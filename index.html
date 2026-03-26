@@ -1,0 +1,316 @@
+atch-center{display:flex;align-items:center;gap:5px;min-width:90px;justify-content:center}
+.score-box{background:var(--light-blue);padding:4px 10px;border-radius:6px;font-weight:700;font-size:.95rem;min-width:32px;text-align:center;color:var(--navy)}
+.score-box.win{background:var(--green-light);color:var(--green)}
+.score-box.loss{background:var(--red-light);color:var(--red)}
+.match-vs{color:var(--gray-light);font-size:.7rem;font-weight:700}
+.score-row{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid #edf2f7;flex-wrap:wrap}
+.score-row .team-label{flex:1;min-width:70px;font-weight:600;font-size:.88rem}
+.score-row .team-label.home{text-align:right}.score-row .team-label.away{text-align:left}
+.score-input{width:56px;padding:8px 4px;text-align:center;border:2px solid #e2e8f0;border-radius:8px;font-size:1.1rem;font-weight:700;color:var(--navy);transition:all .2s;-moz-appearance:textfield}
+.score-input::-webkit-inner-spin-button,.score-input::-webkit-outer-spin-button{-webkit-appearance:none}
+.score-input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(43,108,176,.15)}
+.score-sep{color:var(--gray-light);font-weight:700;font-size:.8rem}
+.btn{padding:10px 24px;border:none;border-radius:8px;font-weight:600;font-size:.88rem;cursor:pointer;transition:all .15s}
+.btn-primary{background:var(--navy);color:var(--white)}.btn-primary:hover{background:var(--blue)}
+.btn-success{background:var(--green);color:var(--white)}
+.btn-danger{background:var(--red);color:var(--white);font-size:.8rem;padding:8px 16px}
+.btn-outline{background:transparent;border:2px solid #e2e8f0;color:var(--dark)}.btn-outline:hover{border-color:var(--blue);color:var(--blue)}
+.btn-sm;padding:6px 14px;font-size:.78rem}
+.btn-row{display:flex;gap:8px;padding:16px 20px;justify-content:flex-end;flex-wrap:wrap}
+select.form-select{padding:8px 12px;border:2px solid #e2e8f0;border-radius:8px;font-size:.88rem;font-weight:500;background:var(--white)}
+.venue-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.venue-card{background:var(--white);border-radius:10px;padding:16px;box-shadow:var(--shadow);border-left:4px solid var(--navy)}
+.venue-card h4{font-size:.92rem;color:var(--navy);margin-bottom:10px}
+.venue-row{display:flex;justify-content:space-between;padding:4px 0;font-size:.83rem;border-bottom:1px solid #f0f4f8}
+.venue-row:last-child{border-bottom:none}
+.venue-sport{color:var(--gray);font-weight:500}.venue-loc{font-weight:600}.venue-loc.na{color:var(--gray-light);font-style:italic}
+.guideline-item{padding:12px 0;border-bottom:1px solid #edf2f7;font-size:.9rem;line-height:1.6;display:flex;gap:10px}
+.guideline-item:last-child{border-bottom:none}
+.guideline-num{background:var(--navy);color:var(--white);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0;margin-top:2px}
+.season-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:20px}
+.season-card{background:var(--white);border-radius:10px;padding:20px;box-shadow:var(-bshadow);text-align:center;cursor:pointer;transition:all .2s;border:2px solid transparent}
+.season-card:hover{border-color:var(--blue);transform:translateY(-2px)}
+.season-card .icon{font-size:2rem;margin-bottom:8px}
+.season-card h4{font-size:.92rem;color:var(--navy);margin-bottom:4px}
+.season-card p{font-size:.78rem;color:var(--gray)}
+.history-table{width:100%;border-collapse:collapse;font-size:.83rem}
+.history-table th{background:var(--navy);color:var(--white);padding:8px 10px;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.5px}
+.history-table td{padding:8px 10px;border-bottom:1px solid #edf2f7}
+.history-table tr:nth-child(even){background:#f7fafc}
+.medal-1{color:var(--gold);font-weight:700}.medal-2{color:#a0aec0;font-weight:700}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:var(--white);border-radius:var(--radius);padding:28px;max-width:380px;width:100%;box-shadow:var(--shadow-lg)}
+.modal h2{font-size:1.15rem;color:var(--navy);margin-bottom:4p|}
+.modal p{font-size:.83rem;color:var(--gray);margin-bottom:16px}
+.modal .field{margin-bottom:12px}
+.modal .field label{display:block;font-size:.78rem;font-weight:600;color:var(--navy);margin-bottom:4px}
+.modal .field input{width:100%;padding:10px 12px;border:2px solid #e2e8f0;border-radius:8px;font-size:.9rem}
+.modal .field input:focus{outline:none;border-color:var(--blue)}
+.modal-error{color:var(--red);font-size:.8rem;margin-bottom:10px;display:none}
+.modal-btns{display:flex;gap:8px}.modal-btns .btn{flex:1}
+.admin-section{background:var(--gold-light);border:2px solid var(--gold);border-radius:var(--radius);padding:16px 20px;margin-bottom:16px;display:none}
+.admin-on .admin-section{display:block}
+.admin-section h3{color:var(--navy);font-size:.92rem;margin-bottom:6px}
+.admin-section p{font-size:.82rem;color:var(--gray);margin-bottom:12px}
+.admin-field{margin-bottom:10px}
+.admin-field label{display:block;font-size:.78rem;font-weight:600;color:var(--navy);margin-bottom:4px}
+.admin-field input,.admin-field select{width:100%;padding:8px 12px;border:2px solid #e2e8f0;border-radius:8px;font-size:.88rem}
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.coach-list-item{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid #edf2f7;font-size:.85rem}
+.coach-list-item:last-child{border-bottom:none}
+.role-badge{font-size:.68rem;padding:2px 8px;border-radius:10px;font-weight:600}
+.role-admin{background:var(--gold-light);color:var(--gold)}.role-coach{background:var(--light-blue);color:var(--blue)}
+.live-dot{width:8px;height:8px;background:var(--green);border-radius:50%;display:inline-block;margin-right:4px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.loading{text-align:center;padding:40px;color:var(--gray)}
+.spinner{width:32px;height:32px;border:3px solid #e2e8f0;border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);padding:12px 28px;border-radius:10px;font-weight:600;font-size:.88rem;box-shadow:0 4px 20px rgba(0,0,0,.2);transition:transform .3s ease;z-index:300;color:var(--white)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.success{background:var(--green)}.toast.error{background:var(--red)}.toast.info{background:var(--blue)}
+@media(max-width:768px){
+.header-brand h1{font-size:1.05rem}.nav-inner a{padding:9px 11px;font-size:.76rem}
+.hero{padding:22px 18px}.hero h2{font-size:1.25rem}
+.ladder-table{font-size:.76rem}.ladder-table th,.ladder-table td{padding:7px 5px}
+.ladder-table th:first-child,.ladder-table td:first-child{padding-left:10px}
+.match-row{padding:10px 12px}.match-team{font-size:.82rem}
+.venue-grid,.season-grid{grid-template-columns:1fr}
+.score-row .team-label{font-size:.82rem;min-width:50px}
+.score-input{width:48px;font-size:1rem}
+.gender-toggle{width:100%}.gender-btn{flex:1}
+.container{padding:12px}.admin-grid{grid-template-columns:1fr}.user-badge{display:none}
+}
+@media(max-width:480px){.header-inner{padding:12px}.admin-grid{grid-template-columns:1fr}.user-badge{display:none}
+}
+@media(max-width:480px){.header-inner{padding:12px}.nav-inner{font-size:.74rem}.hero{padding:18px 10px;border-radius:4px 0}.hero h1{font-size:.95rem;margin-bottom:8px}
+.hero p{font-size:.72rem}.card{padding:12px}
+.card-body{padding:12px}.ladder-tabletfont-size:.7rem}.ladder-table th,.ladder-table td{padding:6px 0}
+.matce-team{font-size:.72rem}.score-box{width:30px;height:30px;line-height:30px}
+.score-row .team-label,{ font-size:.72rem}
+.score-input{width:32px}
+.score-sep{font-size:.70rem}
+.gender-btn{padding:8px 10px}
+.venue-card^{grid-template-columns:1fr}
+.admin-field input,.admin-field select{padding:6px 8px;font-size:.76rem}
+.modal{padding:18px}
+.modal .field input{padding:8px;font-size:.84rem}
+.role-badge{font-size:.63rem;padding:1px 6px}
+.scoricsirc|{width:46px:userÝpauto|font-size:.84rem}
+-gender-toggler{width:auto;flex:normal}
+.admin-section{margin-bottom:8px;padding:10px 12px}
+}
+
+c:root{--navy:#03285e;--blue:#044C87;--light-blue:#E3F4fc;--gold:#FFD700;--gold-light:#FFF4E5;--green:#26C280;-m-grey:#6B7280;--gray:#6B7280;--red:#F44336;-m-white:#FFFFFF;--shadow-sm:0 1px 2px rgba(0,0,0,0.08);--shadow-lg:0 10px 30px rgba(0,0,0,0.12);--radius: 1rem;}
+*b {
+  box-sizing: border-box;
+
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "variation", sans-serif;
+  background: var(--white);
+  color: var(--navy);
+  font-size: 1.02rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--navy);
+  margin: 0 0 0.8rem;
+  font-weight: 700;
+}
+
+h1 { font-size: 1.5rem; }
+h2 { font-size: 1.25rem; }
+h3 { font-size: 1.1rem; }
+h4 { font-size: 0.95rem; }
+
+a {
+  color: var(--blue);
+  text-decoration: none;
+}
+
+a :hover {
+  text-decoration: underline;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.nav {
+  background: var(--navy);
+  position: sticky;
+  top: 0;
+  z-index: I00;
+  color: var(--white);
+}
+
+.nav-inner {
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0;
+}
+
+.nav-inner a {
+  color: inherit;
+  padding: 11px 14px;
+  display: flex;
+  align-items: center;
+}
+.nav-inner a:hover {
+  background: rgba(255, 255, 255, 0.1);
+
+}
+.nav-inner a.active {
+  border-bottom: 3px solid var(--gold);
+}
+
+.nav-inner a{lfox:px
+}
+
+.nav_inner span:last-child {
+  margin-left: auto;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.header-{{
+  background: linear-gradient(105deg, var(--navy), var(--blue));
+  color: white;
+  padding: 30px 16px;
+  text-align: center;
+
+}
+
+.header h1 {
+  color: inherit;
+  font-size: 1.45rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.header p {
+  color: inherit;
+  font-size: 0.9rem;
+  margin: 4px 0;
+}
+size:.72rem;color:var(--gray);font-weight:600;text-transform:uppercase">Athletics</div><div style="font-weight:700;color:var(--navy);margin-top:2px;font-size:.9rem">TBC</div></div>
+<div style="padding:12px;background:var(--light-blue);border-radius:8px;text-align:center"><div style="font-size:.72rem;color:var(--gray);font-weight:600;text-transform:uppercase">Cross Country</div><div style="font-weight:700;color:var(--navy);margin-top:2px;font-size:.9rem">TBC</div></div>
+<div style="padding:12px;background:var(--green-light);border-radius:8px;text-align:center"><div style="font-size:.72rem;color:var(--green);font-weight:600;text-transform:uppercase">Winter Sport</div><div style="font-weight:700;color:var(--navy);margin-top:2px;font-size:.9rem">1 May - 12 Jun</div></div>
+<div style="padding:12px;background:var(--light-blue);border-radius:8px;text-align:center"><div style="font-size:.72rem;color:var(--gray);font-weight:600;text-transform:uppercase">Summer Sport</div><div style="font-weight:700;color:var(--navy);margin-top:2px;font-size:.9rem">TBC</div></div>
+</div></div></div>
+</div>
+<div class="page" id="pg-ladders">
+<div class="tab-row" id="ladder-tabs"></div>
+<div style="display:flex;justify-content:center;margin-bottom:14px"><div class="gender-toggle"><button class="gender-btn active" onclick="setGender('Girls')">Girls</button><button class="gender-btn" onclick="setGender('Boys/Mixed')">Boys/Mixed</button></div></div>
+<div class="card"><div class="card-header"><span id="ladder-title">Loading...</span><span class="badge badge-live"><span class="live-dot"></span>Live</span></div>
+<div class="card-body" style="padding:0"><div class="ladder-wrap"><table class="ladder-table"><thead><tr><th>School</th><th>GP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>PTS</th></tr></thead><tbody id="ladder-body"></tbody></table></div></div></div>
+</div>
+<div class="page" id="pg-fixtures">
+<div class="tab-row" id="fixture-tabs"></div>
+<div style="display:flex;justify-content:center;margin-bottom:14px"><div class="gender-toggle"><button class="gender-btn active" onclick="setGender('Girls')">Girls</button><button class="gender-btn" onclick="setGender('Boys/Mixed')">Boys/Mixed</button></div></div>
+<div id="fixture-rounds"></div>
+</div>
+<div class="page" id="pg-enter">
+<div class="card" style="margin-bottom:14px"><div class="card-header">Score Entry</div><div class="card-body">
+<p style="font-size:.85rem;color:var(--gray);margin-bottom:12px">Select sport and round, enter scores, then save. Results update live for everyone instantly.</p>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<select class="form-select" id="sc-sport" onchange="buildScoreForm()"><option>AFL</option><option>Soccer</option><option>Netball</option><option>Hockey</option><option>Softball</option></select>
+<select class="form-select" id="sc-gender" onchange="buildScoreForm()"><option>Girls</option><option>Boys/Mixed</option></select>
+<select class="form-select" id="sc-round" onchange="buildScoreForm()"></select>
+</div></div></div>
+<div class="card"><div class="card-header" id="sc-title">Select a round</div>
+<div class="card-body" style="padding:0" id="sc-matches"></div>
+<div class="btn-row"><button class="btn btn-outline btn-sm" onclick="clearScoreInputs()">Clear</button><button class="btn btn-primary" onclick="saveScores()">Save Scores</button></div></div>
+</div>
+<div class="page" id="pg-venues"><div class="card"><div class="card-header">Venue Directory</div><div class="card-body"><div class="venue-grid" id="venue-grid"></div></div></div></div>
+<div class="page" id="pg-guidelines"><div class="card"><div class="card-header">Tinter Sport 2026 Guidelines</div><div class="card-body>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px, 1fr));gap:16px">
+<dB  ID="coach-list" style="padding:16px;font-size:.85rem;color:var(--gray)">Connect Firebase to manage coaches.</div>
+</div></div></div>
+<dB cFCs class="page" id="pg-history">
+=1 ID ID ID I"><div class="spinner"></div>Loading...</div></div></div>
+<div class="card"><div class="card-header">Data Management</div><div class="card-body">
+<p style="font-size:.85rem;color:var(--gray);margin-bottom:12px">Export or reset season data.</p>
+<div style="display:flex;gpa:8px;flex-wrap:wrap">
+<button class="btn btn-outline btn-sm" onclick="exportData()">Export All Data (JSON)</button>
+<button class="btn btn-danger" onclick="resetSeason()">Reset All Scores</button>
+</div></div></div>
+</div>
+</div>
+<div style="text-align:center;padding:24px;font-size:.72rem;color:var(--gray)">Williamstown District Primary Schools Sport &bull; Convenor: Paddy Gallivan &bull; Williamstown PS</div>
+<div class="toast" id="toast"></div>
+<script>
+const FIREBASE_CONFIG={apiKey:"AIzaSyA-bNl8XqvZ7DQ6YftL9teXbqxYICBlPF8",authDomain:"willy-district-sport.firebaseapp.com",databaseURL:"https://willy-district-sport-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"willy-district-sport",storageBucket:"willy-district-sport.firebasestorage.app",messagingSenderId:"212867741935",appId:"1:212867741935:web:68e67c7c96dd474fe2831a"};
+const TEAMS=["Altona","Newport Gardens","Newport Lakes","St Mary's","Seaholme","Williamstown North","Williamstown Primary","Sacred Heart"];
+const SPORTS=["AFL","Soccer","Netball","Hockey","Softball"];
+const ROUND_DATES={"Round 1":"1 May","Round 2":"8 May","Round 3":"15 May","Round 4":"22 May","Round 5":"29 May","Round 6":"5 Jun","Round 7":"12 Jun"};
+const ROUNDS=Object.keys(ROUND_DATES);
+const FIX={"Round 1":[{h:"Seaholme",a:"Altona"},{h:"St Mary's",a:"Williamstown North"},{h:"Newport Lakes",a:"Williamstown Primary"},{h:"Sacred Heart",a:"Newport Gardens"}],"Round 2":[{h:"Altona",a:"Newport Lakes"},{h:"Newport Gardens",a:"St Mary's"},{h:"Sacred Heart",a:"Seaholme"},{h:"Williamstown Primary",a:"Williamstown North"}],"Round 3":[{h:"Newport Gardens",a:"Altona"},{h:"Sacred Heart",a:"Newport Lakes"},{h:"Williamstown Primary",a:"St Mary's"},{h:"Williamstown North",a:"Seaholme"}],"Round 4":[{h:"Altona",a:"St Mary's"},{h:"Newport Lakes",a:"Seaholme"},{h:"Newport Gardens",a:"Williamstown North"},{h:"Williamstown Primary",a:"Sacred Heart"}],"Round 5":[{h:"Sacred Heart",a:"Altona"},{h:"Newport Gardens",a:"Williamstown Primary"},{h:"Williamstown North",a:"Newport Lakes"},{h:"St Mary's",a:"Seaholme"}],"Round 6":[{h:"Altona",a:"Williamstown Primary"},{h:"Williamstown North",a:"Sacred Heart"},{h:"Seaholme",a:"Newport Gardens"},{h:"St Mary's",a:"Newport Lakes"}],"Round 7":[{h:"Seaholme",a:"Williamstown Primary"},{h:"St Mary's",a:"Sacred Heart"},{h:"Newport Lakes",a:"Newport Gardens"},{h:"Altona",a:"Williamstown North"}]};
+const VENUES={"Altona PS":{AFL:"Civic Parade Ovals",Soccer:"School",Netball:"School",Softball:"School",Hockey:"N/A"},"Newport Gardens PS":{AFL:"School",Soccer:"School",Netball:"School",Softball:"School",Hockey:"School"},"Newport Lakes PS":{AFL:"Bryan Martyn Oval",Soccer:"Digman Reserve",Netball:"School",Softball:"Digman Reserve",Hockey:"School"},"Seaholme":{AFL:"J.K Grant Reserve",Soccer:"School",Netball:"School",Softball:"J.K Grant Reserve",Hockey:"N/A"},"St Mary's":{AFL:"Fearon Reserve",Soccer:"Fearon Reserve",Netball:"School",Softball:"Willy PS Oval",Hockey:"N/A"},"Williamstown North":{AFL:"Bayside Willy",Soccer:"School",Netball:"School",Softball:"Bayside Willy",Hockey:"N/A"},"Williamstown Primary":{AFL:"Fearon Reserve",Soccer:"Fearon Reserve",Netball:"School",Softball:"Willy PS Oval",Hockey:"School"},"Sacred Heart":{AFL:"Bryan Martyn Oval",Soccer:"Digman Reserve",Netball:"Bryan Martyn Oval",Softball:"Digman Reserve",Hockey:"N/A"}};
+const GUIDELINES=["Games are to commence at 9:30am and to conclude by 10:30am.","Games at Bayside need to conclude at 10:25am due to Bayside College requirement.","Home teams are to have fields and/or courts set up prior to the arrival of the away teams.","Home team to have students ready to greet the arrival of the away teams and direct them to playing areas.","It is suggested that the away team contact the home team prior to the game to inform them of any coaches who are not teaching staff. The responsibility of running and managing games is with the teacher assigned to that sport.","Dates are set. If a school is unable to play on a set date they may have to forfeit if the opposition cannot reschedule.","All coaches must have a thorough understanding of the rules of their sport. It is suggested coaches carry a copy of the rules at all games.","The top 2 teams at the conclusion of the season will play off in Division finals."];
+let sport="AFL",gender="Girls",currentUser=null,userRole=null,db=null,allScores={},allHistory=[],fbReady=false;
+function initFirebase(){if(FIREBASE_CONFIG.apiKey==="YOUR_API_KEY"){fbReady=false;loadLocal();renderAll();return}try{firebase.initializeApp(FIREBASE_CONFIG);db=firebase.database();fbReady=true;firebase.auth().onAuthStateChanged(u=>{currentUser=u;if(u){db.ref('users/'+u.uid).once('value').then(s=>{const d=s.val();userRole=d?d.role:'coach';updateAuthUI();renderAll()})}else{userRole=null;updateAuthUI();renderAll()}});db.ref('scores').on('value',s=>{allScores=s.val()||{};renderAll()});db.ref('history').on('value',s=>{const r=s.val()||{};allHistory=Object.entries(r).map(([k,v])=>({id:k,...v}));})}catch(e){fbReady=false;loadLocal();renderAll()}}
+function loadLocal(){try{allScores=JSON.parse(localStorage.getItem('wds_scores')||'{}')}catch(e){allScores={}}try{allHistory=JSON.parse(localStorage.getItem('wds_history')||'[]')}catch(e){allHistory=[]}}
+function saveLocal(){localStorage.setItem('wds_scores',JSON.stringify(allScores));localStorage.setItem('wds_history',JSON.stringify(allHistory))}
+function getScore(sp,g,r){return allScores[sp+'__'+g+'__'+r]||null}
+function setScore(sp,g,r,d){allScores[sp+'__'+g+'__'+r]=d;if(fbReady)db.ref('scores/'+sp+'__'+g+'__'+r).set(d);else{saveLocal();renderAll()}}
+function handleAuth(){if(currentUser){if(fbReady)firebase.auth().signOut();else{currentUser=null;userRole=null;updateAuthUI();renderAll()}}else{document.getElementById('login-modal').classList.add('show');document.getElementById('login-email').focus()}}
+function closeLogin(){document.getElementById('login-modal').classList.remove('show');document.getElementById('login-error').style.display='none'}
+function doLogin(){const e=document.getElementById('login-email').value.trim(),p=document.getElementById('login-pass').value;if(!e||!p){showLoginErr('Enter email and password');return}if(fbReady){firebase.auth().signInWithEmailAndPassword(e,p).then(()=>closeLogin()).catch(er=>showLoginErr(er.code==='auth/invalid-credential'?'Invalid email or password':er.message))}else{currentUser={email:e,uid:'demo'};userRole='admin';closeLogin();updateAuthUI();renderAll();toast('Logged in (demo mode)','info')}}
+function showLoginErr(m){const el=document.getElementById('login-error');el.textContent=m;el.style.display='block'}
+function updateAuthUI(){const b=document.getElementById('auth-btn'),bg=document.getElementById('user-badge'),an=document.getElementById('admin-nav');if(currentUser){b.textContent='Logout';b.classList.add('gold');bg.textContent=currentUser.email||'';document.body.classList.add('logged-in');if(userRole==='admin'){document.body.classList.add('admin-on');an.style.display='block'}else{document.body.classList.remove('admin-on');an.style.display='none'}}else{b.textContent='Login';b.classList.remove('gold');bg.textContent='';document.body.classList.remove('logged-in','admin-on');an.style.display='none';const ap=document.querySelector('.page.active');if(ap&&(ap.id==='pg-enter'||ap.id==='pg-admin'))goTo('home')}}
+function calcLadder(sp,g){const L={};TEAMS.forEach(t=>L[t]={gp:0,w:0,d:0,l:0,gf:0,ga:0,gd:0,pts:0});ROUNDS.forEach(r=>{const sc=getScore(sp,g,r);if(!sc)return;FIX[r].forEach((m,i)=>{const s=sc[i];if(!s||s.home==="''||s.away==='')return;const hs=+s.home,as=+s.away;if(isNaN(hs)||isNaN(as)||!L[m.h]||!L[m.a])\neiÉÑÕÉ¸í1m´¹¡t¹À¬¬í1m´¹t¹À¬¬í1m´¹¡t¹¬õ¡Ìí1m´¹¡t¹¬õÌí1m´¹t¹¬õÌí1m´¹t¹¬õ¡Ìí1m´¹¡t¹õ1m´¹¡t¹µ1m´¹¡t¹í1m´¹t¹õ1m´¹t¹µ1m´¹t¹í¥¡¡ÌùÌ¥í1m´¹¡t¹Ü¬¬í1m´¹¡t¹ÁÑÌ¬ôÌí1m´¹t¹°¬­õ±Í¥¡Ìù¡Ì¥í1m´¹t¹Ü¬¬í1m´¹t¹ÁÑÌ¬ôÌí1m´¹¡t¹°¬­õ±Íí1m´¹¡t¹¬¬í1m´¹t¹¬¬í1m´¹¡t¹ÁÑÌ¬¬í1m´¹t¹ÁÑÌ¬­õô¥ô¤íÉÑÕÉ¸=©Ð¹¹ÑÉ¥Ì¡0¤¹Í½ÉÐ ¡±¤ôùlÅt¹ÁÑÌµlÅt¹ÁÑÍññlÅt¹µlÅt¹ññlÅt¹µlÅt¹¤¹µÀ ¡m¸±Ít±¤¤ôø¡íÁ½Ìé¤¬Ä±¹µé¸°¸¸¹Íô¤¥ô)Õ¹Ñ¥½¸É¹É±° ¥íÉ¹ÉQÌ ¤íÉ¹É1È ¤íÉ¹É¥áÑÕÉÌ ¤íÉ¹É!½µ ¤íÕ¥±M½É½É´ ¤íÉ¹ÉY¹ÕÌ ¤íÉ¹ÉÕ¥±¥¹Ì ¤í¥¡ÕÍÉI½±ôôôµ¥¸¥É¹É
+½¡1¥ÍÐ ¥ô)Õ¹Ñ¥½¸É¹ÉQÌ ¥íl±ÈµÑÌ°¥áÑÕÉµÑÌt¹½É ¡¥ôùí½¹ÍÐ°õ½Õµ¹Ð¹Ñ±µ¹Ñ	å%¡¥¤í¥¡°¥°¹¥¹¹É!Q50õMA=IQL¹µÀ¡ÌôùñÍÁ¸±ÍÌôÑµÁ¥±°íÌôôõÍÁ½ÉÐüÑ¥Ùèô½¹±¥¬ôÍÑMÁ½ÉÐ íÍô¤øíÍôð½ÍÁ¸ù¤¹©½¥¸ ¥ô¥ô)Õ¹Ñ¥½¸ÍÑMÁ½ÉÐ¡Ì¥íÍÁ½ÉÐõÌíÉ¹ÉQÌ ¤íÉ¹É1È ¤íÉ¹É¥áÑÕÉÌ ¥ô)Õ¹Ñ¥½¸ÍÑ¹È¡¥í¹Èõí½Õµ¹Ð¹ÅÕÉåM±Ñ½É±° ¹¹ÈµÑ¸¤¹½É ¡ôù¹±ÍÍ1¥ÍÐ¹Ñ½± Ñ¥Ù±¹ÑáÑ
+½¹Ñ¹Ð¹ÑÉ¥´ ¤ôôõ¤¤íÉ¹É1È ¤íÉ¹É¥áÑÕÉÌ ¥ô)Õ¹Ñ¥½¸É¹É1È ¥í½Õµ¹Ð¹Ñ±µ¹Ñ	å% ±ÈµÑ¥Ñ±¤¹ÑáÑ
+½¹Ñ¹ÐõÍÁ½ÉÐ¬´­¹È¬1Èí½¹ÍÐÉ½ÝÌõ±1È¡ÍÁ½ÉÐ±¹È¤í½Õµ¹Ð¹Ñ±µ¹Ñ	å% ±Èµ½ä¤¹¥¹¹É!Q50õÉ½ÝÌ¹µÀ¡ÈôùñÑÈøñÑøñÍÁ¸±ÍÌôÁ½ÌµíÈ¹Á½ÌôôôÄüÁ½Ì´ÄéÈ¹Á½ÌôôôÈüÁ½Ì´ÈèÁ½Ìµ½Ñ¡ÈôøíÈ¹Á½Íôð½ÍÁ¸øíÈ¹¹µôð½ÑøñÑøíÈ¹Áôð½ÑøñÑøíÈ¹Ýôð½ÑøñÑøíÈ¹ôð½ÑøñÑøíÈ¹±ôð½ÑøñÑøíÈ¹ôð½ÑøñÑøíÈ¹ôð½ÑøñÑøíÈ¹ôð½ÑøñÑ±ÍÌôÁÑÌµ½°øíÈ¹ÁÑÍôð½Ñøð½ÑÈù¤¹©½¥¸ ¥ô)Õ¹Ñ¥½¸É¹É¥áÑÕÉÌ ¥í½¹ÍÐõ½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¥áÑÕÉµÉ½Õ¹Ì¤í¹¥¹¹É!Q50ôíI=U9L¹½É ¡Èôùí½¹ÍÐÍõÑM½É¡ÍÁ½ÉÐ±¹È±È¤í¹¥¹¹É!Q50¬õñ¥Ø±ÍÌôÉ½Õ¹µ±½¬øñ¥Ø±ÍÌôÉ½Õ¹µ¡øñ ÌøíÉôð½ ÌøñÍÁ¸±ÍÌôÑµÑøíI=U9}QMmÉuôÈÀÈØð½ÍÁ¸øð½¥Øøí%amÉt¹µÀ ¡´±¤¤ôùí½¹ÍÐÌõÍÍm¥t±¡ÌõÌýÌ¹¡½µè´±ÌõÌýÌ¹Ýäè´í±Ð¡ô±ôí¥¡ÌÌ¹¡½µôôÌ¹Ýäôô¥í½¹ÍÐ ô­Ì¹¡½µ±ô­Ì¹Ýäí¥¡ ù¥í¡ôÝ¥¸íô±½ÍÌõ±Í¥¡ù ¥íôÝ¥¸í¡ô±½ÍÌõõÉÑÕÉ¹ñ¥Ø±ÍÌôµÑ µÉ½Üøñ¥Ø±ÍÌôµÑ µÑ´¡½µøí´¹¡ôð½¥Øøñ¥Ø±ÍÌôµÑ µ¹ÑÈøñÍÁ¸±ÍÌôÍ½Éµ½àí¡ôøí¡Íôð½ÍÁ¸øñÍÁ¸±ÍÌôµÑ µÙÌùÙÌð½ÍÁ¸øñÍÁ¸±ÍÌôÍ½Éµ½àíôøíÍôð½ÍÁ¸øð½¥Øøñ¥Ø±ÍÌôµÑ µÑ´Ýäøí´¹ôð½¥Øøð½¥Øùô¤¹©½¥¸ ¥ôð½¥Øùô¥ô)Õ¹Ñ¥½¸Õ¥±M½É½É´ ¥í½¹ÍÐÍÀõ½Õµ¹Ð¹Ñ±µ¹Ñ	å% ÍµÍÁ½ÉÐ¤¹Ù±Õ±õ½Õµ¹Ð¹Ñ±µ¹Ñ	å% Íµ¹È¤¹Ù±Õ±Èõ½Õµ¹Ð¹Ñ±µ¹Ñ	å% ÍµÉ½Õ¹¤¹Ù±Õí¥ È¥ÉÑÕÉ¸í½Õµ¹Ð¹Ñ±µ¹Ñ	å% ÍµÑ¥Ñ±¤¹ÑáÑ
+½¹Ñ¹ÐõÍÀ¬´­¬´­Èí½¹ÍÐàõÑM½É¡ÍÀ±±È¤í½Õµ¹Ð¹Ñ±µ¹Ñ	å% ÍµµÑ¡Ì¤¹¥¹¹É!Q50õ%amÉt¹µÀ ¡´±¤¤ôùí½¹ÍÐÌõàám¥tíÉÑÕÉ¹ñ¥Ø±ÍÌôÍ½ÉµÉ½Üøñ¥Ø±ÍÌôÑ´µ±°¡½µøí´¹¡ôð½¥Øøñ¥¹ÁÕÐÑåÁô¹ÕµÈ±ÍÌôÍ½Éµ¥¹ÁÕÐ¥ôÍ í¥ôµ¥¸ôÀµàôÈÀÀÙ±ÕôíÌýÌ¹¡½µèô¥¹ÁÕÑµ½ô¹ÕµÉ¥øñÍÁ¸±ÍÌôÍ½ÉµÍÀùÙÌð½ÍÁ¸øñ¥¹ÁÕÐÑåÁô¹ÕµÈ±ÍÌôÍ½Éµ¥¹ÁÕÐ¥ôÍí¥ôµ¥¸ôÀµàôÈÀÀÙ±ÕôíÌýÌ¹Ýäèô¥¹ÁÕÑµ½ô¹ÕµÉ¥øñ¥Ø±ÍÌôÑ´µ±°Ýäøí´¹ôð½¥Øøð½¥Øùô¤¹©½¥¸ ¥ô)Õ¹Ñ¥½¸ÍÙM½ÉÌ ¥í¥ ÕÉÉ¹ÑUÍÈ¥íÑ½ÍÐ A±Í±½¥¸¥ÉÍÐ°ÉÉ½È¤íÉÑÕÉ¹õ½¹ÍÐÍÀõ½Õµ¹Ð¹Ñ±µ¹Ñ	å% ÍµÍÁ½ÉÐ¤¹Ù±Õ±õ½Õµ¹Ð¹Ñ±µ¹Ñ	å% Íµ¹È¤¹Ù±Õ±Èõ½Õµ¹Ð¹Ñ±µ¹Ñ	å% ÍµÉ½Õ¹¤¹Ù±Õí½¹ÍÐÍ½ÉÌõ%amÉt¹µÀ ¡|±¤¤ôø¡í¡µé½Õµ¹Ð¹Ñ±µ¹Ñ	å% Í ¨q¸é¤¹Ù±Õ±Ýäé½Õµ¹Ð¹Ñ±µ¹Ñ	å% Í­¤¤¹Ù±Õô¤¤íÍÑM½É¡ÍÀ±±È±Í½ÉÌ¤íÑ½ÍÐ M½ÉÌÍÙ°ÍÕÍÌ¥ô)Õ¹Ñ¥½¸±ÉM½É%¹ÁÕÑÌ ¥í½Õµ¹Ð¹ÅÕÉåM±Ñ½É±° ÍµµÑ¡Ì¹Í½Éµ¥¹ÁÕÐ¤¹½É ¡¤ôù¤¹Ù±Õô¥ô)Õ¹Ñ¥½¸É¹É!½µ ¥í±Ð¹Èõ¹Õ±°í½È¡½¹ÍÐÈ½I=U9L¥í½¹ÍÐÍõÑM½É 0°¥É±Ì±È¤í¥ ÍññÍ¹Í½µ¡ÌôøÍññÌ¹¡½µôôôññÌ¹Ýäôôô¤¥í¹ÈõÈíÉ­õõ¥ ¹È¥¹ÈõI=U9MmI=U9L¹±¹Ñ ´Åtí½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡½µµ¹áÐµ¤¹ÑáÑ
+½¹Ñ¹ÐõI=U9}QMm¹Ét¬ÈÀÈØí½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡½µµ¹áÐµÉ½Õ¹¤¹¥¹¹É!Q50õñÀÍÑå±ô½¹ÐµÝ¥¡ÐèÜÀÀí½±½ÈéÙÈ ´µ¹Ùä¤íµÉ¥¸µ½ÑÑ½´èÄÁÁàøí¹Éôð½Àù­%am¹Ét¹µÀ¡´ôùñ¥ØÍÑå±ô¥ÍÁ±äé±àí©ÕÍÑ¥äµ½¹Ñ¹ÐéÍÁµÑÝ¸íÁ¥¹èÙÁàÀí½¹ÐµÍ¥éè¸àáÉ´í½ÉÈµ½ÑÑ½´èÅÁàÍ½±¥ÉÜøñÍÁ¸øí´¹¡ôð½ÍÁ¸øñÍÁ¸ÍÑå±ô½±½ÈéÙÈ ´µÉä¤ùÙÌð½ÍÁ¸øñÍÁ¸øí´¹ôð½ÍÁ¸øð½¥Øù¤¹©½¥¸ ¤í±Ð¡Ñµ°ôíMA=IQL¹½É ¡ÍÀôùí½¹ÍÐHõ±1È¡ÍÀ°¥É±Ì¤±Hõ±1È¡ÍÀ°	½åÌ½5¥á¤±0õIlÁt±0õIlÁtí¥¡0¹ÀøÁññ0¹ÀøÀ¥í¡Ñµ°¬õñ¥ØÍÑå±ôµÉ¥¸µ½ÑÑ½´èÄÁÁàøñÍÁ¸ÍÑå±ô½¹ÐµÝ¥¡ÐèÜÀÀí½±½ÈéÙÈ ´µ¹Ùä¤í½¹ÐµÍ¥éè¸àáÉ´øíÍÁôð½ÍÁ¸ùí¥¡0¹ÀøÀ¥¡Ñµ°¬õñ¥ØÍÑå±ô½¹ÐµÍ¥éè¸àÍÉ´íÁ¥¹èÉáàÀù¥É±ÌèñÍÑÉ½¹øí0¹¹µôð½ÍÑÉ½¹ø í0¹ÁÑÍôÁÑÌ¤ð½¥Øùí¥¡0¹ÀøÀ¥¡Ñµ°¬õñ¥ØÍÑå±ô½¹ÐµÍ¥éè¸àÍÉ´íÁ¥¹èÉáàÀù	½åÌ½5¥áèñÍÑÉ½¹øí0¹¹µôð½ÍÑÉ½¹ø í0¹ÁÑÍôÁÑÌ¤ð½¥Øùí¡Ñµ°¬ôð½¥Øøõô¤í½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡½µµ±ÉÌ¤¹¥¹¹É!Q50õ¡Ñµ±ñññÀÍÑå±ô½¹ÐµÍ¥éè¸àáÉ´í½±½ÈéÙÈ ´µÉä¤ù9¼ÉÍÕ±ÑÌ¹ÑÉåÐ¸íÕÉÉ¹ÑUÍÈü!Ñ¼ñ¡Éô½¹±¥¬ô½Q¼ ¹ÑÈ¤íÉÑÕÉ¸±Íù¹ÑÈM½ÉÌð½øÑ¼ÐÍÑÉÑ¸è
+½¡Ì¸±½¥¸Ñ¼ÍÑÉÐ¹ÑÉ¥¹Í½ÉÌ¸ôð½Àùô)Õ¹Ñ¥½¸É¹ÉY¹ÕÌ ¥í½Õµ¹Ð¹Ñ±µ¹Ñ	å% Ù¹ÕµÉ¥¤¹¥¹¹É!Q50õ=©Ð¹¹ÑÉ¥Ì¡Y9UL¤¹µÀ ¡mÌ±ÍÙt¤ôùñ¥Ø±ÍÌôÙ¹ÕµÉøñ ÐøíÍôð½ ÐøíMA=IQL¹µÀ¡ÍÀôùñ¥Ø±ÍÌôÙ¹ÕµÉ½ÜøñÍÁ¸±ÍÌôÙ¹ÕµÍÁ½ÉÐøíÍÁôð½ÍÁ¸øñÍÁ¸±ÍÌôÙ¹Õµ±½íÍÙmÍÁtôôô8½ü¹èôøíÍÙmÍÁuôð½ÍÁ¸øð½¥Øù¤¹©½¥¸ ¥ôð½¥Øù¤¹©½¥¸ ¥ô)Õ¹Ñ¥½¸É¹ÉÕ¥±¥¹Ì ¥í½Õµ¹Ð¹Ñ±µ¹Ñ	å% Õ¥±¥¹Ìµ½ä¤¹¥¹¹É!Q50õU%1%9L¹µÀ ¡±¤¤ôùñ¥Ø±ÍÌôÕ¥±¥¹µ¥Ñ´øñÍÁ¸±ÍÌôÕ¥±¥¹µ¹Õ´øí¤¬Åôð½ÍÁ¸øñÍÁ¸øíôð½ÍÁ¸øð½¥Øù¤¹©½¥¸ ¥ô)Õ¹Ñ¥½¸Í¡½Ý!¥ÍÑ½Éä¡ÍÍ½¸¥í½¹ÍÐÉ½ÉÌô¡±±!¥ÍÑ½Éåññmt¤¹¥±ÑÈ¡ÈôùÈ¹ÍÍ½¸ôôõÍÍ½¸¤¹Í½ÉÐ ¡±¤ôù¹åÈµ¹åÈ¤í½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡¥ÍÑ½ÉäµÑ¥°¤¹ÍÑå±¹¥ÍÁ±äô±½¬í½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡¥ÍÑ½ÉäµÑ¥°µÑ¥Ñ±¤¹ÑáÑ
+½¹Ñ¹ÐõÍÍ½¸¬´!¥ÍÑ½É¥°IÍÕ±ÑÌí½¹ÍÐ¥ÍõÕÍÉI½±ôôôµ¥¸í½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡¥ÍÑ½ÉäµÑ½ä¤¹¥¹¹É!Q50õÉ½ÉÌ¹±¹Ñ ôôôÀýñÑÈøñÑ½±ÍÁ¸ôØÍÑå±ôÑáÐµ±¥¸é¹ÑÈíÁ¥¹èÈÑÁàí½±½ÈéÙÈ ´µÉä¤ù9¼É½ÉÌåÐ¸í¥ÍüUÍÑ¡½É´½ÙÑ¼ÉÍÕ±ÑÌ¸èôð½Ñøð½ÑÈùéÉ½ÉÌ¹µÀ¡ÈôùñÑÈøñÑøñÍÑÉ½¹øíÈ¹åÉôð½ÍÑÉ½¹øð½ÑøñÑøíÈ¹Ù¹Ññðôð½ÑøñÑ±ÍÌôµ°´ÄøíÈ¹Ý¥¹¹Éñðôð½ÑøñÑ±ÍÌôµ°´ÈøíÈ¹ÉÕ¹¹Éñð´ôð½ÑøñÑÍÑå±ô½¹ÐµÍ¥éè¸áÉ´í½±½ÈéÙÈ ´µÉä¤øíÈ¹¹½ÑÍñðôð½Ñøí¥ÍýñÑøñÕÑÑ½¸±ÍÌôÑ¸Ñ¸µ¹ÈÑ¸µÍ´½¹±¥¬ô±Ñ!¥ÍÑ½Éä íÈ¹¥ñðô°íÍÍ½¹ô¤ù°ð½ÕÑÑ½¸øð½Ñùèôð½ÑÈù¤¹©½¥¸ ¥ô)Õ¹Ñ¥½¸!¥ÍÑ½ÉåI½É ¥í¥¡ÕÍÉI½±ôôµ¥¸¥íÑ½ÍÐ µ¥¸½¹±ä°ÉÉ½È¤íÉÑÕÉ¹õ½¹ÍÐÉõíåÈè­½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡¥ÍÐµåÈ¤¹Ù±Õ±Í½¸é½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡¥ÍÐµÍÍ½¸¤¹Ù±Õ±Ù¹Ðé½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡¥ÍÐµÙ¹Ð¤¹Ù±Õ±Ý¥¹¹Èé½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡¥ÍÐµÝ¥¹¹È¤¹Ù±Õ±ÉÕ¹¹Èé½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡¥ÍÐµÉÕ¹¹È¤¹Ù±Õ±¹½ÑÌé½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡¥ÍÐµ¹½ÑÌ¤¹Ù±Õôí¥ É¹Ù¹ÑñðÉÑ µ¹ÑÉí¥ÍÁ±äé±àí±¥¸µ¥ÑµÌé¹ÑÈíÀèÕÁàíµ¥¸µÝ¥Ñ èäÁÁàí©ÕÍÑ¥äµ½¹Ñ¹Ðé¹ÑÉô(¹Í½Éµ½áí­É½Õ¹éÙÈ ´µ±¥¡Ðµ±Õ¤íÁ¥¹èÑÁàÄÁÁàí½ÉÈµÉ¥ÕÌèÙÁàí½¹ÐµÝ¥¡ÐèÜÀÀí½¹ÐµÍ¥éè¸äÕÉ´íµ¥¸µÝ¥Ñ èÌÉÁàíÑáÐµ±¥¸é¹ÑÈí½±½ÈéÙÈ ´µ¹Ùä¥ô(¹Í½Éµ½à¹Ý¥¹í­É½Õ¹éÙÈ ´µÉ¸µ±¥¡Ð¤í½±½ÈéÙÈ ´µÉ¸¥ô(¹Í½Éµ½à¹±½ÍÍí­É½Õ¹éÙÈ ´µÉµ±¥¡Ð¤í½±½ÈéÙÈ ´µÉ¥ô(¹µÑ µÙÍí½±½ÈéÙÈ ´µÉäµ±¥¡Ð¤í½¹ÐµÍ¥éè¸ÝÉ´í½¹ÐµÝ¥¡ÐèÜÀÁô(¹Í½ÉµÉ½Ýí¥ÍÁ±äé±àí±¥¸µ¥ÑµÌé¹ÑÈíÀèáÁàíÁ¥¹èÄÉÁàÄÙÁàí½ÉÈµ½ÑÑ½´èÅÁàÍ½±¥ÉÜí±àµÝÉÀéÝÉÁô(¹Í½ÉµÉ½Ü¹Ñ´µ±±í±àèÄíµ¥¸µÝ¥Ñ èÜÁÁàí½¹ÐµÝ¥¡ÐèØÀÀí½¹ÐµÍ¥éè¸àáÉµô(¹Í½ÉµÉ½Ü¹Ñ´µ±°¹¡½µíÑáÐµ±¥¸éÉ¥¡Ñô¹Í½ÉµÉ½Ü¹Ñ´µ±°¹ÝåíÑáÐµ±¥¸é±Ñô(¹Í½Éµ¥¹ÁÕÑíÝ¥Ñ èÔÙÁàíÁ¥¹èáÁàÑÁàíÑáÐµ±¥¸é¹ÑÈí½ÉÈèÉÁàÍ½±¥ÉáÀí½ÉÈµÉ¥ÕÌèáÁàí½¹ÐµÍ¥éèÄ¸ÅÉ´í½¹ÐµÝ¥¡ÐèÜÀÀí½±½ÈéÙÈ ´µ¹Ùä¤íÑÉ¹Í¥Ñ¥½¸é±°¸ÉÌìµµ½èµÁÁÉ¹éÑáÑ¥±ô(¹Í½Éµ¥¹ÁÕÐèèµÝ­¥Ðµ¥¹¹ÈµÍÁ¥¸µÕÑÑ½¸°¹Í½Éµ¥¹ÁÕÐèèµÝ­¥Ðµ½ÕÑÈµÍÁ¥¸µÕÑÑ½¹ìµÝ­¥ÐµÁÁÉ¹é¹½¹ô(¹Í½Éµ¥¹ÁÕÐé½ÕÍí½ÕÑ±¥¹é¹½¹í½ÉÈµ½±½ÈéÙÈ ´µ±Õ¤í½àµÍ¡½ÜèÀÀÀÍÁàÉ ÐÌ°ÄÀà°ÄÜØ°¸ÄÔ¥ô(¹Í½ÉµÍÁí½±½ÈéÙÈ ´µÉäµ±¥¡Ð¤í½¹ÐµÝ¥¡ÐèÜÀÀí½¹ÐµÍ¥éè¸áÉµô(¹Ñ¹íÁ¥¹èÄÁÁàÈÑÁàí½ÉÈé¹½¹í½ÉÈµÉ¥ÕÌèáÁàí½¹ÐµÝ¥¡ÐèØÀÀí½¹ÐµÍ¥éè¸àáÉ´íÕÉÍ½ÈéÁ½¥¹ÑÈíÑÉ¹Í¥Ñ¥½¸é±°¸ÄÕÍô(¹Ñ¸µÁÉ¥µÉåí­É½Õ¹éÙÈ ´µ¹Ùä¤í½±½ÈéÙÈ ´µÝ¡¥Ñ¥ô¹Ñ¸µÁÉ¥µÉäé¡½ÙÉí­É½Õ¹éÙÈ ´µ±Õ¥ô(¹Ñ¸µÍÕÍÍí­É½Õ¹éÙÈ ´µÉ¸¤í½±½ÈéÙÈ ´µÝ¡¥Ñ¥ô(¹Ñ¸µ¹Éí­É½Õ¹éÙÈ ´µÉ¤í½±½ÈéÙÈ ´µÝ¡¥Ñ¤í½¹ÐµÍ¥éè¸áÉ´íÁ¥¹èáÁàÄÙÁáô(¹Ñ¸µ½ÕÑ±¥¹í­É½Õ¹éÑÉ¹ÍÁÉ¹Ðí½ÉÈèÉÁàÍ½±¥ÉáÀí½±½ÈéÙÈ ´µÉ¬¥ô¹Ñ¸µ½ÕÑ±¥¹é¡½ÙÉí½ÉÈµ½±½ÈéÙÈ ´µ±Õ¤í½±½ÈéÙÈ ´µ±Õ¥ô(¹Ñ¸µÍµíÁ¥¹èÙÁàÄÑÁàí½¹ÐµÍ¥éè¸ÜáÉµô(¹Ñ¸µÉ½Ýí¥ÍÁ±äé±àíÀèáÁàíÁ¥¹èÄÙÁàÈÁÁàí©ÕÍÑ¥äµ½¹Ñ¹Ðé±àµ¹í±àµÝÉÀéÝÉÁô)Í±Ð¹½É´µÍ±ÑíÁ¥¹èáÁàÄÉÁàí½ÉÈèÉÁàÍ½±¥ÉáÀí½ÉÈµÉ¥ÕÌèáÁàí½¹ÐµÍ¥éè¸àáÉ´í½¹ÐµÝ¥¡ÐèÔÀÀí­É½Õ¹éÙÈ ´µÝ¡¥Ñ¥ô(¹Ù¹ÕµÉ¥í¥ÍÁ±äéÉ¥íÉ¥µÑµÁ±Ñµ½±Õµ¹ÌéÉÁÐ¡ÕÑ¼µ¥±°±µ¥¹µà ÈàÁÁà°ÅÈ¤¤íÀèÄÉÁáô(¹Ù¹ÕµÉí­É½Õ¹éÙÈ ´µÝ¡¥Ñ¤í½ÉÈµÉ¥ÕÌèÄÁÁàíÁ¥¹èÄÙÁàí½àµÍ¡½ÜéÙÈ ´µÍ¡½Ü¤í½ÉÈµ±ÐèÑÁàÍ½±¥ÙÈ ´µ¹Ùä¥ô(¹Ù¹ÕµÉ Ñí½¹ÐµÍ¥éè¸äÉÉ´í½±½ÈéÙÈ ´µ¹Ùä¤íµÉ¥¸µ½ÑÑ½´èÄÁÁáô(¹Ù¹ÕµÉ½Ýí¥ÍÁ±äé±àí©ÕÍÑ¥äµ½¹Ñ¹ÐéÍÁµÑÝ¸íÁ¥¹èÑÁàÀí½¹ÐµÍ¥éè¸àÍÉ´í½ÉÈµ½ÑÑ½´èÅÁàÍ½±¥ÁÑáô(¹Ù¹ÕµÉ½Üé±ÍÐµ¡¥±í½ÉÈµ½ÑÑ½´é¹½¹ô(¹Ù¹ÕµÍÁ½ÉÑí½±½ÈéÙÈ ´µÉä¤í½¹ÐµÝ¥¡ÐèÔÀÁô¹Ù¹Õµ±½í½¹ÐµÝ¥¡ÐèØÀÁô¹Ù¹Õµ±½¹¹í½±½ÈéÙÈ ´µÉäµ±¥¡Ð¤í½¹ÐµÍÑå±é¥Ñ±¥ô(¹Õ¥±¥¹µ¥ÑµíÁ¥¹èÄÉÁàÀí½ÉÈµ½ÑÑ½´èÅÁàÍ½±¥ÉÜí½¹ÐµÍ¥éè¸åÉ´í±¥¹µ¡¥¡ÐèÄ¸Øí¥ÍÁ±äé±àíÀèÄÁÁáô(¹Õ¥±¥¹µ¥Ñ´é±ÍÐµ¡¥±í½ÉÈµ½ÑÑ½´é¹½¹ô(¹Õ¥±¥¹µ¹Õµí­É½Õ¹éÙÈ ´µ¹Ùä¤í½±½ÈéÙÈ ´µÝ¡¥Ñ¤íÝ¥Ñ èÈÑÁàí¡¥¡ÐèÈÑÁàí½ÉÈµÉ¥ÕÌèÔÀí¥ÍÁ±äé±àí±¥¸µ¥ÑµÌé¹ÑÈí©ÕÍÑ¥äµ½¹Ñ¹Ðé¹ÑÈí½¹ÐµÍ¥éè¸ÝÉ´í½¹ÐµÝ¥¡ÐèÜÀÀí±àµÍ¡É¥¹¬èÀíµÉ¥¸µÑ½ÀèÉÁáô(¹ÍÍ½¸µÉ¥í¥ÍÁ±äéÉ¥íÉ¥µÑµÁ±Ñµ½±Õµ¹ÌéÉÁÐ¡ÕÑ¼µ¥±°±µ¥¹µà ÈÈÁÁà°ÅÈ¤¤íÀèÄÉÁàíµÉ¥¸µ½ÑÑ½´èÈÁÁáô(¹ÍÍ½¸µÉí­É½Õ¹éÙÈ ´µÝ¡¥Ñ¤í½ÉÈµÉ¥ÕÌèÄÁÁàíÁ¥¹èÈÁÁàí½àµÍ¡½ÜéÙÈ ´µÍ¡½Ü¤íÑáÐµ±¥¸é¹ÑÈíÕÉÍ½ÈéÁ½¥¹ÑÈíÑÉ¹Í¥Ñ¥½¸é±°¸ÉÌí½ÉÈèÉÁàÍ½±¥ÑÉ¹ÍÁÉ¹Ñô(¹ÍÍ½¸µÉé¡½ÙÉí½ÉÈµ½±½ÈéÙÈ ´µ±Õ¤íÑÉ¹Í½É´éÑÉ¹Í±Ñd ´ÉÁà¥ô(¹ÍÍ½¸µÉ¹¥½¹í½¹ÐµÍ¥éèÉÉ´íµÉ¥¸µ½ÑÑ½´èáÁáô(¹ÍÍ½¸µÉ Ñí½¹ÐµÍ¥éè¸äÉÉ´í½±½ÈéÙÈ ´µ¹Ùä¤íµÉ¥¸µ½ÑÑ½´èÑÁáô(¹ÍÍ½¸µÉÁí½¹ÐµÍ¥éè¸ÜáÉ´í½±½ÈéÙÈ ´µÉä¥ô(¹¡¥ÍÑ½ÉäµÑ±íÝ¥Ñ èÄÀÀí½ÉÈµ½±±ÁÍé½±±ÁÍí½¹ÐµÍ¥éè¸àÍÉµô(¹¡¥ÍÑ½ÉäµÑ±Ñ¡í­É½Õ¹éÙÈ ´µ¹Ùä¤í½±½ÈéÙÈ ´µÝ¡¥Ñ¤íÁ¥¹èáÁàÄÁÁàíÑáÐµ±¥¸é±Ðí½¹ÐµÍ¥éè¸ÜÉÉ´íÑáÐµÑÉ¹Í½É´éÕÁÁÉÍí±ÑÑÈµÍÁ¥¹è¸ÕÁáô(¹¡¥ÍÑ½ÉäµÑ±o')}}
+function showLoginErr(m){const el=document.getElementById('login-error');el.textContent=m;el.style.display='block'}
+function updateAuthUI(){const b=document.getElementById('auth-btn'),bg=document.getElementById('user-badge'),an=document.getElementById('admin-nav');if(currentUser){b.textContent='Logout';b.classList.add('gold');bg.textContent=currentUser.email||'';document.body.classList.add('logged-in');if(userRole==='admin'){document.body.classList.add('admin-on');an.style.display='block'}else{document.body.classList.remove('admin-on');an.style.display='none'}}else{b.textContent='Login';b.classList.remove('gold');bg.textContent='';document.body.classList.remove('logged-in','admin-on');an.style.display='none';const ap=document.querySelector('.page.active');if(ap&&(ap.id==='pg-enter'||ap.id==='pg-admin'))goTo('home')}}
+function calcLadder(sp,g){const L={};TEAMS.forEach(t=>L[t]={gp:0,w:0,d:0,l:0,gf:0,ga:0,gd:0,pts:0});ROUNDS.forEach(r=>{const sc=getScore(sp,g,r);if(!sc)return;FIX[r].forEach((m,i)=>{const s=sc[i];if(!s||s.home===''||s.away==='')return;const hs=+s.home,as=+s.away;if(isNaN(hs)||isNaN(as)||!L[m.h]||!L[m.a])return;L[m.h].gp++;L[m.a].gp++;L[m.h].gf+=hs;L[m.h].ga+=as;L[m.a].gf+=as;L[m.a].ga+=hs;L[m.h].gd=L[m.h].gf-L[m.h].ga;L[m.a].gd=L[m.a].gf-L[m.a].ga;if(hs>as){L[m.h].w++;L[m.h].pts+=3;L[m.a].l++}else if(as>hs){L[m.a].w++;L[m.a].pts+=3;L[m.h].l++}else{L[m.h].d++;L[m.a].d++;L[m.h].pts++;L[m.a].pts++}})});return Object.entries(L).sort((a,b)=>b[1].pts-a[1].pts||b[1].gd-a[1].gd||b[1].gf-a[1].gf).map(([n,s],i)=>({pos:i+1,name:n,...s}))}
+function renderAll(){renderTabs();renderLadder();renderFixtures();renderHome();buildScoreForm();renderVenues();renderGuidelines();if(userRole==='admin')renderCoachList()}
+function renderTabs(){['ladder-tabs','fixture-tabs'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=SPORTS.map(s=>`<span class="tab-pill${s===sport?' active':''}" onclick="setSport('${s}')">${s}</span>`).join('')})}
+function setSport(s){sport=s;renderTabs();renderLadder();renderFixtures()}
+function setGender(g){gender=g;document.querySelectorAll('.gender-btn').forEach(b=>b.classList.toggle('active',b.textContent.trim()===g));renderLadder();renderFixtures()}
+function renderLadder(){document.getElementById('ladder-title').textContent=sport+' - '+gender+' Ladder';const rows=calcLadder(sport,gender);document.getElementById('ladder-body').innerHTML=rows.map(r=>`<tr><td><span class="pos-badge ${r.pos===1?'pos-1':r.pos===2?'pos-2':'pos-other'}">${r.pos}</span>${r.name}</td><td>${r.gp}</td><td>${r.w}</td><td>${r.d}</td><td>${r.l}</td><td>${r.gf}</td><td>${r.ga}</td><td>${r.gd}</td><td class="pts-col">${r.pts}</td></tr>`).join('')}
+function renderFixtures(){const c=document.getElementById('fixture-rounds');c.innerHTML='';ROUNDS.forEach(r=>{const sc=getScore(sport,gender,r);c.innerHTML+=`<div class="round-block"><div class="round-head"><h3>${r}</h3><span class="date-tag">${ROUND_DATES[r]} 2026</span></div>${FIX[r].map((m,i)=>{const s=sc&&sc[i],hs=s?s.home:'-',as=s?s.away:'-';let hc='',ac='';if(s&&s.home!==''&&s.away!==''){const h=+s.home,a=+s.away;if(h>a){hc=' win';ac=' loss'}else if(a>h){ac=' win';hc=' loss'}}return`<div class="match-row"><div class="match-team home">${m.h}</div><div class="match-center"><span class="score-box${hc}">${hs}</span><span class="match-vs">vs</span><span class="score-box${ac}">${as}</span></div><div class="match-team away">${m.a}</div></div>`}).join('')}</div>`})}
+function buildScoreForm(){const sp=document.getElementById('sc-sport').value,g=document.getElementById('sc-gender').value,r=document.getElementById('sc-round').value;if(!r)return;document.getElementById('sc-title').textContent=sp+' - '+g+' - '+r;const ex=getScore(sp,g,r);document.getElementById('sc-matches').innerHTML=FIX[r].map((m,i)=>{const s=ex&&ex[i];return`<div class="score-row"><div class="team-label home">${m.h}</div><input type="number" class="score-input" id="sh${i}" min="0" max="200" value="${s?s.home:''}" inputmode="numeric"><span class="score-sep">vs</span><input type="number" class="score-input" id="sa${i}" min="0" max="200" value="${s?s.away:''}" inputmode="numeric"><div class="team-label away">${m.a}</div></div>`}).join('')}
+function saveScores(){if(!currentUser){toast('Please log in first','error');return}const sp=document.getElementById('sc-sport').value,g=document.getElementById('sc-gender').value,r=document.getElementById('sc-round').value;const scores=FIX[r].map((_,i)=>({home:document.getElementById('sh'+i).value,away:document.getElementById('sa'+i).value}));setScore(sp,g,r,scores);toast('Scores saved!','success')}
+function clearScoreInputs(){document.querySelectorAll('#sc-matches .score-input').forEach(i=>i.value='')}
+function renderHome(){let nr=null;for(const r of ROUNDS){const sc=getScore('AFL','Girls',r);if(!sc||sc.some(s=>!s||s.home===''||s.away==='')){nr=r;break}}if(!nr)nr=ROUNDS[ROUNDS.length-1];document.getElementById('home-next-badge').textContent=ROUND_DATES[nr]+' 2026';document.getElementById('home-next-round').innerHTML=`<p style="font-weight:700;color:var(--navy);margin-bottom:10px">${nr}</p>`+FIX[nr].map(m=>`<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:.88rem;border-bottom:1px solid #edf2f7"><span>${m.h}</span><span style="color:var(--gray)">vs</span><span>${m.a}</span></div>`).join('');let html='';SPORTS.forEach(sp=>{const gR=calcLadder(sp,'Girls'),bR=calcLadder(sp,'Boys/Mixed'),gL=gR[0],bL=bR[0];if(gL.gp>0||bL.gp>0){html+=`<div style="margin-bottom:10px"><span style="font-weight:700;color:var(--navy);font-size:.88rem">${sp}</span>`;if(gL.gp>0)html+=`<div style="font-size:.83rem;padding:2px 0">Girls: <strong>${gL.name}</strong> (${gL.pts} pts)</div>`;if(bL.gp>0)html+=`<div style="font-size:.83rem;padding:2px 0">Boys/Mixed: <strong>${bL.name}</strong> (${bL.pts} pts)</div>`;html+='</div>'}});document.getElementById('home-leaders').innerHTML=html||`<p style="font-size:.88rem;color:var(--gray)">No results entered yet. ${currentUser?'Head to <a href="#" onclick="goTo(\'enter\');return false">Enter Scores</a> to get started.':'Coaches can log in to start entering scores.'}</p>`}
+function renderVenues(){document.getElementById('venue-grid').innerHTML=Object.entries(VENUES).map(([s,sv])=>`<div class="venue-card"><h4>${s}</h4>${SPORTS.map(sp=>`<div class="venue-row"><span class="venue-sport">${sp}</span><span class="venue-loc${sv[sp]==='N/A'?' na':''}">${sv[sp]}</span></div>`).join('')}</div>`).join('')}
+function renderGuidelines(){document.getElementById('guidelines-body').innerHTML=GUIDELINES.map((g,i)=>`<div class="guideline-item"><span class="guideline-num">${i+1}</span><span>${g}</span></div>`).join('')}
+function showHistory(season){const records=(allHistory||[]).filter(r=>r.season===season).sort((a,b)=>b.year-a.year);document.getElementById('history-detail').style.display='block';document.getElementById('history-detail-title').textContent=season+' - Historical Results';const isA=userRole==='admin';document.getElementById('history-tbody').innerHTML=records.length===0?`<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--gray)">No records yet.${isA?' Use the form above to add results.':''}</td></tr>`:records.map(r=>`<tr><td><strong>${r.year}</strong></td><td>${r.event||''}</td><td class="medal-1">${r.winner||''}</td><td class="medal-2">${r.runner||'-'}</td><td style="font-size:.8rem;color:var(--gray)">${r.notes||''}</td>${isA?`<td><button class="btn btn-danger btn-sm" onclick="deleteHistory('${r.id||''}','${season}')">Del</button></td>`:''}</tr>`).join('');document.getElementById('history-detail').scrollIntoView({behavior:'smooth'})}
+function addHistoryRecord(){if(userRole!=='admin'){toast('Admin only','error');return}const rec={year:+document.getElementById('hist-year').value,season:document.getElementById('hist-season').value,event:document.getElementById('hist-event').value,winner:document.getElementById('hist-winner').value,runner:document.getElementById('hist-runner').value,notes:document.getElementById('hist-notes').value};if(!rec.event||!rec.winner){toast('Fill in event and winner','error');return}if(fbReady)db.ref('history').push(rec);else{rec.id='l_'+Date.now();allHistory.push(rec);saveLocal();showHistory(rec.season)}toast('Record added!','success');['hist-event','hist-winner','hist-runner','hist-notes'].forEach(id=>document.getElementById(id).value='')}
+function deleteHistory(id,season){if(!confirm('Delete this record?'))return;if(fbReady)db.ref('history/'+id).remove();else{allHistory=allHistory.filter(r=>r.id!==id);saveLocal();showHistory(season)}toast('Deleted','info')}
+function createCoach(){if(userRole!=='admin'){toast('Admin only','error');return}const e=document.getElementById('new-coach-email').value.trim(),p=document.getElementById('new-coach-pass').value,n=document.getElementById('new-coach-name').value.trim(),r=document.getElementById('new-coach-role').value;if(!e||!p||p.length<6){toast('Enter email and password (min 6 chars)','error');return}if(fbReady){const sa=firebase.initializeApp(FIREBASE_CONFIG,'Sec'+Date.now());sa.auth().createUserWithEmailAndPassword(e,p).then(c=>{db.ref('users/'+c.user.uid).set({email:e,name:n||e,role:r});sa.auth().signOut();sa.delete();toast('Coach account created!','success');['new-coach-email','new-coach-pass','new-coach-name'].forEach(id=>document.getElementById(id).value='');renderCoachList()}).catch(er=>{sa.delete();toast(er.message,'error')})}else toast('Coach created (demo mode)','info')}
+function renderCoachList(){if(!fbReady){document.getElementById('coach-list').innerHTML='<div style="padding:16px;font-size:.85rem;color:var(--gray)">Connect Firebase to manage coaches.</div>';return}db.ref('users').once('value').then(s=>{const u=s.val()||{};document.getElementById('coach-list').innerHTML=Object.entries(u).map(([uid,d])=>`<div class="coach-list-item"><div><strong>${d.name||d.email}</strong><div style="font-size:.75rem;color:var(--gray)">${d.email}</div></div><span class="role-badge role-${d.role}">${d.role}</span></div>`).join('')||'<div style="padding:16px;font-size:.85rem;color:var(--gray)">No users yet.</div>'})}
+function exportData(){const d={scores:allScores,history:allHistory,exported:new Date().toISOString()};const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='willy-district-sport-backup.json';a.click();URL.revokeObjectURL(u);toast('Exported!','success')}
+function resetSeason(){if(!confirm('Delete ALL scores for the current season?'))return;if(!confirm('Really? This cannot be undone.'))return;if(fbReady)db.ref('scores').remove();else{allScores={};saveLocal()}toast('All scores reset','info');renderAll()}
+function goTo(page){if((page==='enter'||page==='admin')&&!currentUser){handleAuth();return}document.querySelectorAll('.nav-inner a').forEach(a=>a.classList.toggle('active',a.dataset.page===page));document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('pg-'+page).classList.add('active');window.scrollTo(0,0);if(page==='enter')buildScoreForm();if(page==='ladders'||page==='fixtures'){renderTabs();renderLadder();renderFixtures()}if(page==='admin')renderCoachList()}
+document.querySelectorAll('.nav-inner a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();goTo(a.dataset.page)}));
+function toast(m,t='success'){const el=document.getElementById('toast');el.textContent=m;el.className='toast '+t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500)}
+(function(){const rs=document.getElementById('sc-round');ROUNDS.forEach(r=>{const o=document.createElement('option');o.value=r;o.textContent=r;rs.appendChild(o)});initFirebase()})();
+</script>
+</body>
+</html>
