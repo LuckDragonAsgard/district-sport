@@ -1,4 +1,84 @@
-atch-center{display:flex;align-items:center;gap:5px;min-width:90px;justify-content:center}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Williamstown District Primary School Sport - Live results, ladders, fixtures and history.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Willy District Sport">
+<meta name="theme-color" content="#1a365d">
+<title>Williamstown District Sport</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--navy:#1a365d;--blue:#2b6cb0;--light-blue:#ebf4ff;--gold:#d69e2e;--gold-light:#fefcbf;--green:#38a169;--green-light:#c6f6d5;--red:#e53e3e;--red-light:#fed7d7;--gray:#718096;--gray-light:#a0aec0;--white:#fff;--dark:#1a202c;--shadow:0 4px 6px rgba(0,0,0,.07);--shadow-lg:0 10px 25px rgba(0,0,0,.1);--radius:12px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f0f4f8;color:var(--dark);min-height:100vh}
+a{color:var(--blue);text-decoration:none}input,select,button,textarea{font-family:inherit}
+.site-header{background:linear-gradient(135deg,var(--navy) 0%,#2c5282 50%,var(--blue) 100%);color:var(--white);position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.2)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;max-width:1200px;margin:0 auto}
+.header-brand h1{font-size:1.3rem;font-weight:800;letter-spacing:-.5px;cursor:pointer}
+.header-brand h1 .accent{color:var(--gold)}
+.header-brand .subtitle{font-size:.68rem;opacity:.7;letter-spacing:.5px;text-transform:uppercase}
+.header-right{display:flex;align-items:center;gap:8px}
+.hdr-btn{padding:6px 14px;border-radius:20px;font-size:.75rem;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,.3);transition:all .2s;background:rgba(255,255,255,.1);color:var(--white)}
+.hdr-btn:hover{background:rgba(255,255,255,.2)}
+.hdr-btn.gold{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.user-badge{font-size:.7rem;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.8}
+nav{background:rgba(0,0,0,.2);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.nav-inner{display:flex;list-style:none;max-width:1200px;margin:0 auto;padding:0 8px}
+.nav-inner a{display:block;padding:11px 15px;font-size:.82rem;font-weight:600;color:rgba(255,255,255,.65);white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;cursor:pointer}
+.nav-inner a:hover,.nav-inner a.active{color:var(--white);border-bottom-color:var(--gold)}
+.nav-inner a.coach-only{display:none}
+.logged-in .nav-inner a.coach-only{display:block}
+.container{max-width:1200px;margin:0 auto;padding:16px}
+.page{display:none}.page.active{display:block}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px;transition:box-shadow .2s}
+.card:hover{box-shadow:var(--shadow-lg)}
+.card-header{padding:14px 20px;font-weight:700;font-size:.95rem;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.card-body{padding:16px 20px}
+.badge{font-size:.7rem;padding:3px 10px;border-radius:12px;font-weight:600}
+.badge-live{background:var(--green-light);color:var(--green)}.badge-upcoming{background:var(--light-blue);color:var(--blue)}
+.hero{background:linear-gradient(135deg,var(--navy),var(--blue));color:var(--white);border-radius:var(--radius);padding:32px 28px;margin-bottom:20px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;right:-40px;top:-40px;width:220px;height:220px;background:rgba(255,255,255,.03);border-radius:50%}
+.hero h2{font-size:1.5rem;font-weight:800;margin-bottom:6px}
+.hero p{opacity:.8;font-size:.88rem;line-height:1.5}
+.hero .season-badge{display:inline-block;background:var(--gold);color:var(--navy);padding:4px 14px;border-radius:20px;font-size:.75rem;font-weight:700;margin-bottom:12px}
+.quick-links{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.quick-link{padding:8px 16px;border-radius:8px;font-size:.8rem;font-weight:600;background:rgba(255,255,255,.12);color:var(--white);cursor:pointer;transition:all .2s;border:1px solid rgba(255,255,255,.15)}
+.quick-link:hover{background:rgba(255,255,255,.22)}
+.tab-row{display:flex;gap:8px;overflow-x:auto;padding:12px 0;scrollbar-width:none}
+.tab-row::-webkit-scrollbar{display:none}
+.tab-pill{padding:7px 16px;border-radius:20px;font-size:.8rem;font-weight:600;cursor:pointer;white-space:nowrap;border:2px solid #e2e8f0;background:var(--white);transition:all .2s;user-select:none}
+.tab-pill.active{background:var(--navy);color:var(--white);border-color:var(--navy)}
+.tab-pill:hover:not(.active){border-color:var(--blue);color:var(--blue)}
+.gender-toggle{display:inline-flex;border-radius:8px;overflow:hidden;border:2px solid var(--navy)}
+.gender-btn{padding:7px 18px;font-size:.8rem;font-weight:600;cursor:pointer;background:var(--white);color:var(--navy);transition:all .2s;border:none}
+.gender-btn.active{background:var(--navy);color:var(--white)}
+.ladder-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.ladder-table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:480px}
+.ladder-table th{background:var(--navy);color:var(--white);padding:10px 8px;text-align:center;font-size:.72rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.ladder-table th:first-child{text-align:left;padding-left:40px;border-radius:8px 0 0 0}
+.ladder-table th:last-child{border-radius:0 8px 0 0}
+.ladder-table td{padding:10px 8px;text-align:center;border-bottom:1px solid #edf2f7}
+.ladder-table td:first-child{text-align:left;padding-left:16px;font-weight:600}
+.ladder-table tr:nth-child(even){background:#f7fafc}
+.ladder-table tr:hover{background:var(--light-blue)}
+.pos-badge{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-size:.7rem;font-weight:700;margin-right:6px}
+.pos-1{background:var(--gold);color:var(--white)}.pos-2{background:#a0aec0;color:var(--white)}.pos-other{background:#edf2f7;color:var(--gray)}
+.pts-col{font-weight:800;color:var(--navy);font-size:.95rem}
+.round-block{margin-bottom:16px;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.round-head{background:linear-gradient(135deg,var(--navy),var(--blue));color:var(--white);padding:12px 20px;display:flex;justify-content:space-between;align-items:center}
+.round-head h3{font-size:.95rem;font-weight:700}.round-head .date-tag{font-size:.78rem;opacity:.85;background:rgba(255,255,255,.12);padding:3px 10px;border-radius:12px}
+.match-row{display:flex;align-items:center;padding:11px 16px;border-bottom:1px solid #edf2f7;background:var(--white)}
+.match-row:last-child{border-bottom:none}
+.match-team{flex:1;font-weight:500;font-size:.88rem}
+.match-team.home{text-align:right;padding-right:10px}
+.match-team.away{text-align:left;padding-left:10px}
+.match-center{display:flex;align-items:center;gap:5px;min-width:90px;justify-content:center}
 .score-box{background:var(--light-blue);padding:4px 10px;border-radius:6px;font-weight:700;font-size:.95rem;min-width:32px;text-align:center;color:var(--navy)}
 .score-box.win{background:var(--green-light);color:var(--green)}
 .score-box.loss{background:var(--red-light);color:var(--red)}
@@ -15,7 +95,7 @@ atch-center{display:flex;align-items:center;gap:5px;min-width:90px;justify-conte
 .btn-success{background:var(--green);color:var(--white)}
 .btn-danger{background:var(--red);color:var(--white);font-size:.8rem;padding:8px 16px}
 .btn-outline{background:transparent;border:2px solid #e2e8f0;color:var(--dark)}.btn-outline:hover{border-color:var(--blue);color:var(--blue)}
-.btn-sm;padding:6px 14px;font-size:.78rem}
+.btn-sm{padding:6px 14px;font-size:.78rem}
 .btn-row{display:flex;gap:8px;padding:16px 20px;justify-content:flex-end;flex-wrap:wrap}
 select.form-select{padding:8px 12px;border:2px solid #e2e8f0;border-radius:8px;font-size:.88rem;font-weight:500;background:var(--white)}
 .venue-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
@@ -28,7 +108,7 @@ select.form-select{padding:8px 12px;border:2px solid #e2e8f0;border-radius:8px;f
 .guideline-item:last-child{border-bottom:none}
 .guideline-num{background:var(--navy);color:var(--white);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0;margin-top:2px}
 .season-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:20px}
-.season-card{background:var(--white);border-radius:10px;padding:20px;box-shadow:var(-bshadow);text-align:center;cursor:pointer;transition:all .2s;border:2px solid transparent}
+.season-card{background:var(--white);border-radius:10px;padding:20px;box-shadow:var(--shadow);text-align:center;cursor:pointer;transition:all .2s;border:2px solid transparent}
 .season-card:hover{border-color:var(--blue);transform:translateY(-2px)}
 .season-card .icon{font-size:2rem;margin-bottom:8px}
 .season-card h4{font-size:.92rem;color:var(--navy);margin-bottom:4px}
@@ -41,7 +121,7 @@ select.form-select{padding:8px 12px;border:2px solid #e2e8f0;border-radius:8px;f
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
 .modal-overlay.show{display:flex}
 .modal{background:var(--white);border-radius:var(--radius);padding:28px;max-width:380px;width:100%;box-shadow:var(--shadow-lg)}
-.modal h2{font-size:1.15rem;color:var(--navy);margin-bottom:4p|}
+.modal h2{font-size:1.15rem;color:var(--navy);margin-bottom:4px}
 .modal p{font-size:.83rem;color:var(--gray);margin-bottom:16px}
 .modal .field{margin-bottom:12px}
 .modal .field label{display:block;font-size:.78rem;font-weight:600;color:var(--navy);margin-bottom:4px}
@@ -81,137 +161,48 @@ select.form-select{padding:8px 12px;border:2px solid #e2e8f0;border-radius:8px;f
 .gender-toggle{width:100%}.gender-btn{flex:1}
 .container{padding:12px}.admin-grid{grid-template-columns:1fr}.user-badge{display:none}
 }
-@media(max-width:480px){.header-inner{padding:12px}.admin-grid{grid-template-columns:1fr}.user-badge{display:none}
-}
-@media(max-width:480px){.header-inner{padding:12px}.nav-inner{font-size:.74rem}.hero{padding:18px 10px;border-radius:4px 0}.hero h1{font-size:.95rem;margin-bottom:8px}
-.hero p{font-size:.72rem}.card{padding:12px}
-.card-body{padding:12px}.ladder-tabletfont-size:.7rem}.ladder-table th,.ladder-table td{padding:6px 0}
-.matce-team{font-size:.72rem}.score-box{width:30px;height:30px;line-height:30px}
-.score-row .team-label,{ font-size:.72rem}
-.score-input{width:32px}
-.score-sep{font-size:.70rem}
-.gender-btn{padding:8px 10px}
-.venue-card^{grid-template-columns:1fr}
-.admin-field input,.admin-field select{padding:6px 8px;font-size:.76rem}
-.modal{padding:18px}
-.modal .field input{padding:8px;font-size:.84rem}
-.role-badge{font-size:.63rem;padding:1px 6px}
-.scoricsirc|{width:46px:userÝpauto|font-size:.84rem}
--gender-toggler{width:auto;flex:normal}
-.admin-section{margin-bottom:8px;padding:10px 12px}
-}
-
-c:root{--navy:#03285e;--blue:#044C87;--light-blue:#E3F4fc;--gold:#FFD700;--gold-light:#FFF4E5;--green:#26C280;-m-grey:#6B7280;--gray:#6B7280;--red:#F44336;-m-white:#FFFFFF;--shadow-sm:0 1px 2px rgba(0,0,0,0.08);--shadow-lg:0 10px 30px rgba(0,0,0,0.12);--radius: 1rem;}
-*b {
-  box-sizing: border-box;
-
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "variation", sans-serif;
-  background: var(--white);
-  color: var(--navy);
-  font-size: 1.02rem;
-  line-height: 1.5;
-  margin: 0;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  color: var(--navy);
-  margin: 0 0 0.8rem;
-  font-weight: 700;
-}
-
-h1 { font-size: 1.5rem; }
-h2 { font-size: 1.25rem; }
-h3 { font-size: 1.1rem; }
-h4 { font-size: 0.95rem; }
-
-a {
-  color: var(--blue);
-  text-decoration: none;
-}
-
-a :hover {
-  text-decoration: underline;
-}
-
-button {
-  font: inherit;
-  cursor: pointer;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.nav {
-  background: var(--navy);
-  position: sticky;
-  top: 0;
-  z-index: I00;
-  color: var(--white);
-}
-
-.nav-inner {
-  display:flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0;
-}
-
-.nav-inner a {
-  color: inherit;
-  padding: 11px 14px;
-  display: flex;
-  align-items: center;
-}
-.nav-inner a:hover {
-  background: rgba(255, 255, 255, 0.1);
-
-}
-.nav-inner a.active {
-  border-bottom: 3px solid var(--gold);
-}
-
-.nav-inner a{lfox:px
-}
-
-.nav_inner span:last-child {
-  margin-left: auto;
-}
-
-.nav-brand {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-weight: 700;
-  font-size: 1.1rem;
-}
-
-.header-{{
-  background: linear-gradient(105deg, var(--navy), var(--blue));
-  color: white;
-  padding: 30px 16px;
-  text-align: center;
-
-}
-
-.header h1 {
-  color: inherit;
-  font-size: 1.45rem;
-  font-weight: 700;
-  margin: 0;
-}
-
-.header p {
-  color: inherit;
-  font-size: 0.9rem;
-  margin: 4px 0;
-}
-size:.72rem;color:var(--gray);font-weight:600;text-transform:uppercase">Athletics</div><div style="font-weight:700;color:var(--navy);margin-top:2px;font-size:.9rem">TBC</div></div>
+@media(max-width:480px){.header-inner{padding:10px 14px}.nav-inner a{padding:8px 9px;font-size:.72rem}.pos-badge{width:18px;height:18px;font-size:.6rem;margin-right:3px}}
+@media print{.site-header{position:static}nav,.btn-row,.admin-section,.hdr-btn,.score-input,.quick-links,.gender-toggle,.tab-row,.modal-overlay{display:none!important}.page{display:block!important;page-break-before:always}.card,.round-block{box-shadow:none;border:1px solid #ccc;break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="modal-overlay" id="login-modal"><div class="modal">
+<h2>Coach Login</h2><p>Sign in to enter scores and manage results.</p>
+<div class="modal-error" id="login-error"></div>
+<div class="field"><label>Email</label><input type="email" id="login-email" placeholder="your@school.vic.edu.au"></div>
+<div class="field"><label>Password</label><input type="password" id="login-pass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+<div class="modal-btns" style="margin-top:16px"><button class="btn btn-outline" onclick="closeLogin()">Cancel</button><button class="btn btn-primary" onclick="doLogin()">Sign In</button></div>
+</div></div>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand" onclick="goTo('home')"><h1><span class="accent">Williamstown</span> District Sport</h1><div class="subtitle">Primary Schools Sporting Association</div></div>
+<div class="header-right"><span class="user-badge" id="user-badge"></span><button class="hdr-btn" id="auth-btn" onclick="handleAuth()">Login</button></div>
+</div>
+<nav><div class="nav-inner" id="main-nav">
+<a class="active" data-page="home">Home</a>
+<a data-page="ladders"><span class="live-dot"></span>Ladders</a>
+<a data-page="fixtures">Fixtures</a>
+<a data-page="enter" class="coach-only">Enter Scores</a>
+<a data-page="venues">Venues</a>
+<a data-page="guidelines">Guidelines</a>
+<a data-page="history">History</a>
+<a data-page="admin" class="coach-only" id="admin-nav" style="display:none">Admin</a>
+</div></nav>
+</header>
+<div class="container">
+<div class="page active" id="pg-home">
+<div class="hero"><span class="season-badge">2026 Season</span><h2>Winter Sport</h2>
+<p>Live results, ladders and fixtures for AFL, Soccer, Netball, Hockey and Softball across the Williamstown District.</p>
+<div class="quick-links"><span class="quick-link" onclick="goTo('ladders')"><span class="live-dot"></span>Live Ladders</span><span class="quick-link" onclick="goTo('fixtures')">Fixtures & Results</span><span class="quick-link" onclick="goTo('history')">History</span></div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px">
+<div class="card"><div class="card-header">Next Round <span class="badge badge-upcoming" id="home-next-badge"></span></div><div class="card-body" id="home-next-round"><div class="loading"><div class="spinner"></div>Loading...</div></div></div>
+<div class="card"><div class="card-header">Current Leaders <span class="badge badge-live"><span class="live-dot"></span>Live</span></div><div class="card-body" id="home-leaders"><div class="loading"><div class="spinner"></div>Loading...</div></div></div>
+</div>
+<div class="card"><div class="card-header">2026 Calendar</div><div class="card-body">
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
+<div style="padding:12px;background:var(--light-blue);border-radius:8px;text-align:center"><div style="font-size:.72rem;color:var(--gray);font-weight:600;text-transform:uppercase">Swimming</div><div style="font-weight:700;color:var(--navy);margin-top:2px;font-size:.9rem">TBC</div></div>
+<div style="padding:12px;background:var(--light-blue);border-radius:8px;text-align:center"><div style="font-size:.72rem;color:var(--gray);font-weight:600;text-transform:uppercase">Athletics</div><div style="font-weight:700;color:var(--navy);margin-top:2px;font-size:.9rem">TBC</div></div>
 <div style="padding:12px;background:var(--light-blue);border-radius:8px;text-align:center"><div style="font-size:.72rem;color:var(--gray);font-weight:600;text-transform:uppercase">Cross Country</div><div style="font-weight:700;color:var(--navy);margin-top:2px;font-size:.9rem">TBC</div></div>
 <div style="padding:12px;background:var(--green-light);border-radius:8px;text-align:center"><div style="font-size:.72rem;color:var(--green);font-weight:600;text-transform:uppercase">Winter Sport</div><div style="font-weight:700;color:var(--navy);margin-top:2px;font-size:.9rem">1 May - 12 Jun</div></div>
 <div style="padding:12px;background:var(--light-blue);border-radius:8px;text-align:center"><div style="font-size:.72rem;color:var(--gray);font-weight:600;text-transform:uppercase">Summer Sport</div><div style="font-weight:700;color:var(--navy);margin-top:2px;font-size:.9rem">TBC</div></div>
@@ -241,15 +232,41 @@ size:.72rem;color:var(--gray);font-weight:600;text-transform:uppercase">Athletic
 <div class="btn-row"><button class="btn btn-outline btn-sm" onclick="clearScoreInputs()">Clear</button><button class="btn btn-primary" onclick="saveScores()">Save Scores</button></div></div>
 </div>
 <div class="page" id="pg-venues"><div class="card"><div class="card-header">Venue Directory</div><div class="card-body"><div class="venue-grid" id="venue-grid"></div></div></div></div>
-<div class="page" id="pg-guidelines"><div class="card"><div class="card-header">Tinter Sport 2026 Guidelines</div><div class="card-body>
-<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px, 1fr));gap:16px">
-<dB  ID="coach-list" style="padding:16px;font-size:.85rem;color:var(--gray)">Connect Firebase to manage coaches.</div>
-</div></div></div>
-<dB cFCs class="page" id="pg-history">
-=1 ID ID ID I"><div class="spinner"></div>Loading...</div></div></div>
+<div class="page" id="pg-guidelines"><div class="card"><div class="card-header">Winter Sport 2026 Guidelines</div><div class="card-body" id="guidelines-body"></div></div></div>
+<div class="page" id="pg-history">
+<div class="admin-section"><h3>Add Historical Result</h3><p>Enter past results to build up the district's historical record.</p>
+<div class="admin-grid">
+<div class="admin-field"><label>Year</label><input type="number" id="hist-year" value="2025" min="2000" max="2026"></div>
+<div class="admin-field"><label>Season</label><select id="hist-season"><option>Winter Sport</option><option>Summer Sport</option><option>Swimming</option><option>Athletics</option><option>Cross Country</option></select></div>
+<div class="admin-field"><label>Sport / Event</label><input type="text" id="hist-event" placeholder="e.g. AFL - Girls"></div>
+<div class="admin-field"><label>Winner</label><input type="text" id="hist-winner" placeholder="School name"></div>
+<div class="admin-field"><label>Runner Up</label><input type="text" id="hist-runner" placeholder="School name"></div>
+<div class="admin-field"><label>Notes</label><input type="text" id="hist-notes" placeholder="e.g. Grand Final 45-32"></div>
+</div><div style="display:flex;gap:8px;margin-top:10px"><button class="btn btn-primary btn-sm" onclick="addHistoryRecord()">Add Record</button></div></div>
+<div class="season-grid">
+<div class="season-card" onclick="showHistory('Winter Sport')"><div class="icon">&#9917;</div><h4>Winter Sport</h4><p>AFL, Soccer, Netball, Hockey, Softball</p></div>
+<div class="season-card" onclick="showHistory('Summer Sport')"><div class="icon">&#127934;</div><h4>Summer Sport</h4><p>Basketball, Volleyball, Hot Shots, Tee Ball</p></div>
+<div class="season-card" onclick="showHistory('Swimming')"><div class="icon">&#127946;</div><h4>Swimming</h4><p>District Swimming Carnival</p></div>
+<div class="season-card" onclick="showHistory('Athletics')"><div class="icon">&#127939;</div><h4>Athletics</h4><p>District Athletics Carnival</p></div>
+<div class="season-card" onclick="showHistory('Cross Country')"><div class="icon">&#127797;</div><h4>Cross Country</h4><p>District Cross Country</p></div>
+</div>
+<div class="card" id="history-detail" style="display:none"><div class="card-header"><span id="history-detail-title"></span><button class="btn btn-outline btn-sm" onclick="document.getElementById('history-detail').style.display='none'">Close</button></div>
+<div class="card-body" style="padding:0;overflow-x:auto"><table class="history-table"><thead><tr><th>Year</th><th>Event</th><th>Winner</th><th>Runner Up</th><th>Notes</th><th class="admin-col"></th></tr></thead><tbody id="history-tbody"></tbody></table></div></div>
+</div>
+<div class="page" id="pg-admin">
+<div class="card"><div class="card-header">Manage Coaches</div><div class="card-body">
+<p style="font-size:.85rem;color:var(--gray);margin-bottom:16px">Create accounts for coaches. They log in to enter scores. Create one per school or per sport.</p>
+<div class="admin-grid" style="margin-bottom:16px">
+<div class="admin-field"><label>Email</label><input type="email" id="new-coach-email" placeholder="coach@school.vic.edu.au"></div>
+<div class="admin-field"><label>Password</label><input type="text" id="new-coach-pass" placeholder="Min 6 characters"></div>
+<div class="admin-field"><label>Display Name</label><input type="text" id="new-coach-name" placeholder="e.g. Seaholme - Mr Smith"></div>
+<div class="admin-field"><label>Role</label><select id="new-coach-role"><option value="coach">Coach</option><option value="admin">Admin</option></select></div>
+</div><button class="btn btn-primary btn-sm" onclick="createCoach()">Create Account</button>
+</div></div>
+<div class="card"><div class="card-header">Registered Users</div><div class="card-body" style="padding:0" id="coach-list"><div class="loading"><div class="spinner"></div>Loading...</div></div></div>
 <div class="card"><div class="card-header">Data Management</div><div class="card-body">
 <p style="font-size:.85rem;color:var(--gray);margin-bottom:12px">Export or reset season data.</p>
-<div style="display:flex;gpa:8px;flex-wrap:wrap">
+<div style="display:flex;gap:8px;flex-wrap:wrap">
 <button class="btn btn-outline btn-sm" onclick="exportData()">Export All Data (JSON)</button>
 <button class="btn btn-danger" onclick="resetSeason()">Reset All Scores</button>
 </div></div></div>
@@ -275,16 +292,6 @@ function setScore(sp,g,r,d){allScores[sp+'__'+g+'__'+r]=d;if(fbReady)db.ref('sco
 function handleAuth(){if(currentUser){if(fbReady)firebase.auth().signOut();else{currentUser=null;userRole=null;updateAuthUI();renderAll()}}else{document.getElementById('login-modal').classList.add('show');document.getElementById('login-email').focus()}}
 function closeLogin(){document.getElementById('login-modal').classList.remove('show');document.getElementById('login-error').style.display='none'}
 function doLogin(){const e=document.getElementById('login-email').value.trim(),p=document.getElementById('login-pass').value;if(!e||!p){showLoginErr('Enter email and password');return}if(fbReady){firebase.auth().signInWithEmailAndPassword(e,p).then(()=>closeLogin()).catch(er=>showLoginErr(er.code==='auth/invalid-credential'?'Invalid email or password':er.message))}else{currentUser={email:e,uid:'demo'};userRole='admin';closeLogin();updateAuthUI();renderAll();toast('Logged in (demo mode)','info')}}
-function showLoginErr(m){const el=document.getElementById('login-error');el.textContent=m;el.style.display='block'}
-function updateAuthUI(){const b=document.getElementById('auth-btn'),bg=document.getElementById('user-badge'),an=document.getElementById('admin-nav');if(currentUser){b.textContent='Logout';b.classList.add('gold');bg.textContent=currentUser.email||'';document.body.classList.add('logged-in');if(userRole==='admin'){document.body.classList.add('admin-on');an.style.display='block'}else{document.body.classList.remove('admin-on');an.style.display='none'}}else{b.textContent='Login';b.classList.remove('gold');bg.textContent='';document.body.classList.remove('logged-in','admin-on');an.style.display='none';const ap=document.querySelector('.page.active');if(ap&&(ap.id==='pg-enter'||ap.id==='pg-admin'))goTo('home')}}
-function calcLadder(sp,g){const L={};TEAMS.forEach(t=>L[t]={gp:0,w:0,d:0,l:0,gf:0,ga:0,gd:0,pts:0});ROUNDS.forEach(r=>{const sc=getScore(sp,g,r);if(!sc)return;FIX[r].forEach((m,i)=>{const s=sc[i];if(!s||s.home==="''||s.away==='')return;const hs=+s.home,as=+s.away;if(isNaN(hs)||isNaN(as)||!L[m.h]||!L[m.a])\neiÉÑÕÉ¸í1m´¹¡t¹À¬¬í1m´¹t¹À¬¬í1m´¹¡t¹¬õ¡Ìí1m´¹¡t¹¬õÌí1m´¹t¹¬õÌí1m´¹t¹¬õ¡Ìí1m´¹¡t¹õ1m´¹¡t¹µ1m´¹¡t¹í1m´¹t¹õ1m´¹t¹µ1m´¹t¹í¥¡¡ÌùÌ¥í1m´¹¡t¹Ü¬¬í1m´¹¡t¹ÁÑÌ¬ôÌí1m´¹t¹°¬­õ±Í¥¡Ìù¡Ì¥í1m´¹t¹Ü¬¬í1m´¹t¹ÁÑÌ¬ôÌí1m´¹¡t¹°¬­õ±Íí1m´¹¡t¹¬¬í1m´¹t¹¬¬í1m´¹¡t¹ÁÑÌ¬¬í1m´¹t¹ÁÑÌ¬­õô¥ô¤íÉÑÕÉ¸=©Ð¹¹ÑÉ¥Ì¡0¤¹Í½ÉÐ ¡±¤ôùlÅt¹ÁÑÌµlÅt¹ÁÑÍññlÅt¹µlÅt¹ññlÅt¹µlÅt¹¤¹µÀ ¡m¸±Ít±¤¤ôø¡íÁ½Ìé¤¬Ä±¹µé¸°¸¸¹Íô¤¥ô)Õ¹Ñ¥½¸É¹É±° ¥íÉ¹ÉQÌ ¤íÉ¹É1È ¤íÉ¹É¥áÑÕÉÌ ¤íÉ¹É!½µ ¤íÕ¥±M½É½É´ ¤íÉ¹ÉY¹ÕÌ ¤íÉ¹ÉÕ¥±¥¹Ì ¤í¥¡ÕÍÉI½±ôôôµ¥¸¥É¹É
-½¡1¥ÍÐ ¥ô)Õ¹Ñ¥½¸É¹ÉQÌ ¥íl±ÈµÑÌ°¥áÑÕÉµÑÌt¹½É ¡¥ôùí½¹ÍÐ°õ½Õµ¹Ð¹Ñ±µ¹Ñ	å%¡¥¤í¥¡°¥°¹¥¹¹É!Q50õMA=IQL¹µÀ¡ÌôùñÍÁ¸±ÍÌôÑµÁ¥±°íÌôôõÍÁ½ÉÐüÑ¥Ùèô½¹±¥¬ôÍÑMÁ½ÉÐ íÍô¤øíÍôð½ÍÁ¸ù¤¹©½¥¸ ¥ô¥ô)Õ¹Ñ¥½¸ÍÑMÁ½ÉÐ¡Ì¥íÍÁ½ÉÐõÌíÉ¹ÉQÌ ¤íÉ¹É1È ¤íÉ¹É¥áÑÕÉÌ ¥ô)Õ¹Ñ¥½¸ÍÑ¹È¡¥í¹Èõí½Õµ¹Ð¹ÅÕÉåM±Ñ½É±° ¹¹ÈµÑ¸¤¹½É ¡ôù¹±ÍÍ1¥ÍÐ¹Ñ½± Ñ¥Ù±¹ÑáÑ
-½¹Ñ¹Ð¹ÑÉ¥´ ¤ôôõ¤¤íÉ¹É1È ¤íÉ¹É¥áÑÕÉÌ ¥ô)Õ¹Ñ¥½¸É¹É1È ¥í½Õµ¹Ð¹Ñ±µ¹Ñ	å% ±ÈµÑ¥Ñ±¤¹ÑáÑ
-½¹Ñ¹ÐõÍÁ½ÉÐ¬´­¹È¬1Èí½¹ÍÐÉ½ÝÌõ±1È¡ÍÁ½ÉÐ±¹È¤í½Õµ¹Ð¹Ñ±µ¹Ñ	å% ±Èµ½ä¤¹¥¹¹É!Q50õÉ½ÝÌ¹µÀ¡ÈôùñÑÈøñÑøñÍÁ¸±ÍÌôÁ½ÌµíÈ¹Á½ÌôôôÄüÁ½Ì´ÄéÈ¹Á½ÌôôôÈüÁ½Ì´ÈèÁ½Ìµ½Ñ¡ÈôøíÈ¹Á½Íôð½ÍÁ¸øíÈ¹¹µôð½ÑøñÑøíÈ¹Áôð½ÑøñÑøíÈ¹Ýôð½ÑøñÑøíÈ¹ôð½ÑøñÑøíÈ¹±ôð½ÑøñÑøíÈ¹ôð½ÑøñÑøíÈ¹ôð½ÑøñÑøíÈ¹ôð½ÑøñÑ±ÍÌôÁÑÌµ½°øíÈ¹ÁÑÍôð½Ñøð½ÑÈù¤¹©½¥¸ ¥ô)Õ¹Ñ¥½¸É¹É¥áÑÕÉÌ ¥í½¹ÍÐõ½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¥áÑÕÉµÉ½Õ¹Ì¤í¹¥¹¹É!Q50ôíI=U9L¹½É ¡Èôùí½¹ÍÐÍõÑM½É¡ÍÁ½ÉÐ±¹È±È¤í¹¥¹¹É!Q50¬õñ¥Ø±ÍÌôÉ½Õ¹µ±½¬øñ¥Ø±ÍÌôÉ½Õ¹µ¡øñ ÌøíÉôð½ ÌøñÍÁ¸±ÍÌôÑµÑøíI=U9}QMmÉuôÈÀÈØð½ÍÁ¸øð½¥Øøí%amÉt¹µÀ ¡´±¤¤ôùí½¹ÍÐÌõÍÍm¥t±¡ÌõÌýÌ¹¡½µè´±ÌõÌýÌ¹Ýäè´í±Ð¡ô±ôí¥¡ÌÌ¹¡½µôôÌ¹Ýäôô¥í½¹ÍÐ ô­Ì¹¡½µ±ô­Ì¹Ýäí¥¡ ù¥í¡ôÝ¥¸íô±½ÍÌõ±Í¥¡ù ¥íôÝ¥¸í¡ô±½ÍÌõõÉÑÕÉ¹ñ¥Ø±ÍÌôµÑ µÉ½Üøñ¥Ø±ÍÌôµÑ µÑ´¡½µøí´¹¡ôð½¥Øøñ¥Ø±ÍÌôµÑ µ¹ÑÈøñÍÁ¸±ÍÌôÍ½Éµ½àí¡ôøí¡Íôð½ÍÁ¸øñÍÁ¸±ÍÌôµÑ µÙÌùÙÌð½ÍÁ¸øñÍÁ¸±ÍÌôÍ½Éµ½àíôøíÍôð½ÍÁ¸øð½¥Øøñ¥Ø±ÍÌôµÑ µÑ´Ýäøí´¹ôð½¥Øøð½¥Øùô¤¹©½¥¸ ¥ôð½¥Øùô¥ô)Õ¹Ñ¥½¸Õ¥±M½É½É´ ¥í½¹ÍÐÍÀõ½Õµ¹Ð¹Ñ±µ¹Ñ	å% ÍµÍÁ½ÉÐ¤¹Ù±Õ±õ½Õµ¹Ð¹Ñ±µ¹Ñ	å% Íµ¹È¤¹Ù±Õ±Èõ½Õµ¹Ð¹Ñ±µ¹Ñ	å% ÍµÉ½Õ¹¤¹Ù±Õí¥ È¥ÉÑÕÉ¸í½Õµ¹Ð¹Ñ±µ¹Ñ	å% ÍµÑ¥Ñ±¤¹ÑáÑ
-½¹Ñ¹ÐõÍÀ¬´­¬´­Èí½¹ÍÐàõÑM½É¡ÍÀ±±È¤í½Õµ¹Ð¹Ñ±µ¹Ñ	å% ÍµµÑ¡Ì¤¹¥¹¹É!Q50õ%amÉt¹µÀ ¡´±¤¤ôùí½¹ÍÐÌõàám¥tíÉÑÕÉ¹ñ¥Ø±ÍÌôÍ½ÉµÉ½Üøñ¥Ø±ÍÌôÑ´µ±°¡½µøí´¹¡ôð½¥Øøñ¥¹ÁÕÐÑåÁô¹ÕµÈ±ÍÌôÍ½Éµ¥¹ÁÕÐ¥ôÍ í¥ôµ¥¸ôÀµàôÈÀÀÙ±ÕôíÌýÌ¹¡½µèô¥¹ÁÕÑµ½ô¹ÕµÉ¥øñÍÁ¸±ÍÌôÍ½ÉµÍÀùÙÌð½ÍÁ¸øñ¥¹ÁÕÐÑåÁô¹ÕµÈ±ÍÌôÍ½Éµ¥¹ÁÕÐ¥ôÍí¥ôµ¥¸ôÀµàôÈÀÀÙ±ÕôíÌýÌ¹Ýäèô¥¹ÁÕÑµ½ô¹ÕµÉ¥øñ¥Ø±ÍÌôÑ´µ±°Ýäøí´¹ôð½¥Øøð½¥Øùô¤¹©½¥¸ ¥ô)Õ¹Ñ¥½¸ÍÙM½ÉÌ ¥í¥ ÕÉÉ¹ÑUÍÈ¥íÑ½ÍÐ A±Í±½¥¸¥ÉÍÐ°ÉÉ½È¤íÉÑÕÉ¹õ½¹ÍÐÍÀõ½Õµ¹Ð¹Ñ±µ¹Ñ	å% ÍµÍÁ½ÉÐ¤¹Ù±Õ±õ½Õµ¹Ð¹Ñ±µ¹Ñ	å% Íµ¹È¤¹Ù±Õ±Èõ½Õµ¹Ð¹Ñ±µ¹Ñ	å% ÍµÉ½Õ¹¤¹Ù±Õí½¹ÍÐÍ½ÉÌõ%amÉt¹µÀ ¡|±¤¤ôø¡í¡µé½Õµ¹Ð¹Ñ±µ¹Ñ	å% Í ¨q¸é¤¹Ù±Õ±Ýäé½Õµ¹Ð¹Ñ±µ¹Ñ	å% Í­¤¤¹Ù±Õô¤¤íÍÑM½É¡ÍÀ±±È±Í½ÉÌ¤íÑ½ÍÐ M½ÉÌÍÙ°ÍÕÍÌ¥ô)Õ¹Ñ¥½¸±ÉM½É%¹ÁÕÑÌ ¥í½Õµ¹Ð¹ÅÕÉåM±Ñ½É±° ÍµµÑ¡Ì¹Í½Éµ¥¹ÁÕÐ¤¹½É ¡¤ôù¤¹Ù±Õô¥ô)Õ¹Ñ¥½¸É¹É!½µ ¥í±Ð¹Èõ¹Õ±°í½È¡½¹ÍÐÈ½I=U9L¥í½¹ÍÐÍõÑM½É 0°¥É±Ì±È¤í¥ ÍññÍ¹Í½µ¡ÌôøÍññÌ¹¡½µôôôññÌ¹Ýäôôô¤¥í¹ÈõÈíÉ­õõ¥ ¹È¥¹ÈõI=U9MmI=U9L¹±¹Ñ ´Åtí½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡½µµ¹áÐµ¤¹ÑáÑ
-½¹Ñ¹ÐõI=U9}QMm¹Ét¬ÈÀÈØí½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡½µµ¹áÐµÉ½Õ¹¤¹¥¹¹É!Q50õñÀÍÑå±ô½¹ÐµÝ¥¡ÐèÜÀÀí½±½ÈéÙÈ ´µ¹Ùä¤íµÉ¥¸µ½ÑÑ½´èÄÁÁàøí¹Éôð½Àù­%am¹Ét¹µÀ¡´ôùñ¥ØÍÑå±ô¥ÍÁ±äé±àí©ÕÍÑ¥äµ½¹Ñ¹ÐéÍÁµÑÝ¸íÁ¥¹èÙÁàÀí½¹ÐµÍ¥éè¸àáÉ´í½ÉÈµ½ÑÑ½´èÅÁàÍ½±¥ÉÜøñÍÁ¸øí´¹¡ôð½ÍÁ¸øñÍÁ¸ÍÑå±ô½±½ÈéÙÈ ´µÉä¤ùÙÌð½ÍÁ¸øñÍÁ¸øí´¹ôð½ÍÁ¸øð½¥Øù¤¹©½¥¸ ¤í±Ð¡Ñµ°ôíMA=IQL¹½É ¡ÍÀôùí½¹ÍÐHõ±1È¡ÍÀ°¥É±Ì¤±Hõ±1È¡ÍÀ°	½åÌ½5¥á¤±0õIlÁt±0õIlÁtí¥¡0¹ÀøÁññ0¹ÀøÀ¥í¡Ñµ°¬õñ¥ØÍÑå±ôµÉ¥¸µ½ÑÑ½´èÄÁÁàøñÍÁ¸ÍÑå±ô½¹ÐµÝ¥¡ÐèÜÀÀí½±½ÈéÙÈ ´µ¹Ùä¤í½¹ÐµÍ¥éè¸àáÉ´øíÍÁôð½ÍÁ¸ùí¥¡0¹ÀøÀ¥¡Ñµ°¬õñ¥ØÍÑå±ô½¹ÐµÍ¥éè¸àÍÉ´íÁ¥¹èÉáàÀù¥É±ÌèñÍÑÉ½¹øí0¹¹µôð½ÍÑÉ½¹ø í0¹ÁÑÍôÁÑÌ¤ð½¥Øùí¥¡0¹ÀøÀ¥¡Ñµ°¬õñ¥ØÍÑå±ô½¹ÐµÍ¥éè¸àÍÉ´íÁ¥¹èÉáàÀù	½åÌ½5¥áèñÍÑÉ½¹øí0¹¹µôð½ÍÑÉ½¹ø í0¹ÁÑÍôÁÑÌ¤ð½¥Øùí¡Ñµ°¬ôð½¥Øøõô¤í½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡½µµ±ÉÌ¤¹¥¹¹É!Q50õ¡Ñµ±ñññÀÍÑå±ô½¹ÐµÍ¥éè¸àáÉ´í½±½ÈéÙÈ ´µÉä¤ù9¼ÉÍÕ±ÑÌ¹ÑÉåÐ¸íÕÉÉ¹ÑUÍÈü!Ñ¼ñ¡Éô½¹±¥¬ô½Q¼ ¹ÑÈ¤íÉÑÕÉ¸±Íù¹ÑÈM½ÉÌð½øÑ¼ÐÍÑÉÑ¸è
-½¡Ì¸±½¥¸Ñ¼ÍÑÉÐ¹ÑÉ¥¹Í½ÉÌ¸ôð½Àùô)Õ¹Ñ¥½¸É¹ÉY¹ÕÌ ¥í½Õµ¹Ð¹Ñ±µ¹Ñ	å% Ù¹ÕµÉ¥¤¹¥¹¹É!Q50õ=©Ð¹¹ÑÉ¥Ì¡Y9UL¤¹µÀ ¡mÌ±ÍÙt¤ôùñ¥Ø±ÍÌôÙ¹ÕµÉøñ ÐøíÍôð½ ÐøíMA=IQL¹µÀ¡ÍÀôùñ¥Ø±ÍÌôÙ¹ÕµÉ½ÜøñÍÁ¸±ÍÌôÙ¹ÕµÍÁ½ÉÐøíÍÁôð½ÍÁ¸øñÍÁ¸±ÍÌôÙ¹Õµ±½íÍÙmÍÁtôôô8½ü¹èôøíÍÙmÍÁuôð½ÍÁ¸øð½¥Øù¤¹©½¥¸ ¥ôð½¥Øù¤¹©½¥¸ ¥ô)Õ¹Ñ¥½¸É¹ÉÕ¥±¥¹Ì ¥í½Õµ¹Ð¹Ñ±µ¹Ñ	å% Õ¥±¥¹Ìµ½ä¤¹¥¹¹É!Q50õU%1%9L¹µÀ ¡±¤¤ôùñ¥Ø±ÍÌôÕ¥±¥¹µ¥Ñ´øñÍÁ¸±ÍÌôÕ¥±¥¹µ¹Õ´øí¤¬Åôð½ÍÁ¸øñÍÁ¸øíôð½ÍÁ¸øð½¥Øù¤¹©½¥¸ ¥ô)Õ¹Ñ¥½¸Í¡½Ý!¥ÍÑ½Éä¡ÍÍ½¸¥í½¹ÍÐÉ½ÉÌô¡±±!¥ÍÑ½Éåññmt¤¹¥±ÑÈ¡ÈôùÈ¹ÍÍ½¸ôôõÍÍ½¸¤¹Í½ÉÐ ¡±¤ôù¹åÈµ¹åÈ¤í½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡¥ÍÑ½ÉäµÑ¥°¤¹ÍÑå±¹¥ÍÁ±äô±½¬í½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡¥ÍÑ½ÉäµÑ¥°µÑ¥Ñ±¤¹ÑáÑ
-½¹Ñ¹ÐõÍÍ½¸¬´!¥ÍÑ½É¥°IÍÕ±ÑÌí½¹ÍÐ¥ÍõÕÍÉI½±ôôôµ¥¸í½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡¥ÍÑ½ÉäµÑ½ä¤¹¥¹¹É!Q50õÉ½ÉÌ¹±¹Ñ ôôôÀýñÑÈøñÑ½±ÍÁ¸ôØÍÑå±ôÑáÐµ±¥¸é¹ÑÈíÁ¥¹èÈÑÁàí½±½ÈéÙÈ ´µÉä¤ù9¼É½ÉÌåÐ¸í¥ÍüUÍÑ¡½É´½ÙÑ¼ÉÍÕ±ÑÌ¸èôð½Ñøð½ÑÈùéÉ½ÉÌ¹µÀ¡ÈôùñÑÈøñÑøñÍÑÉ½¹øíÈ¹åÉôð½ÍÑÉ½¹øð½ÑøñÑøíÈ¹Ù¹Ññðôð½ÑøñÑ±ÍÌôµ°´ÄøíÈ¹Ý¥¹¹Éñðôð½ÑøñÑ±ÍÌôµ°´ÈøíÈ¹ÉÕ¹¹Éñð´ôð½ÑøñÑÍÑå±ô½¹ÐµÍ¥éè¸áÉ´í½±½ÈéÙÈ ´µÉä¤øíÈ¹¹½ÑÍñðôð½Ñøí¥ÍýñÑøñÕÑÑ½¸±ÍÌôÑ¸Ñ¸µ¹ÈÑ¸µÍ´½¹±¥¬ô±Ñ!¥ÍÑ½Éä íÈ¹¥ñðô°íÍÍ½¹ô¤ù°ð½ÕÑÑ½¸øð½Ñùèôð½ÑÈù¤¹©½¥¸ ¥ô)Õ¹Ñ¥½¸!¥ÍÑ½ÉåI½É ¥í¥¡ÕÍÉI½±ôôµ¥¸¥íÑ½ÍÐ µ¥¸½¹±ä°ÉÉ½È¤íÉÑÕÉ¹õ½¹ÍÐÉõíåÈè­½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡¥ÍÐµåÈ¤¹Ù±Õ±Í½¸é½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡¥ÍÐµÍÍ½¸¤¹Ù±Õ±Ù¹Ðé½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡¥ÍÐµÙ¹Ð¤¹Ù±Õ±Ý¥¹¹Èé½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡¥ÍÐµÝ¥¹¹È¤¹Ù±Õ±ÉÕ¹¹Èé½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡¥ÍÐµÉÕ¹¹È¤¹Ù±Õ±¹½ÑÌé½Õµ¹Ð¹Ñ±µ¹Ñ	å% ¡¥ÍÐµ¹½ÑÌ¤¹Ù±Õôí¥ É¹Ù¹ÑñðÉÑ µ¹ÑÉí¥ÍÁ±äé±àí±¥¸µ¥ÑµÌé¹ÑÈíÀèÕÁàíµ¥¸µÝ¥Ñ èäÁÁàí©ÕÍÑ¥äµ½¹Ñ¹Ðé¹ÑÉô(¹Í½Éµ½áí­É½Õ¹éÙÈ ´µ±¥¡Ðµ±Õ¤íÁ¥¹èÑÁàÄÁÁàí½ÉÈµÉ¥ÕÌèÙÁàí½¹ÐµÝ¥¡ÐèÜÀÀí½¹ÐµÍ¥éè¸äÕÉ´íµ¥¸µÝ¥Ñ èÌÉÁàíÑáÐµ±¥¸é¹ÑÈí½±½ÈéÙÈ ´µ¹Ùä¥ô(¹Í½Éµ½à¹Ý¥¹í­É½Õ¹éÙÈ ´µÉ¸µ±¥¡Ð¤í½±½ÈéÙÈ ´µÉ¸¥ô(¹Í½Éµ½à¹±½ÍÍí­É½Õ¹éÙÈ ´µÉµ±¥¡Ð¤í½±½ÈéÙÈ ´µÉ¥ô(¹µÑ µÙÍí½±½ÈéÙÈ ´µÉäµ±¥¡Ð¤í½¹ÐµÍ¥éè¸ÝÉ´í½¹ÐµÝ¥¡ÐèÜÀÁô(¹Í½ÉµÉ½Ýí¥ÍÁ±äé±àí±¥¸µ¥ÑµÌé¹ÑÈíÀèáÁàíÁ¥¹èÄÉÁàÄÙÁàí½ÉÈµ½ÑÑ½´èÅÁàÍ½±¥ÉÜí±àµÝÉÀéÝÉÁô(¹Í½ÉµÉ½Ü¹Ñ´µ±±í±àèÄíµ¥¸µÝ¥Ñ èÜÁÁàí½¹ÐµÝ¥¡ÐèØÀÀí½¹ÐµÍ¥éè¸àáÉµô(¹Í½ÉµÉ½Ü¹Ñ´µ±°¹¡½µíÑáÐµ±¥¸éÉ¥¡Ñô¹Í½ÉµÉ½Ü¹Ñ´µ±°¹ÝåíÑáÐµ±¥¸é±Ñô(¹Í½Éµ¥¹ÁÕÑíÝ¥Ñ èÔÙÁàíÁ¥¹èáÁàÑÁàíÑáÐµ±¥¸é¹ÑÈí½ÉÈèÉÁàÍ½±¥ÉáÀí½ÉÈµÉ¥ÕÌèáÁàí½¹ÐµÍ¥éèÄ¸ÅÉ´í½¹ÐµÝ¥¡ÐèÜÀÀí½±½ÈéÙÈ ´µ¹Ùä¤íÑÉ¹Í¥Ñ¥½¸é±°¸ÉÌìµµ½èµÁÁÉ¹éÑáÑ¥±ô(¹Í½Éµ¥¹ÁÕÐèèµÝ­¥Ðµ¥¹¹ÈµÍÁ¥¸µÕÑÑ½¸°¹Í½Éµ¥¹ÁÕÐèèµÝ­¥Ðµ½ÕÑÈµÍÁ¥¸µÕÑÑ½¹ìµÝ­¥ÐµÁÁÉ¹é¹½¹ô(¹Í½Éµ¥¹ÁÕÐé½ÕÍí½ÕÑ±¥¹é¹½¹í½ÉÈµ½±½ÈéÙÈ ´µ±Õ¤í½àµÍ¡½ÜèÀÀÀÍÁàÉ ÐÌ°ÄÀà°ÄÜØ°¸ÄÔ¥ô(¹Í½ÉµÍÁí½±½ÈéÙÈ ´µÉäµ±¥¡Ð¤í½¹ÐµÝ¥¡ÐèÜÀÀí½¹ÐµÍ¥éè¸áÉµô(¹Ñ¹íÁ¥¹èÄÁÁàÈÑÁàí½ÉÈé¹½¹í½ÉÈµÉ¥ÕÌèáÁàí½¹ÐµÝ¥¡ÐèØÀÀí½¹ÐµÍ¥éè¸àáÉ´íÕÉÍ½ÈéÁ½¥¹ÑÈíÑÉ¹Í¥Ñ¥½¸é±°¸ÄÕÍô(¹Ñ¸µÁÉ¥µÉåí­É½Õ¹éÙÈ ´µ¹Ùä¤í½±½ÈéÙÈ ´µÝ¡¥Ñ¥ô¹Ñ¸µÁÉ¥µÉäé¡½ÙÉí­É½Õ¹éÙÈ ´µ±Õ¥ô(¹Ñ¸µÍÕÍÍí­É½Õ¹éÙÈ ´µÉ¸¤í½±½ÈéÙÈ ´µÝ¡¥Ñ¥ô(¹Ñ¸µ¹Éí­É½Õ¹éÙÈ ´µÉ¤í½±½ÈéÙÈ ´µÝ¡¥Ñ¤í½¹ÐµÍ¥éè¸áÉ´íÁ¥¹èáÁàÄÙÁáô(¹Ñ¸µ½ÕÑ±¥¹í­É½Õ¹éÑÉ¹ÍÁÉ¹Ðí½ÉÈèÉÁàÍ½±¥ÉáÀí½±½ÈéÙÈ ´µÉ¬¥ô¹Ñ¸µ½ÕÑ±¥¹é¡½ÙÉí½ÉÈµ½±½ÈéÙÈ ´µ±Õ¤í½±½ÈéÙÈ ´µ±Õ¥ô(¹Ñ¸µÍµíÁ¥¹èÙÁàÄÑÁàí½¹ÐµÍ¥éè¸ÜáÉµô(¹Ñ¸µÉ½Ýí¥ÍÁ±äé±àíÀèáÁàíÁ¥¹èÄÙÁàÈÁÁàí©ÕÍÑ¥äµ½¹Ñ¹Ðé±àµ¹í±àµÝÉÀéÝÉÁô)Í±Ð¹½É´µÍ±ÑíÁ¥¹èáÁàÄÉÁàí½ÉÈèÉÁàÍ½±¥ÉáÀí½ÉÈµÉ¥ÕÌèáÁàí½¹ÐµÍ¥éè¸àáÉ´í½¹ÐµÝ¥¡ÐèÔÀÀí­É½Õ¹éÙÈ ´µÝ¡¥Ñ¥ô(¹Ù¹ÕµÉ¥í¥ÍÁ±äéÉ¥íÉ¥µÑµÁ±Ñµ½±Õµ¹ÌéÉÁÐ¡ÕÑ¼µ¥±°±µ¥¹µà ÈàÁÁà°ÅÈ¤¤íÀèÄÉÁáô(¹Ù¹ÕµÉí­É½Õ¹éÙÈ ´µÝ¡¥Ñ¤í½ÉÈµÉ¥ÕÌèÄÁÁàíÁ¥¹èÄÙÁàí½àµÍ¡½ÜéÙÈ ´µÍ¡½Ü¤í½ÉÈµ±ÐèÑÁàÍ½±¥ÙÈ ´µ¹Ùä¥ô(¹Ù¹ÕµÉ Ñí½¹ÐµÍ¥éè¸äÉÉ´í½±½ÈéÙÈ ´µ¹Ùä¤íµÉ¥¸µ½ÑÑ½´èÄÁÁáô(¹Ù¹ÕµÉ½Ýí¥ÍÁ±äé±àí©ÕÍÑ¥äµ½¹Ñ¹ÐéÍÁµÑÝ¸íÁ¥¹èÑÁàÀí½¹ÐµÍ¥éè¸àÍÉ´í½ÉÈµ½ÑÑ½´èÅÁàÍ½±¥ÁÑáô(¹Ù¹ÕµÉ½Üé±ÍÐµ¡¥±í½ÉÈµ½ÑÑ½´é¹½¹ô(¹Ù¹ÕµÍÁ½ÉÑí½±½ÈéÙÈ ´µÉä¤í½¹ÐµÝ¥¡ÐèÔÀÁô¹Ù¹Õµ±½í½¹ÐµÝ¥¡ÐèØÀÁô¹Ù¹Õµ±½¹¹í½±½ÈéÙÈ ´µÉäµ±¥¡Ð¤í½¹ÐµÍÑå±é¥Ñ±¥ô(¹Õ¥±¥¹µ¥ÑµíÁ¥¹èÄÉÁàÀí½ÉÈµ½ÑÑ½´èÅÁàÍ½±¥ÉÜí½¹ÐµÍ¥éè¸åÉ´í±¥¹µ¡¥¡ÐèÄ¸Øí¥ÍÁ±äé±àíÀèÄÁÁáô(¹Õ¥±¥¹µ¥Ñ´é±ÍÐµ¡¥±í½ÉÈµ½ÑÑ½´é¹½¹ô(¹Õ¥±¥¹µ¹Õµí­É½Õ¹éÙÈ ´µ¹Ùä¤í½±½ÈéÙÈ ´µÝ¡¥Ñ¤íÝ¥Ñ èÈÑÁàí¡¥¡ÐèÈÑÁàí½ÉÈµÉ¥ÕÌèÔÀí¥ÍÁ±äé±àí±¥¸µ¥ÑµÌé¹ÑÈí©ÕÍÑ¥äµ½¹Ñ¹Ðé¹ÑÈí½¹ÐµÍ¥éè¸ÝÉ´í½¹ÐµÝ¥¡ÐèÜÀÀí±àµÍ¡É¥¹¬èÀíµÉ¥¸µÑ½ÀèÉÁáô(¹ÍÍ½¸µÉ¥í¥ÍÁ±äéÉ¥íÉ¥µÑµÁ±Ñµ½±Õµ¹ÌéÉÁÐ¡ÕÑ¼µ¥±°±µ¥¹µà ÈÈÁÁà°ÅÈ¤¤íÀèÄÉÁàíµÉ¥¸µ½ÑÑ½´èÈÁÁáô(¹ÍÍ½¸µÉí­É½Õ¹éÙÈ ´µÝ¡¥Ñ¤í½ÉÈµÉ¥ÕÌèÄÁÁàíÁ¥¹èÈÁÁàí½àµÍ¡½ÜéÙÈ ´µÍ¡½Ü¤íÑáÐµ±¥¸é¹ÑÈíÕÉÍ½ÈéÁ½¥¹ÑÈíÑÉ¹Í¥Ñ¥½¸é±°¸ÉÌí½ÉÈèÉÁàÍ½±¥ÑÉ¹ÍÁÉ¹Ñô(¹ÍÍ½¸µÉé¡½ÙÉí½ÉÈµ½±½ÈéÙÈ ´µ±Õ¤íÑÉ¹Í½É´éÑÉ¹Í±Ñd ´ÉÁà¥ô(¹ÍÍ½¸µÉ¹¥½¹í½¹ÐµÍ¥éèÉÉ´íµÉ¥¸µ½ÑÑ½´èáÁáô(¹ÍÍ½¸µÉ Ñí½¹ÐµÍ¥éè¸äÉÉ´í½±½ÈéÙÈ ´µ¹Ùä¤íµÉ¥¸µ½ÑÑ½´èÑÁáô(¹ÍÍ½¸µÉÁí½¹ÐµÍ¥éè¸ÜáÉ´í½±½ÈéÙÈ ´µÉä¥ô(¹¡¥ÍÑ½ÉäµÑ±íÝ¥Ñ èÄÀÀí½ÉÈµ½±±ÁÍé½±±ÁÍí½¹ÐµÍ¥éè¸àÍÉµô(¹¡¥ÍÑ½ÉäµÑ±Ñ¡í­É½Õ¹éÙÈ ´µ¹Ùä¤í½±½ÈéÙÈ ´µÝ¡¥Ñ¤íÁ¥¹èáÁàÄÁÁàíÑáÐµ±¥¸é±Ðí½¹ÐµÍ¥éè¸ÜÉÉ´íÑáÐµÑÉ¹Í½É´éÕÁÁÉÍí±ÑÑÈµÍÁ¥¹è¸ÕÁáô(¹¡¥ÍÑ½ÉäµÑ±o')}}
 function showLoginErr(m){const el=document.getElementById('login-error');el.textContent=m;el.style.display='block'}
 function updateAuthUI(){const b=document.getElementById('auth-btn'),bg=document.getElementById('user-badge'),an=document.getElementById('admin-nav');if(currentUser){b.textContent='Logout';b.classList.add('gold');bg.textContent=currentUser.email||'';document.body.classList.add('logged-in');if(userRole==='admin'){document.body.classList.add('admin-on');an.style.display='block'}else{document.body.classList.remove('admin-on');an.style.display='none'}}else{b.textContent='Login';b.classList.remove('gold');bg.textContent='';document.body.classList.remove('logged-in','admin-on');an.style.display='none';const ap=document.querySelector('.page.active');if(ap&&(ap.id==='pg-enter'||ap.id==='pg-admin'))goTo('home')}}
 function calcLadder(sp,g){const L={};TEAMS.forEach(t=>L[t]={gp:0,w:0,d:0,l:0,gf:0,ga:0,gd:0,pts:0});ROUNDS.forEach(r=>{const sc=getScore(sp,g,r);if(!sc)return;FIX[r].forEach((m,i)=>{const s=sc[i];if(!s||s.home===''||s.away==='')return;const hs=+s.home,as=+s.away;if(isNaN(hs)||isNaN(as)||!L[m.h]||!L[m.a])return;L[m.h].gp++;L[m.a].gp++;L[m.h].gf+=hs;L[m.h].ga+=as;L[m.a].gf+=as;L[m.a].ga+=hs;L[m.h].gd=L[m.h].gf-L[m.h].ga;L[m.a].gd=L[m.a].gf-L[m.a].ga;if(hs>as){L[m.h].w++;L[m.h].pts+=3;L[m.a].l++}else if(as>hs){L[m.a].w++;L[m.a].pts+=3;L[m.h].l++}else{L[m.h].d++;L[m.a].d++;L[m.h].pts++;L[m.a].pts++}})});return Object.entries(L).sort((a,b)=>b[1].pts-a[1].pts||b[1].gd-a[1].gd||b[1].gf-a[1].gf).map(([n,s],i)=>({pos:i+1,name:n,...s}))}
