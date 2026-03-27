@@ -1,4 +1,3 @@
-<!-- © 2026 10 16 Pty Ltd. All rights reserved. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -543,6 +542,5 @@ document.querySelectorAll('.nav-inner a').forEach(a=>a.addEventListener('click',
 function toast(m,t='success'){const el=document.getElementById('toast');el.textContent=m;el.className='toast '+t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500)}
 (function(){const rs=document.getElementById('sc-round');const ROUNDS=Object.keys(WINTER_FIX);ROUNDS.forEach(r=>{const o=document.createElement('option');o.value=r;o.textContent=r;rs.appendChild(o)});currentSeason=detectSeason();document.querySelectorAll('.season-btn').forEach(b=>{b.classList.toggle('active',b.dataset.season===currentSeason)});sport=currentSeason==="summer"?SUMMER_SPORTS[0]:WINTER_SPORTS[0];initFirebase()})();
 </script>
-<footer style="text-align:center;padding:20px;color:#888;font-size:12px;">© 2026 10 16 Pty Ltd. All rights reserved.</footer>
 </body>
 </html>
