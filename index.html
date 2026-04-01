@@ -493,7 +493,17 @@ const BUILTIN_HISTORY=[
 {year:2021,season:"Winter Sport",event:"Netball - Mixed",winner:"Williamstown North Gold",runner:"St Mary's"},
 {year:2021,season:"Winter Sport",event:"Netball - Girls",winner:"Williamstown Gold",runner:"Newport Gardens"},
 {year:2021,season:"Winter Sport",event:"Softball - Mixed",winner:"Newport Gardens",runner:"Williamstown Gold"},
-{year:2021,season:"Winter Sport",event:"Softball - Girls",winner:"Newport Gardens",runner:"Altona"}
+{year:2021,season:"Winter Sport",event:"Softball - Girls",winner:"Newport Gardens",runner:"Altona"},
+{year:2026,season:"Summer Sport",event:"Basketball - Boys/Mixed",winner:"Newport Gardens",runner:"Altona",notes:"Grand Final: 14-8"},
+{year:2026,season:"Summer Sport",event:"Basketball - Girls",winner:"Newport Gardens",runner:"Williamstown North",notes:"Grand Final: 18-8"},
+{year:2026,season:"Summer Sport",event:"Cricket - Girls",winner:"Williamstown Primary",runner:"Newport Gardens",notes:"Grand Final: 133-128"},
+{year:2026,season:"Summer Sport",event:"Cricket - Boys/Mixed",winner:"Sacred Heart",runner:"Williamstown Primary",notes:"Grand Final: 114-80"},
+{year:2026,season:"Summer Sport",event:"Tee Ball - Boys/Mixed",winner:"Newport Gardens",runner:"-",notes:"Grand Final"},
+{year:2026,season:"Summer Sport",event:"Tee Ball - Girls",winner:"Newport Gardens",runner:"-",notes:"Grand Final"},
+{year:2026,season:"Summer Sport",event:"Hot Shots - Girls",winner:"Seaholme",runner:"Altona",notes:"Grand Final: 7-5 sets"},
+{year:2026,season:"Summer Sport",event:"Hot Shots - Boys/Mixed",winner:"Altona",runner:"Williamstown Primary",notes:"Grand Final: 8-4 sets"},
+{year:2026,season:"Summer Sport",event:"Volleyball - Boys/Mixed",winner:"St Mary's",runner:"Seaholme",notes:"Grand Final: 2-0"},
+{year:2026,season:"Summer Sport",event:"Volleyball - Girls",winner:"Altona",runner:"-",notes:"Grand Final"}
 ];
 let currentSeason="summer",sport="Basketball",gender="Girls",currentUser=null,userRole=null,db=null,allScores={},allHistory=[],fbReady=false;
 function detectSeason(){const now=new Date();const isAfterMay1=now.getFullYear()>2026||(now.getFullYear()===2026&&now.getMonth()>=4);return isAfterMay1?"winter":"summer"}
