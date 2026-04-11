@@ -785,6 +785,7 @@ function swapLanes(from){
   } else {
     doSwap();
   }
+}
 
 // Decode fbEncode() keys back to human-readable "age|gender|event" (for CSV export).
 function fbDecode(k){
@@ -1084,19 +1085,4 @@ if(q.has('test')){
   assert(trimmedMean([null,NaN,-5,0]) === null, 'all invalid -> null');
   const race = {
     age:'9 Yrs', gender:'Boys', event:'100m', tier:'division',
-  assert(typeof recallRace === 'function', 'recallRace exists');
-  assert(typeof exportResultsCSV === 'function', 'exportResultsCSV exists');
-  assert(typeof swapLanes === 'function', 'swapLanes exists');
-  assert(typeof clearLaneSplits === 'function', 'clearLaneSplits exists');
-  assert(fbDecode('9 Yrs|Boys|100m') === '9 Yrs|Boys|100m', 'fbDecode passthrough of plain key');
-  assert(fbDecode('12__SL__13 Yrs|Boys|100m') === '12/13 Yrs|Boys|100m', 'fbDecode round-trips __SL__');
-  const roundtrip = fbDecode(fbKey('12/13 Yrs','Boys','100m'));
-  assert(roundtrip === '12/13 Yrs|Boys|100m', 'fbKey -> fbDecode round-trip');
-  assert(csvEscape('plain') === 'plain', 'csvEscape plain');
-  assert(csvEscape('has,comma') === '"has,comma"', 'csvEscape quotes commas');
-  assert(csvEscape('has "quote"') === '"has ""quote"""', 'csvEscape escapes quotes');
-  document.body.insertAdjacentHTML('afterbegin','<div style="padding:10px;background:#064E3B;color:#fff;font-weight:800">Self-tests done - check console.</div>');
-}
-</script>
-</body>
-</html>
+    lanes: {1:{name
