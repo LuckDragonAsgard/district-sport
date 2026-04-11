@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#0D9488">
 <title>WPS Timing</title>
-<!-- WPS Athletics Timing v3 - 2026-04-11
+<!-- WPS Athletics Timing v3.2 - 2026-04-11
      Phone-first crowd-sourced lane timing. Any number of timers per lane,
      trimmed-mean averaging, Firebase server-clock sync, tier-aware timer-floor
      (1/2/3 timers per lane by level), auto-flow into results/ (same tree the
@@ -13,7 +13,11 @@
      ?carnival=xxx URL param with isolated DB namespace per carnival. QR code
      + short join code on the Join Page so parents scan-in instead of typing.
      Publish preview + split validation + audit log for zero-margin-of-error
-     reliability. -->
+     reliability.
+     v3.2 adds: dedicated Starter role (?starter=1) - stripped-down GO/recall
+     view for the start-line person so admin stays at finish line; false-start
+     recall button + red flash broadcast to all timers; per-lane swap + clear
+     splits for mid-carnival fixes; results CSV export from admin. -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
@@ -96,6 +100,18 @@ label{display:block;font-size:11px;text-transform:uppercase;color:var(--sub);mar
 .countdown{position:fixed;inset:0;background:rgba(15,23,42,.95);display:flex;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .countdown-num{font-size:260px;font-weight:900;color:#F59E0B;text-shadow:0 0 40px rgba(245,158,11,.6)}
 .countdown-num.go{color:#10B981;text-shadow:0 0 60px rgba(16,185,129,.7);font-size:220px;letter-spacing:4px}
+
+.recall-flash{position:fixed;inset:0;background:#991B1B;display:flex;align-items:center;justify-content:center;z-index:210;animation:recallPulse .4s ease-in-out 4}
+.recall-flash .msg{font-size:58px;font-weight:900;color:#FEF2F2;letter-spacing:4px;text-align:center;text-shadow:0 0 30px rgba(254,242,242,.6)}
+.recall-flash .sub{font-size:15px;color:#FECACA;margin-top:14px;text-align:center;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+@keyframes recallPulse{0%,100%{background:#991B1B}50%{background:#450A0A}}
+
+.starter-go-btn{width:100%;min-height:220px;font-size:54px;font-weight:900;background:var(--good);color:#fff;border-radius:20px;border:4px solid #047857;letter-spacing:4px;text-transform:uppercase;box-shadow:0 10px 0 #065F46,0 16px 28px rgba(16,163,74,.38);margin-bottom:14px}
+.starter-go-btn:active{box-shadow:0 3px 0 #065F46,0 6px 12px rgba(16,163,74,.38);transform:translateY(7px)}
+.starter-go-btn:disabled{background:#334155;color:#64748B;border-color:#1E293B;box-shadow:none;transform:none;letter-spacing:2px;font-size:28px}
+.starter-recall-btn{width:100%;min-height:120px;font-size:30px;font-weight:900;background:var(--bad);color:#fff;border-radius:16px;border:3px solid #991B1B;letter-spacing:2px;text-transform:uppercase;box-shadow:0 6px 0 #991B1B,0 10px 18px rgba(220,38,38,.32)}
+.starter-recall-btn:active{box-shadow:0 2px 0 #991B1B,0 4px 10px rgba(220,38,38,.32);transform:translateY(4px)}
+.starter-recall-btn:disabled{background:#334155;color:#64748B;border-color:#1E293B;box-shadow:none;transform:none;font-size:18px}
 
 .conf{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
 .conf-high{background:#064E3B;color:#6EE7B7;border:1px solid #10B981}
@@ -262,6 +278,7 @@ const laneParam = q.get('lane');
 const isAdmin   = q.has('admin');
 const isObserver= q.has('observer');
 const isJoin    = q.has('join');
+const isStarter = q.has('starter');
 
 let lastRaceSnapshot = null;
 try { lastRaceSnapshot = JSON.parse(localStorage.getItem('wps_timing_last_race') || 'null'); } catch(e){}
@@ -325,6 +342,20 @@ function playCountdown(onDone){
   setTimeout(step, 900);
 }
 
+// RECALL / FALSE START flash (v3.2). Rips any in-progress countdown overlay, shows a
+// red screen + buzzes HARD so every timer knows to stop. Auto-removes after 1.6s.
+function flashRecall(){
+  // Kill any live countdown so it doesn't fire GO after a recall.
+  document.querySelectorAll('.countdown').forEach(el => el.remove());
+  countdownActive = false;
+  const overlay = document.createElement('div');
+  overlay.className = 'recall-flash';
+  overlay.innerHTML = '<div><div class="msg">RECALL</div><div class="sub">False start &middot; stop timing</div></div>';
+  document.body.appendChild(overlay);
+  buzz([200,80,200,80,200]);
+  setTimeout(() => { overlay.remove(); if(!countdownActive) render(); }, 1600);
+}
+
 // BOOT
 const appEl = document.getElementById('app');
 
@@ -334,6 +365,7 @@ fbDb.ref('.info/connected').on('value', s => {
 });
 
 let firstSnap = true;
+let lastRecalledAt = 0;
 TIMING_REF.on('value', s => {
   const prev = currentRace;
   const wasFirst = firstSnap;
@@ -346,8 +378,18 @@ TIMING_REF.on('value', s => {
   // or within the last 400ms (countdown latency budget).
   const startsSoon = nowStart && nowStart > (serverNow() - 400);
   const freshGo = !wasFirst && !prevStart && nowStart && currentRace.state === 'running' && startsSoon;
-  if(freshGo && (laneParam || isObserver) && !isAdmin){
+  // Starter phone hears countdown so they can fire the whistle on "GO" (v3.2)
+  if(freshGo && (laneParam || isObserver || isStarter) && !isAdmin){
     playCountdown(() => { render(); });
+  }
+  // RECALL / FALSE START (v3.2) - admin or starter can abort a running race.
+  // When recalledAt increments, every phone flashes red for 1.5s + buzzes so timers stop.
+  const nowRecalled = (currentRace && currentRace.recalledAt) || 0;
+  if(!wasFirst && nowRecalled && nowRecalled !== lastRecalledAt){
+    lastRecalledAt = nowRecalled;
+    flashRecall();
+  } else if(nowRecalled){
+    lastRecalledAt = nowRecalled;
   }
   if(currentRace && (currentRace.state === 'armed' || currentRace.state === 'running')){
     acquireWakeLock();
@@ -369,6 +411,7 @@ function render(){
   if(rafHandle){ cancelAnimationFrame(rafHandle); rafHandle=null; }
   if(isJoin) return renderJoin();
   if(isAdmin) return renderAdmin();
+  if(isStarter) return renderStarter();
   if(isObserver) return renderObserver();
   if(laneParam) return renderTimer(parseInt(laneParam,10));
   return renderLanePicker();
@@ -396,7 +439,7 @@ function renderLanePicker(){
     '<div class="card"><label>Current race</label><div style="font-size:16px;font-weight:800;margin-bottom:4px">' + eventLine + '</div>' + tierLine + '</div>' +
     '<div class="card"><label>Your timer name</label><input type="text" placeholder="e.g. Paddy G" value="' + escHtml(timerName) + '" oninput="saveTimerName(this.value)"></div>' +
     '<div class="lanes-grid">' + lanesHtml + '</div>' +
-    '<div class="footer-note"><a class="link" href="?admin=1' + carnivalAmp() + '">Race Control (admin)</a> - <a class="link" href="?observer=1' + carnivalAmp() + '">Observer</a> - <a class="link" href="?join=1' + carnivalAmp() + '">Join Page</a></div>';
+    '<div class="footer-note"><a class="link" href="?admin=1' + carnivalAmp() + '">Race Control (admin)</a> - <a class="link" href="?starter=1' + carnivalAmp() + '">Starter</a> - <a class="link" href="?observer=1' + carnivalAmp() + '">Observer</a> - <a class="link" href="?join=1' + carnivalAmp() + '">Join Page</a></div>';
 }
 function saveTimerName(v){
   timerName = v.trim();
@@ -538,6 +581,10 @@ function renderAdmin(){
             ? '<div class="mean-big">' + fmtSec(meanMs) + 's</div><div class="muted" style="font-size:10px">' + (Object.keys(splits).length>=3?'trimmed mean':'mean') + '</div>'
             : '<div class="mean-na">-</div>') + '</div>' +
         '</div>' +
+        '<div class="row" style="margin-top:8px;gap:6px">' +
+          '<button class="ghost" style="padding:6px 10px;font-size:11px" onclick="swapLanes(' + i + ')">Swap with...</button>' +
+          '<button class="ghost" style="padding:6px 10px;font-size:11px" onclick="clearLaneSplits(' + i + ')" ' + (splitCount?'':'disabled') + '>Clear splits</button>' +
+        '</div>' +
       '</div>';
   }
 
@@ -557,10 +604,13 @@ function renderAdmin(){
   for(const e of ALL_EVENTS) evOpts  += '<option' + (e===event?' selected':'') + '>' + e + '</option>';
   for(const t of TIMING_TIER_ORDER) tierOpts += '<option value="' + t + '"' + (t===tier?' selected':'') + '>' + TIMING_TIERS[t].label + ' - min ' + TIMING_TIERS[t].min + '/lane</option>';
 
+  const canRecall = race.state === 'running' || race.state === 'armed';
+
   appEl.innerHTML =
     '<div class="nav-tabs">' +
       '<a href="./timing.html' + carnivalQs() + '">Timer</a>' +
       '<a href="?admin=1' + carnivalAmp() + '" class="active">Race Control</a>' +
+      '<a href="?starter=1' + carnivalAmp() + '">Starter</a>' +
       '<a href="?observer=1' + carnivalAmp() + '">Observer</a>' +
       '<a href="?join=1' + carnivalAmp() + '">Join Page</a>' +
       '<a href="./index.html" target="_blank">Scoring app</a>' +
@@ -575,14 +625,17 @@ function renderAdmin(){
       '<div class="row" style="margin-top:10px;gap:6px;flex-wrap:wrap">' +
         '<button class="primary" onclick="armRace()">Arm new race</button>' +
         '<button class="good" onclick="goRace()" ' + (race.state!=='armed'?'disabled':'') + '>GO</button>' +
+        '<button class="bad" onclick="recallRace()" ' + (canRecall?'':'disabled') + '>Recall</button>' +
         '<button class="ghost" onclick="clearSplits()">Reset splits</button>' +
         '<button class="ghost" onclick="abandonRace()">Abandon</button>' +
         reuseBtn +
       '</div>' +
       '<div class="muted" style="margin-top:8px">State: <strong style="color:' + (race.state==='running'?'#10B981':race.state==='armed'?'#F59E0B':'#94A3B8') + '">' + escHtml(race.state||'idle') + '</strong>' + (race.startedAtServer?' - running clock: <span id="admClock" style="font-family:ui-monospace,monospace">0.00</span>':'') + '</div>' +
+      '<div class="muted" style="margin-top:6px;font-size:11px">Starter device? Open <a class="link" href="?starter=1' + carnivalAmp() + '">the Starter page</a> on the start-line phone so you can stay at the finish line.</div>' +
     '</div>' +
     '<div class="card"><label>Lanes and live splits</label>' + lanesHtml + (underCount && race.state && race.state!=='idle' ? '<div style="background:#FEF3C7;color:#92400E;padding:10px;border-radius:8px;font-size:12px;font-weight:700;margin-top:4px">' + underCount + ' lane(s) under the ' + floor.tierLabel + ' floor (need ' + floor.need + ' timer(s) each). Publish will flag it.</div>':'') + (allLanesDone ? '<div style="background:#064E3B;color:#A7F3D0;padding:12px;border-radius:8px;font-size:13px;font-weight:800;margin-top:4px;text-align:center">ALL LANES DONE - ready to publish</div>':'') + '</div>' +
     '<div class="card"><label>Publish to scoring app</label><div class="muted" style="margin-bottom:10px">Writes to <code>' + escHtml(CARN_ROOT) + '/results/</code>. You will see a preview + confirmation before anything is written.</div><button class="primary" style="width:100%" ' + (canPublish?'':'disabled') + ' onclick="previewPublish()">Preview and Publish ' + escHtml(age + ' ' + gender + ' ' + event) + '</button></div>' +
+    '<div class="card"><label>Export results</label><div class="muted" style="margin-bottom:10px">Downloads every published result in this carnival as a CSV (and copies to clipboard). Use for backup, sharing with other schools, or pasting into an SSV spreadsheet.</div><button class="ghost" style="width:100%" onclick="exportResultsCSV()">Export all results (CSV)</button></div>' +
     '<div class="footer-note">Server offset ' + (serverOffset>=0?'+':'') + serverOffset + 'ms - Timer id ' + escHtml(timerId) + ' - Carnival ' + escHtml(CARNIVAL_ID) + '</div>';
 
   if(race.state === 'running' && race.startedAtServer){
@@ -634,6 +687,169 @@ function reuseLastRace(){
   const snap = lastRaceSnapshot;
   const raceId = 'r_' + Date.now().toString(36);
   TIMING_REF.set({raceId, age:snap.age, gender:snap.gender, event:snap.event, tier:snap.tier||'willy', state:'armed', startedAtServer:null, publishedAt:null, lanes:snap.lanes||{}, splits:null});
+}
+
+// RECALL / FALSE START (v3.2). Wipes startedAtServer + splits and bumps recalledAt so every
+// phone gets the red flash. State goes back to 'armed' so the starter can re-GO immediately
+// (or admin can re-assign lanes first). Callable from both admin and starter views.
+function recallRace(){
+  if(!currentRace){ return; }
+  const st = currentRace.state;
+  if(st !== 'running' && st !== 'armed'){ alert('Nothing to recall - no race is running.'); return; }
+  if(!confirm('RECALL race? Every phone will flash red and all splits on this race will be wiped. Lane assignments are kept.')) return;
+  TIMING_REF.update({
+    state: 'armed',
+    startedAtServer: null,
+    splits: null,
+    recalledAt: firebase.database.ServerValue.TIMESTAMP
+  }).catch(err => alert('Recall failed: ' + (err && err.message || err)));
+}
+
+// Per-lane split clear (v3.2). For "re-run just one lane" mid-carnival without wiping the whole race.
+function clearLaneSplits(lane){
+  if(!confirm('Clear splits for lane ' + lane + '? The runner can then be re-timed without touching other lanes.')) return;
+  TIMING_REF.child('splits').child(String(lane)).remove();
+}
+
+// Swap lanes (v3.2). Moves the runner AND their splits between two lane positions.
+// Semantics: the split follows the runner (you ran 12.3s on lane 2, you now own that 12.3 on lane 5).
+function swapLanes(from){
+  const toStr = prompt('Swap lane ' + from + ' with which lane number?');
+  if(toStr == null) return;
+  const to = parseInt(toStr, 10);
+  if(!(to >= 1 && to <= LANE_COUNT) || to === from){ alert('Invalid target lane.'); return; }
+  if(!currentRace){ return; }
+  const race = currentRace;
+  const fromLane = (race.lanes && race.lanes[from]) || null;
+  const toLane   = (race.lanes && race.lanes[to])   || null;
+  const fromSplits = (race.splits && race.splits[from]) || null;
+  const toSplits   = (race.splits && race.splits[to])   || null;
+  const hasAnySplits = fromSplits || toSplits;
+  if(hasAnySplits && !confirm('These lanes have splits. Splits will move WITH the runner (splits follow the name, not the lane position). Continue?')) return;
+  const updates = {};
+  updates['lanes/' + from]  = toLane;
+  updates['lanes/' + to]    = fromLane;
+  updates['splits/' + from] = toSplits;
+  updates['splits/' + to]   = fromSplits;
+  TIMING_REF.update(updates).catch(err => alert('Swap failed: ' + (err && err.message || err)));
+}
+
+// Decode fbEncode() keys back to human-readable "age|gender|event" (for CSV export).
+function fbDecode(k){
+  return String(k||'')
+    .replace(/__DOT__/g,'.')
+    .replace(/__SL__/g,'/')
+    .replace(/__LB__/g,'[')
+    .replace(/__RB__/g,']')
+    .replace(/__HASH__/g,'#')
+    .replace(/__DOLLAR__/g,'$');
+}
+function csvEscape(v){
+  const s = v == null ? '' : String(v);
+  return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+}
+
+// CSV export of every published result in this carnival (v3.2). Downloads a file AND copies
+// to clipboard - whichever fits the admin's flow (paste into sheet vs file save).
+function exportResultsCSV(){
+  RESULTS_REF.once('value').then(snap => {
+    const data = snap.val() || {};
+    const rows = [['event_key','age','gender','event','place','name','house','time_s']];
+    const keys = Object.keys(data).sort();
+    for(const fk of keys){
+      const parts = fbDecode(fk).split('|');
+      const age = parts[0] || '', gender = parts[1] || '', ev = parts[2] || '';
+      const ranked = Array.isArray(data[fk]) ? data[fk] : Object.values(data[fk] || {});
+      for(const r of ranked){
+        if(!r) continue;
+        const t = (typeof r.result === 'number') ? r.result.toFixed(2) : '';
+        rows.push([fk, age, gender, ev, r.place || '', r.name || '', r.house || '', t]);
+      }
+    }
+    const csv = rows.map(row => row.map(csvEscape).join(',')).join('\n');
+    // Copy to clipboard (best-effort, may need user gesture on some browsers)
+    let copied = false;
+    try {
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(csv);
+        copied = true;
+      }
+    } catch(e){}
+    // Download file
+    try {
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = CARNIVAL_ID + '-results-' + new Date().toISOString().slice(0,10) + '.csv';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+    } catch(e){
+      alert('Download failed but CSV is ' + (copied?'in your clipboard':'below:\n\n' + csv.slice(0,2000)));
+      return;
+    }
+    alert('Exported ' + (rows.length - 1) + ' result row(s) across ' + keys.length + ' event(s).' + (copied ? '\nCSV also copied to clipboard.' : ''));
+  }).catch(err => alert('Export failed: ' + (err && err.message || err)));
+}
+
+// VIEW: STARTER (v3.2)
+// Stripped-down view for the start-line person. Admin sits at finish line managing lanes,
+// starter owns ARM->GO->RECALL. Plays the 3-2-1 countdown locally so the starter hears it
+// through the phone speaker and fires the whistle on "GO".
+function renderStarter(){
+  const race = currentRace || {};
+  const state = race.state || 'idle';
+  const hasRace = !!race.event;
+  const running = state === 'running' && race.startedAtServer;
+  const canGo = state === 'armed';
+  const canRecall = state === 'running' || state === 'armed';
+
+  const stateColor = state==='running' ? '#10B981' : state==='armed' ? '#F59E0B' : '#94A3B8';
+  const stateCls = 'state-' + (state==='running'?'running':state==='armed'?'armed':(state==='stopped'||state==='published')?'stopped':'waiting');
+
+  const eventBlock = hasRace
+    ? '<div class="card" style="text-align:center;padding:24px"><label style="text-align:center">Next race</label><div style="font-size:32px;font-weight:900;line-height:1.2;margin-bottom:6px">' + escHtml(race.age || '') + '</div><div style="font-size:26px;font-weight:800;color:#5EEAD4;margin-bottom:4px">' + escHtml(race.gender || '') + '</div><div style="font-size:22px;font-weight:700">' + escHtml(race.event || '') + '</div></div>'
+    : '<div class="card" style="text-align:center;padding:24px"><div class="muted">Waiting for admin to arm a race...</div></div>';
+
+  const goLabel = running ? 'RACE RUNNING' : (canGo ? 'GO' : (hasRace ? 'WAIT FOR ARM' : 'NO RACE ARMED'));
+  const recallLabel = running ? 'RECALL' : (state === 'armed' ? 'CANCEL ARM' : 'RECALL');
+
+  const reuseBtn = lastRaceSnapshot && lastRaceSnapshot.event && (!hasRace || state === 'published' || state === 'stopped' || state === 'idle')
+    ? '<button class="ghost" style="width:100%;margin-bottom:10px" onclick="reuseLastRace()">Re-arm last race: ' + escHtml(lastRaceSnapshot.age + ' ' + lastRaceSnapshot.gender + ' ' + lastRaceSnapshot.event) + '</button>'
+    : '';
+
+  appEl.innerHTML =
+    '<div class="nav-tabs">' +
+      '<a href="./timing.html' + carnivalQs() + '">Timer</a>' +
+      '<a href="?admin=1' + carnivalAmp() + '">Race Control</a>' +
+      '<a href="?starter=1' + carnivalAmp() + '" class="active">Starter</a>' +
+      '<a href="?observer=1' + carnivalAmp() + '">Observer</a>' +
+    '</div>' +
+    '<h1>Starter</h1>' +
+    '<div class="muted" style="margin-bottom:10px">Start-line phone. Hold your phone near the track, tap GO - you will hear 3-2-1-GO through the speaker. Fire the whistle on GO.</div>' +
+    eventBlock +
+    '<div class="state-banner ' + stateCls + '" style="margin-bottom:14px">' + escHtml(state.toUpperCase()) + (running ? ' - <span id="starterClock" style="font-family:ui-monospace,monospace">0.00</span>' : '') + '</div>' +
+    reuseBtn +
+    '<button class="starter-go-btn" ' + (canGo ? '' : 'disabled') + ' onclick="starterGo()">' + goLabel + '</button>' +
+    '<button class="starter-recall-btn" ' + (canRecall ? '' : 'disabled') + ' onclick="recallRace()">' + recallLabel + '</button>' +
+    '<div class="footer-note">Carnival <strong style="color:#5EEAD4">' + escHtml(CARNIVAL_ID) + '</strong> - state <strong style="color:' + stateColor + '">' + escHtml(state) + '</strong> - offset ' + (serverOffset>=0?'+':'') + serverOffset + 'ms</div>';
+
+  if(running){
+    const tick = () => {
+      const el = document.getElementById('starterClock');
+      if(!el) return;
+      el.textContent = fmtClock(serverNow() - race.startedAtServer);
+      rafHandle = requestAnimationFrame(tick);
+    };
+    tick();
+  }
+}
+
+// Starter presses GO. Same as admin's goRace() but named distinctly so we can log it differently later.
+function starterGo(){
+  if(!currentRace || currentRace.state !== 'armed'){ alert('No race armed. Admin needs to arm a race first.'); return; }
+  const startAt = serverNow() + COUNTDOWN_GO_MS;
+  TIMING_REF.update({state:'running', startedAtServer: startAt});
 }
 
 function previewPublish(){
@@ -708,6 +924,11 @@ window.abandonRace = abandonRace;
 window.assignLane = assignLane;
 window.previewPublish = previewPublish;
 window.reuseLastRace = reuseLastRace;
+window.recallRace = recallRace;
+window.clearLaneSplits = clearLaneSplits;
+window.swapLanes = swapLanes;
+window.exportResultsCSV = exportResultsCSV;
+window.starterGo = starterGo;
 
 // VIEW: OBSERVER
 function renderObserver(){
@@ -752,6 +973,7 @@ function renderObserver(){
     '<div class="nav-tabs">' +
       '<a href="./timing.html' + carnivalQs() + '">Timer</a>' +
       '<a href="?admin=1' + carnivalAmp() + '">Race Control</a>' +
+      '<a href="?starter=1' + carnivalAmp() + '">Starter</a>' +
       '<a href="?observer=1' + carnivalAmp() + '" class="active">Observer</a>' +
       '<a href="?join=1' + carnivalAmp() + '">Join Page</a>' +
     '</div>' +
@@ -781,6 +1003,7 @@ function renderJoin(){
     '<div class="nav-tabs">' +
       '<a href="./timing.html' + qParam + '">Timer</a>' +
       '<a href="?admin=1' + carnivalAmp() + '">Race Control</a>' +
+      '<a href="?starter=1' + carnivalAmp() + '">Starter</a>' +
       '<a href="?observer=1' + carnivalAmp() + '">Observer</a>' +
       '<a href="?join=1' + carnivalAmp() + '" class="active">Join Page</a>' +
     '</div>' +
@@ -839,6 +1062,19 @@ if(q.has('test')){
   assert(COUNTDOWN_GO_MS > 0, 'countdown GO delay is positive');
   assert(COUNTDOWN_END_MS > COUNTDOWN_GO_MS, 'overlay removes AFTER the GO flash');
   assert(fmtClock(-1500) === '0.00', 'fmtClock clamps negative to 0.00');
+  // v3.2 self-tests - Starter role, recall, CSV export
+  assert(typeof renderStarter === 'function', 'renderStarter exists');
+  assert(typeof recallRace === 'function', 'recallRace exists');
+  assert(typeof exportResultsCSV === 'function', 'exportResultsCSV exists');
+  assert(typeof swapLanes === 'function', 'swapLanes exists');
+  assert(typeof clearLaneSplits === 'function', 'clearLaneSplits exists');
+  assert(fbDecode('9 Yrs|Boys|100m') === '9 Yrs|Boys|100m', 'fbDecode passthrough of plain key');
+  assert(fbDecode('12__SL__13 Yrs|Boys|100m') === '12/13 Yrs|Boys|100m', 'fbDecode round-trips __SL__');
+  const roundtrip = fbDecode(fbKey('12/13 Yrs','Boys','100m'));
+  assert(roundtrip === '12/13 Yrs|Boys|100m', 'fbKey -> fbDecode round-trip');
+  assert(csvEscape('plain') === 'plain', 'csvEscape plain');
+  assert(csvEscape('has,comma') === '"has,comma"', 'csvEscape quotes commas');
+  assert(csvEscape('has "quote"') === '"has ""quote"""', 'csvEscape escapes quotes');
   document.body.insertAdjacentHTML('afterbegin','<div style="padding:10px;background:#064E3B;color:#fff;font-weight:800">Self-tests done - check console.</div>');
 }
 </script>
