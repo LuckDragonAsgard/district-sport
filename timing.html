@@ -1085,4 +1085,42 @@ if(q.has('test')){
   assert(trimmedMean([null,NaN,-5,0]) === null, 'all invalid -> null');
   const race = {
     age:'9 Yrs', gender:'Boys', event:'100m', tier:'division',
-    lanes: {1:{name
+    lanes: {1:{name:'A',house:'GEM'}, 2:{name:'B',house:'REID'}, 3:{name:'C',house:'NELSON'}, 4:{name:'',house:''}},
+    splits: {
+      1: {t1:{name:'x',elapsedMs:12100}, t2:{name:'y',elapsedMs:12200}, t3:{name:'z',elapsedMs:99999}},
+      2: {t1:{name:'x',elapsedMs:13500}, t2:{name:'y',elapsedMs:13700}},
+      3: {t1:{name:'x',elapsedMs:11900}},
+      4: {}
+    }
+  };
+  const ranked = buildRankedFromRace(race);
+  assert(ranked.length === 3, 'lane 4 dropped');
+  assert(ranked[0].name === 'C', 'lane 3 is 1st');
+  assert(Math.abs(ranked[1].result - 12.20) < 0.01, 'lane 1 trimmed = 12.20');
+  assert(Math.abs(ranked[2].result - 13.60) < 0.01, 'lane 2 plain mean = 13.60');
+  const floor = checkTierFloor(race);
+  assert(!floor.ok, 'division floor flags');
+  assert(floor.under.length === 1 && floor.under[0].lane === 3, 'lane 3 is the one under');
+  assert(carnivalJoinCode('wps-athletics-2026') === carnivalJoinCode('wps-athletics-2026'), 'join code deterministic');
+  assert(carnivalJoinCode('foo') !== carnivalJoinCode('bar'), 'different ids -> different codes');
+  assert(COUNTDOWN_GO_MS > 0, 'countdown GO delay is positive');
+  assert(COUNTDOWN_END_MS > COUNTDOWN_GO_MS, 'overlay removes AFTER the GO flash');
+  assert(fmtClock(-1500) === '0.00', 'fmtClock clamps negative to 0.00');
+  // v3.2 self-tests - Starter role, recall, CSV export
+  assert(typeof renderStarter === 'function', 'renderStarter exists');
+  assert(typeof recallRace === 'function', 'recallRace exists');
+  assert(typeof exportResultsCSV === 'function', 'exportResultsCSV exists');
+  assert(typeof swapLanes === 'function', 'swapLanes exists');
+  assert(typeof clearLaneSplits === 'function', 'clearLaneSplits exists');
+  assert(fbDecode('9 Yrs|Boys|100m') === '9 Yrs|Boys|100m', 'fbDecode passthrough of plain key');
+  assert(fbDecode('12__SL__13 Yrs|Boys|100m') === '12/13 Yrs|Boys|100m', 'fbDecode round-trips __SL__');
+  const roundtrip = fbDecode(fbKey('12/13 Yrs','Boys','100m'));
+  assert(roundtrip === '12/13 Yrs|Boys|100m', 'fbKey -> fbDecode round-trip');
+  assert(csvEscape('plain') === 'plain', 'csvEscape plain');
+  assert(csvEscape('has,comma') === '"has,comma"', 'csvEscape quotes commas');
+  assert(csvEscape('has "quote"') === '"' + 'has ""' + 'quote""' + '"', 'csvEscape escapes quotes');
+  document.body.insertAdjacentHTML('afterbegin','<div style="padding:10px;background:#064E3B;color:#fff;font-weight:800">Self-tests done - check console.</div>');
+}
+</script>
+</body>
+</html>
