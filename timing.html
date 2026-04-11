@@ -160,7 +160,7 @@ function showConfirm(msg, onOk){
   el.id = '_confirmModal';
   el.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,.85);display:flex;align-items:center;justify-content:center;z-index:400';
   el.innerHTML = '<div style="background:#1E293B;border:1px solid #475569;border-radius:16px;padding:28px 32px;max-width:420px;width:90%;text-align:center">'
-    + '<div style="font-size:15px;font-weight:700;color:#F8FAFC;line-height:1.5;margin-bottom:20px">' + msg + '</div>'
+    + '<div style="font-size:15px;font-weight:700;color:#F8FAFC;line-height:1.5;margin-bottom:20px">' + escHtml(msg) + '</div>'
     + '<div style="display:flex;gap:12px;justify-content:center">'
     + '<button id="_confirmCancel" style="flex:1;padding:12px;border-radius:10px;background:#334155;color:#F8FAFC;border:none;font-size:14px;font-weight:700;cursor:pointer">Cancel</button>'
     + '<button id="_confirmOk" style="flex:1;padding:12px;border-radius:10px;background:#DC2626;color:#fff;border:none;font-size:14px;font-weight:700;cursor:pointer">Confirm</button>'
@@ -296,16 +296,22 @@ function checkTierFloor(race){
     const lane = race.lanes && race.lanes[i];
     if(!lane || !lane.name) continue;
     const splits = (race.splits && race.splits[i]) || {};
-    const got = Object.keys(splits).length;
+    // BUG A FIX: only count splits with a valid elapsedMs (timer actually stopped).
+    // Timers who joined but haven't hit STOP yet have no elapsedMs and must not
+    // count toward the tier floor — publish would reject them as invalid.
+    const got = Object.values(splits).filter(s => s && typeof s.elapsedMs === 'number' && s.elapsedMs > 500).length;
     if(got < need) under.push({lane:i, got, need, name:lane.name});
   }
   return {ok: under.length === 0, need, under, tierLabel: tier.label};
 }
 function confidenceFor(splits, tierMin){
-  const count = splits ? Object.keys(splits).length : 0;
-  if(count === 0) return {cls:'conf-none', label:'NO TIMERS'};
+  // BUG B FIX: use only valid (stopped) splits for count — a timer who joined
+  // but hasn't hit STOP yet has no elapsedMs and must not inflate the count.
+  const joined = splits ? Object.keys(splits).length : 0;
+  if(joined === 0) return {cls:'conf-none', label:'NO TIMERS'};
   const vals = Object.values(splits).map(s => s && s.elapsedMs).filter(v => typeof v === 'number' && v > 0);
-  if(vals.length === 0) return {cls:'conf-none', label:'NO DATA'};
+  const count = vals.length; // only count timers who have actually stopped
+  if(count === 0) return {cls:'conf-none', label:joined + ' timing' + (joined>1?'…':'…')}; // running but not stopped
   const spread = vals.length > 1 ? (Math.max(...vals) - Math.min(...vals)) : 0;
   if(count >= 3 && spread < 500)  return {cls:'conf-high', label:'HIGH ' + count + ' timers'};
   if(count >= 3 && spread < 1500) return {cls:'conf-med',  label:'OK ' + count + ' ' + (spread/1000).toFixed(2) + 's'};
@@ -344,12 +350,16 @@ let currentRace = null;
 let rafHandle   = null;
 let wakeLockSentinel = null;
 let countdownActive = false;
+let countdownId = 0;
+let wakeLockTimeout = null;
 
 async function acquireWakeLock(){
   try{
     if('wakeLock' in navigator && !wakeLockSentinel){
       wakeLockSentinel = await navigator.wakeLock.request('screen');
       wakeLockSentinel.addEventListener('release', () => { wakeLockSentinel = null; });
+      if(wakeLockTimeout) clearTimeout(wakeLockTimeout);
+      wakeLockTimeout = setTimeout(function(){ if(wakeLockSentinel){ wakeLockSentinel.release(); wakeLockSentinel=null; } }, 7200000);
     }
   }catch(e){}
 }
@@ -366,6 +376,7 @@ function buzz(pattern){ if(navigator.vibrate){ try{ navigator.vibrate(pattern); 
 
 function playCountdown(onDone){
   countdownActive = true;
+  const myId = ++countdownId;
   const overlay = document.createElement('div');
   overlay.className = 'countdown';
   overlay.innerHTML = '<div class="countdown-num">3</div>';
@@ -374,6 +385,7 @@ function playCountdown(onDone){
   const seq = ['2','1','GO'];
   let idx = 0;
   const step = () => {
+    if(myId !== countdownId) return;
     if(idx >= seq.length){ overlay.remove(); countdownActive = false; if(onDone) onDone(); return; }
     const val = seq[idx++];
     const isGo = val === 'GO';
@@ -389,6 +401,7 @@ function playCountdown(onDone){
 function flashRecall(){
   // Kill any live countdown so it doesn't fire GO after a recall.
   document.querySelectorAll('.countdown').forEach(el => el.remove());
+  countdownId++;
   countdownActive = false;
   const overlay = document.createElement('div');
   overlay.className = 'recall-flash';
@@ -408,7 +421,12 @@ fbDb.ref('.info/connected').on('value', s => {
 
 let firstSnap = true;
 let lastRecalledAt = 0;
-TIMING_REF.on('value', s => {
+let timingListenerTimeout = null;
+
+function attachTimingListener(){
+  if(timingListenerTimeout) clearTimeout(timingListenerTimeout);
+  TIMING_REF.off('value');
+  TIMING_REF.on('value', s => {
   const prev = currentRace;
   const wasFirst = firstSnap;
   firstSnap = false;
@@ -444,7 +462,11 @@ TIMING_REF.on('value', s => {
   if(!countdownActive) render();
 }, err => {
   appEl.innerHTML = '<div class="card" style="border-color:#DC2626"><strong>DB error:</strong> ' + escHtml(err.message || err.code || 'unknown') + '</div>';
-});
+  timingListenerTimeout = setTimeout(() => { TIMING_REF.off('value'); attachTimingListener(); }, 5000);
+  });
+}
+
+attachTimingListener();
 
 function carnivalQs(){ return CARNIVAL_ID !== DEFAULT_CARNIVAL ? ('?carnival=' + encodeURIComponent(CARNIVAL_ID)) : ''; }
 function carnivalAmp(){ return CARNIVAL_ID !== DEFAULT_CARNIVAL ? ('&carnival=' + encodeURIComponent(CARNIVAL_ID)) : ''; }
@@ -793,6 +815,7 @@ function swapLanes(from){
   input.focus();
   const close = () => document.body.removeChild(el);
   el.querySelector('#_swapCancel').onclick = close;
+  input.addEventListener('keydown', function(e){ if(e.key==='Enter'){ doConfirm(); } if(e.key==='Escape'){ close(); } });
   const doConfirm = () => {
     const to = parseInt(input.value, 10);
     close();
@@ -819,7 +842,6 @@ function swapLanes(from){
     }
   };
   el.querySelector('#_swapOk').onclick = doConfirm;
-  input.addEventListener('keydown', e => { if(e.key === 'Enter') doConfirm(); if(e.key === 'Escape') close(); });
 }
 
 // Decode fbEncode() keys back to human-readable "age|gender|event" (for CSV export).
@@ -991,8 +1013,8 @@ function previewPublish(){
   };
 }
 function doPublish(race, ranked, fk, floor, rejects){
-  RESULTS_REF.child(fk).set(ranked)
-    .then(() => TIMING_REF.update({state:'published', publishedAt: firebase.database.ServerValue.TIMESTAMP}))
+  TIMING_REF.update({state:'published', publishedAt: firebase.database.ServerValue.TIMESTAMP})
+    .then(() => RESULTS_REF.child(fk).set(ranked))
     .then(() => AUDIT_REF.push({
       publishedAt: firebase.database.ServerValue.TIMESTAMP,
       raceId: race.raceId || null,
@@ -1099,7 +1121,7 @@ function renderJoin(){
     '</div>' +
     '<h1>Join this carnival</h1>' +
     '<div class="muted" style="margin-bottom:14px">Show this screen to every parent/teacher who is timing. They scan, pick a lane, ready to go.</div>' +
-    '<div class="card" style="text-align:center"><label style="text-align:left">Scan to join</label><div style="background:#fff;padding:18px;border-radius:14px;display:inline-block;margin:6px auto 10px"><img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=' + encodeURIComponent(joinUrl) + '&color=0F172A&bgcolor=FFFFFF&margin=4" width="240" height="240" alt="QR code" style="display:block;border-radius:6px"></div><div class="muted" style="word-break:break-all;font-size:11px">' + escHtml(joinUrl) + '</div></div>' +
+    '<div class="card" style="text-align:center"><label style="text-align:left">Scan to join</label><div style="background:#fff;padding:18px;border-radius:14px;display:inline-block;margin:6px auto 10px"><img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=' + encodeURIComponent(joinUrl) + '&color=0F172A&bgcolor=FFFFFF&margin=4" width="240" height="240" alt="QR code" style="display:block;border-radius:6px" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'"><div style="display:none;font-family:monospace;word-break:break-all;padding:12px;background:#f1f5f9;border-radius:6px;color:#0f172a;font-size:12px">' + escHtml(joinUrl) + '</div></div><div class="muted" style="word-break:break-all;font-size:11px">' + escHtml(joinUrl) + '</div></div>' +
     '<div class="card" style="text-align:center"><label style="text-align:left">Or type this code</label><div class="join-code">' + JOIN_CODE + '</div><div class="muted">Carnival id: <strong style="color:#5EEAD4">' + escHtml(CARNIVAL_ID) + '</strong></div></div>' +
     '<div class="card"><label>How it works</label><div style="font-size:13px;line-height:1.6">1. Each timer opens this URL on their phone (scan QR or type it in).<br>2. They enter their name once - saved on their phone.<br>3. They pick the lane they are standing next to.<br>4. When you hit GO, all phones get a 3-2-1 countdown + haptic buzz.<br>5. They tap the big STOP button when their runner crosses.<br>6. You hit Publish - times flow straight into the scoring app.</div></div>' +
     '<div class="footer-note"><a class="link" href="./timing.html' + qParam + '">back to Timer</a></div>';
