@@ -113,6 +113,11 @@ label{display:block;font-size:11px;text-transform:uppercase;color:var(--sub);mar
 .starter-recall-btn:active{box-shadow:0 2px 0 #991B1B,0 4px 10px rgba(220,38,38,.32);transform:translateY(4px)}
 .starter-recall-btn:disabled{background:#334155;color:#64748B;border-color:#1E293B;box-shadow:none;transform:none;font-size:18px}
 
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1E293B;color:#F8FAFC;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:700;border:1px solid #334155;box-shadow:0 8px 32px rgba(0,0,0,.4);z-index:500;transition:transform .25s ease,opacity .25s ease;opacity:0;pointer-events:none;white-space:nowrap;max-width:90vw;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.ok{border-color:var(--good)}
+.toast.err{border-color:var(--bad);background:#450A0A}
+
 .conf{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
 .conf-high{background:#064E3B;color:#6EE7B7;border:1px solid #10B981}
 .conf-med{background:#422006;color:#FDBA74;border:1px solid #F59E0B}
@@ -146,6 +151,25 @@ const FB_CONFIG = {
 };
 firebase.initializeApp(FB_CONFIG);
 const fbDb = firebase.database();
+
+// Toast notifications - replaces blocking alert() calls
+let _toastTimer;
+function showToast(msg, type='ok', ms=3500){
+  let el = document.getElementById('_toast');
+  if(!el){
+    el = document.createElement('div');
+    el.id = '_toast';
+    el.className = 'toast';
+    document.body.appendChild(el);
+  }
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  clearTimeout(_toastTimer);
+  // force reflow so transition fires even when toast is already visible
+  void el.offsetWidth;
+  el.classList.add('show');
+  _toastTimer = setTimeout(() => el.classList.remove('show'), ms);
+}
 
 // CARNIVAL NAMESPACE - one app serves every carnival
 const DEFAULT_CARNIVAL = 'wps-athletics-2026';
@@ -516,12 +540,12 @@ function renderTimer(lane){
 
 function stopClicked(lane){
   if(!currentRace || currentRace.state !== 'running' || !currentRace.startedAtServer){ return; }
-  if(!timerName){ alert('Please enter your timer name first.'); return; }
+  if(!timerName){ showToast('Please enter your timer name first.', 'err'); return; }
   const stopAtServer = serverNow();
   const elapsedMs = Math.max(0, stopAtServer - currentRace.startedAtServer);
   // Split validation: reject impossible values
-  if(elapsedMs < 500){ alert('Too fast to be real (<0.5s). Ignored.'); return; }
-  if(elapsedMs > 3600000){ alert('Over 1 hour - that cannot be right. Ignored.'); return; }
+  if(elapsedMs < 500){ showToast('Too fast to be real (<0.5s). Ignored.', 'err'); return; }
+  if(elapsedMs > 3600000){ showToast('Over 1 hour - that cannot be right. Ignored.', 'err'); return; }
   const el = document.getElementById('clockBox');
   if(el){ el.textContent = fmtClock(elapsedMs); el.classList.remove('live'); el.classList.add('stopped'); }
   const btn = document.getElementById('stopBtn');
@@ -532,7 +556,7 @@ function stopClicked(lane){
     name: timerName,
     elapsedMs: elapsedMs,
     stopAt: firebase.database.ServerValue.TIMESTAMP
-  }).catch(err => alert('Failed to save split: ' + (err && err.message || err)));
+  }).catch(err => showToast('Failed to save split: ' + (err && err.message || err), 'err', 6000));
 }
 
 // VIEW: ADMIN
@@ -695,14 +719,14 @@ function reuseLastRace(){
 function recallRace(){
   if(!currentRace){ return; }
   const st = currentRace.state;
-  if(st !== 'running' && st !== 'armed'){ alert('Nothing to recall - no race is running.'); return; }
+  if(st !== 'running' && st !== 'armed'){ showToast('Nothing to recall - no race is running.', 'err'); return; }
   if(!confirm('RECALL race? Every phone will flash red and all splits on this race will be wiped. Lane assignments are kept.')) return;
   TIMING_REF.update({
     state: 'armed',
     startedAtServer: null,
     splits: null,
     recalledAt: firebase.database.ServerValue.TIMESTAMP
-  }).catch(err => alert('Recall failed: ' + (err && err.message || err)));
+  }).catch(err => showToast('Recall failed: ' + (err && err.message || err), 'err', 6000));
 }
 
 // Per-lane split clear (v3.2). For "re-run just one lane" mid-carnival without wiping the whole race.
@@ -717,7 +741,7 @@ function swapLanes(from){
   const toStr = prompt('Swap lane ' + from + ' with which lane number?');
   if(toStr == null) return;
   const to = parseInt(toStr, 10);
-  if(!(to >= 1 && to <= LANE_COUNT) || to === from){ alert('Invalid target lane.'); return; }
+  if(!(to >= 1 && to <= LANE_COUNT) || to === from){ showToast('Invalid target lane.', 'err'); return; }
   if(!currentRace){ return; }
   const race = currentRace;
   const fromLane = (race.lanes && race.lanes[from]) || null;
@@ -731,7 +755,7 @@ function swapLanes(from){
   updates['lanes/' + to]    = fromLane;
   updates['splits/' + from] = toSplits;
   updates['splits/' + to]   = fromSplits;
-  TIMING_REF.update(updates).catch(err => alert('Swap failed: ' + (err && err.message || err)));
+  TIMING_REF.update(updates).catch(err => showToast('Swap failed: ' + (err && err.message || err), 'err', 6000));
 }
 
 // Decode fbEncode() keys back to human-readable "age|gender|event" (for CSV export).
@@ -785,11 +809,11 @@ function exportResultsCSV(){
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 1500);
     } catch(e){
-      alert('Download failed but CSV is ' + (copied?'in your clipboard':'below:\n\n' + csv.slice(0,2000)));
+      showToast('Download failed' + (copied?' — CSV in clipboard':'.'), 'err', 6000);
       return;
     }
-    alert('Exported ' + (rows.length - 1) + ' result row(s) across ' + keys.length + ' event(s).' + (copied ? '\nCSV also copied to clipboard.' : ''));
-  }).catch(err => alert('Export failed: ' + (err && err.message || err)));
+    showToast('✓ Exported ' + (rows.length - 1) + ' row(s) across ' + keys.length + ' event(s).' + (copied ? ' CSV copied.' : ''), 'ok', 5000);
+  }).catch(err => showToast('Export failed: ' + (err && err.message || err), 'err', 6000));
 }
 
 // VIEW: STARTER (v3.2)
@@ -847,14 +871,14 @@ function renderStarter(){
 
 // Starter presses GO. Same as admin's goRace() but named distinctly so we can log it differently later.
 function starterGo(){
-  if(!currentRace || currentRace.state !== 'armed'){ alert('No race armed. Admin needs to arm a race first.'); return; }
+  if(!currentRace || currentRace.state !== 'armed'){ showToast('No race armed. Admin needs to arm first.', 'err'); return; }
   const startAt = serverNow() + COUNTDOWN_GO_MS;
   TIMING_REF.update({state:'running', startedAtServer: startAt});
 }
 
 function previewPublish(){
   const race = currentRace;
-  if(!race || !race.age){ alert('No race to publish.'); return; }
+  if(!race || !race.age){ showToast('No race to publish.', 'err'); return; }
   // Validate splits
   const validated = JSON.parse(JSON.stringify(race));
   const rejects = [];
@@ -871,7 +895,7 @@ function previewPublish(){
     }
   }
   const ranked = buildRankedFromRace(validated);
-  if(!ranked.length){ alert('No lane has any VALID splits yet - nothing to publish.'); return; }
+  if(!ranked.length){ showToast('No lane has valid splits yet — nothing to publish.', 'err'); return; }
   const floor = checkTierFloor(validated);
   const fk = fbKey(race.age, race.gender, race.event);
 
@@ -915,8 +939,8 @@ function doPublish(race, ranked, fk, floor, rejects){
       tierOk: floor.ok,
       rejectedSplits: rejects.length
     }))
-    .then(() => alert('Published ' + ranked.length + ' place(s) to results + audit log.'))
-    .catch(err => alert('Publish failed: ' + (err && err.message || err)));
+    .then(() => showToast('✓ Published ' + ranked.length + ' place(s) to results.', 'ok'))
+    .catch(err => showToast('Publish failed: ' + (err && err.message || err), 'err', 6000));
 }
 window.armRace = armRace;
 window.goRace = goRace;
@@ -1055,20 +1079,4 @@ if(q.has('test')){
   assert(fmtClock(-1500) === '0.00', 'fmtClock clamps negative to 0.00');
   // v3.2 self-tests - Starter role, recall, CSV export
   assert(typeof renderStarter === 'function', 'renderStarter exists');
-  assert(typeof recallRace === 'function', 'recallRace exists');
-  assert(typeof exportResultsCSV === 'function', 'exportResultsCSV exists');
-  assert(typeof swapLanes === 'function', 'swapLanes exists');
-  assert(typeof clearLaneSplits === 'function', 'clearLaneSplits exists');
-  assert(fbDecode('9 Yrs|Boys|100m') === '9 Yrs|Boys|100m', 'fbDecode passthrough of plain key');
-  assert(fbDecode('12__SL__13 Yrs|Boys|100m') === '12/13 Yrs|Boys|100m', 'fbDecode round-trips __SL__');
-  const roundtrip = fbDecode(fbKey('12/13 Yrs','Boys','100m'));
-  assert(roundtrip === '12/13 Yrs|Boys|100m', 'fbKey -> fbDecode round-trip');
-  assert(csvEscape('plain') === 'plain', 'csvEscape plain');
-  assert(csvEscape('has,comma') === '"has,comma"', 'csvEscape quotes commas');
-  assert(csvEscape('has "quote"') === '"has ""quote"""', 'csvEscape escapes quotes');
-  document.body.insertAdjacentHTML('afterbegin','<div style="padding:10px;background:#064E3B;color:#fff;font-weight:800">Self-tests done - check console.</div>');
-}
-</script>
-</body>
-</html>
-                                                                                                                                                                                                                                                                                  
+  assert(typeof recallRace === 'function'
