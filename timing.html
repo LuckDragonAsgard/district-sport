@@ -703,7 +703,8 @@ function armRace(){
     const lanes = {};
     for(let i=1;i<=LANE_COUNT;i++){ if(prev[i]) lanes[i] = prev[i]; }
     const raceId = 'r_' + Date.now().toString(36);
-    TIMING_REF.set({raceId, age, gender, event, tier, state:'armed', startedAtServer:null, publishedAt:null, lanes, splits:null});
+    TIMING_REF.set({raceId, age, gender, event, tier, state:'armed', startedAtServer:null, publishedAt:null, lanes, splits:null})
+      .catch(err => showToast('Arm failed: ' + (err && err.message || err), 'err', 6000));
   };
   if(currentRace && currentRace.state === 'running'){
     showConfirm('A race is currently RUNNING.<br>Arming a new one will wipe the live splits. Continue?', doArm);
@@ -716,22 +717,35 @@ function goRace(){
   // Schedule race start to land exactly when the "GO" flash happens on each phone.
   // Using a scheduled absolute time (not ServerValue.TIMESTAMP) keeps all devices aligned.
   const startAt = serverNow() + COUNTDOWN_GO_MS;
-  TIMING_REF.update({state:'running', startedAtServer: startAt});
+  TIMING_REF.update({state:'running', startedAtServer: startAt})
+    .catch(err => showToast('GO failed: ' + (err && err.message || err), 'err', 6000));
 }
-function clearSplits(){ TIMING_REF.child('splits').remove(); }
+function clearSplits(){
+  TIMING_REF.child('splits').remove()
+    .catch(err => showToast('Clear splits failed: ' + (err && err.message || err), 'err', 6000));
+}
 function abandonRace(){
-  showConfirm('Abandon current race?<br>Lane assignments and splits will be wiped.', () => TIMING_REF.remove());
+  showConfirm('Abandon current race?<br>Lane assignments and splits will be wiped.', () =>
+    TIMING_REF.remove()
+      .catch(err => showToast('Abandon failed: ' + (err && err.message || err), 'err', 6000))
+  );
 }
 function assignLane(lane, val){
-  if(!val){ TIMING_REF.child('lanes').child(String(lane)).remove(); return; }
+  if(!val){
+    TIMING_REF.child('lanes').child(String(lane)).remove()
+      .catch(err => showToast('Clear lane failed: ' + (err && err.message || err), 'err', 6000));
+    return;
+  }
   const [name, house] = val.split('|');
-  TIMING_REF.child('lanes').child(String(lane)).set({name, house});
+  TIMING_REF.child('lanes').child(String(lane)).set({name, house})
+    .catch(err => showToast('Assign lane failed: ' + (err && err.message || err), 'err', 6000));
 }
 function reuseLastRace(){
   if(!lastRaceSnapshot) return;
   const snap = lastRaceSnapshot;
   const raceId = 'r_' + Date.now().toString(36);
-  TIMING_REF.set({raceId, age:snap.age, gender:snap.gender, event:snap.event, tier:snap.tier||'willy', state:'armed', startedAtServer:null, publishedAt:null, lanes:snap.lanes||{}, splits:null});
+  TIMING_REF.set({raceId, age:snap.age, gender:snap.gender, event:snap.event, tier:snap.tier||'willy', state:'armed', startedAtServer:null, publishedAt:null, lanes:snap.lanes||{}, splits:null})
+    .catch(err => showToast('Reuse race failed: ' + (err && err.message || err), 'err', 6000));
 }
 
 // RECALL / FALSE START (v3.2). Wipes startedAtServer + splits and bumps recalledAt so every
@@ -754,37 +768,58 @@ function recallRace(){
 // Per-lane split clear (v3.2). For "re-run just one lane" mid-carnival without wiping the whole race.
 function clearLaneSplits(lane){
   showConfirm('Clear splits for Lane ' + lane + '?<br><br>The runner can be re-timed without touching other lanes.', () => {
-    TIMING_REF.child('splits').child(String(lane)).remove();
+    TIMING_REF.child('splits').child(String(lane)).remove()
+      .catch(err => showToast('Clear lane splits failed: ' + (err && err.message || err), 'err', 6000));
   });
 }
 
 // Swap lanes (v3.2). Moves the runner AND their splits between two lane positions.
 // Semantics: the split follows the runner (you ran 12.3s on lane 2, you now own that 12.3 on lane 5).
 function swapLanes(from){
-  const toStr = prompt('Swap lane ' + from + ' with which lane number?');
-  if(toStr == null) return;
-  const to = parseInt(toStr, 10);
-  if(!(to >= 1 && to <= LANE_COUNT) || to === from){ showToast('Invalid target lane.', 'err'); return; }
-  if(!currentRace){ return; }
-  const race = currentRace;
-  const fromLane = (race.lanes && race.lanes[from]) || null;
-  const toLane   = (race.lanes && race.lanes[to])   || null;
-  const fromSplits = (race.splits && race.splits[from]) || null;
-  const toSplits   = (race.splits && race.splits[to])   || null;
-  const hasAnySplits = fromSplits || toSplits;
-  const doSwap = () => {
-    const updates = {};
-    updates['lanes/' + from]  = toLane;
-    updates['lanes/' + to]    = fromLane;
-    updates['splits/' + from] = toSplits;
-    updates['splits/' + to]   = fromSplits;
-    TIMING_REF.update(updates).catch(err => showToast('Swap failed: ' + (err && err.message || err), 'err', 6000));
+  // In-page input modal — no native prompt()
+  const el = document.createElement('div');
+  el.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,.85);display:flex;align-items:center;justify-content:center;z-index:400';
+  el.innerHTML = `<div style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:28px 32px;max-width:320px;width:90%;text-align:center;font-family:sans-serif;color:#f1f5f9">
+    <p style="margin:0 0 18px;font-size:1rem;line-height:1.5">Swap lane <strong>${from}</strong> with which lane?</p>
+    <input id="_swapInput" type="number" min="1" max="${LANE_COUNT}" placeholder="Lane number"
+      style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #475569;background:#0f172a;color:#f1f5f9;font-size:1.1rem;text-align:center;margin-bottom:18px;box-sizing:border-box">
+    <div style="display:flex;gap:12px;justify-content:center">
+      <button id="_swapCancel" style="flex:1;padding:10px;border-radius:8px;border:none;background:#334155;color:#f1f5f9;font-size:.95rem;cursor:pointer">Cancel</button>
+      <button id="_swapOk" style="flex:1;padding:10px;border-radius:8px;border:none;background:#2563eb;color:#fff;font-size:.95rem;font-weight:600;cursor:pointer">Swap</button>
+    </div>
+  </div>`;
+  document.body.appendChild(el);
+  const input = el.querySelector('#_swapInput');
+  input.focus();
+  const close = () => document.body.removeChild(el);
+  el.querySelector('#_swapCancel').onclick = close;
+  const doConfirm = () => {
+    const to = parseInt(input.value, 10);
+    close();
+    if(!(to >= 1 && to <= LANE_COUNT) || to === from){ showToast('Invalid target lane.', 'err'); return; }
+    if(!currentRace){ return; }
+    const race = currentRace;
+    const fromLane   = (race.lanes  && race.lanes[from])  || null;
+    const toLane     = (race.lanes  && race.lanes[to])    || null;
+    const fromSplits = (race.splits && race.splits[from]) || null;
+    const toSplits   = (race.splits && race.splits[to])   || null;
+    const hasAnySplits = fromSplits || toSplits;
+    const doSwap = () => {
+      const updates = {};
+      updates['lanes/' + from]  = toLane;
+      updates['lanes/' + to]    = fromLane;
+      updates['splits/' + from] = toSplits;
+      updates['splits/' + to]   = fromSplits;
+      TIMING_REF.update(updates).catch(err => showToast('Swap failed: ' + (err && err.message || err), 'err', 6000));
+    };
+    if(hasAnySplits){
+      showConfirm('These lanes have splits.<br>Splits move WITH the runner. Continue?', doSwap);
+    } else {
+      doSwap();
+    }
   };
-  if(hasAnySplits){
-    showConfirm('These lanes have splits.<br>Splits move WITH the runner. Continue?', doSwap);
-  } else {
-    doSwap();
-  }
+  el.querySelector('#_swapOk').onclick = doConfirm;
+  input.addEventListener('keydown', e => { if(e.key === 'Enter') doConfirm(); if(e.key === 'Escape') close(); });
 }
 
 // Decode fbEncode() keys back to human-readable "age|gender|event" (for CSV export).
@@ -902,7 +937,8 @@ function renderStarter(){
 function starterGo(){
   if(!currentRace || currentRace.state !== 'armed'){ showToast('No race armed. Admin needs to arm first.', 'err'); return; }
   const startAt = serverNow() + COUNTDOWN_GO_MS;
-  TIMING_REF.update({state:'running', startedAtServer: startAt});
+  TIMING_REF.update({state:'running', startedAtServer: startAt})
+    .catch(err => showToast('GO failed: ' + (err && err.message || err), 'err', 6000));
 }
 
 function previewPublish(){
