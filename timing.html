@@ -20,7 +20,7 @@
      splits for mid-carnival fixes; results CSV export from admin. -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<!-- qrcode library removed; QR generated server-side via qrserver.com img tag -->
 <style>
 :root{
   --bg:#0F172A; --card:#1E293B; --card2:#334155; --ink:#F8FAFC; --sub:#94A3B8;
@@ -1009,22 +1009,12 @@ function renderJoin(){
     '</div>' +
     '<h1>Join this carnival</h1>' +
     '<div class="muted" style="margin-bottom:14px">Show this screen to every parent/teacher who is timing. They scan, pick a lane, ready to go.</div>' +
-    '<div class="card" style="text-align:center"><label style="text-align:left">Scan to join</label><div id="qrBox" style="background:#fff;padding:18px;border-radius:14px;display:inline-block;margin:6px auto 10px"></div><div class="muted" style="word-break:break-all;font-size:11px">' + escHtml(joinUrl) + '</div></div>' +
+    '<div class="card" style="text-align:center"><label style="text-align:left">Scan to join</label><div style="background:#fff;padding:18px;border-radius:14px;display:inline-block;margin:6px auto 10px"><img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=' + encodeURIComponent(joinUrl) + '&color=0F172A&bgcolor=FFFFFF&margin=4" width="240" height="240" alt="QR code" style="display:block;border-radius:6px"></div><div class="muted" style="word-break:break-all;font-size:11px">' + escHtml(joinUrl) + '</div></div>' +
     '<div class="card" style="text-align:center"><label style="text-align:left">Or type this code</label><div class="join-code">' + JOIN_CODE + '</div><div class="muted">Carnival id: <strong style="color:#5EEAD4">' + escHtml(CARNIVAL_ID) + '</strong></div></div>' +
     '<div class="card"><label>How it works</label><div style="font-size:13px;line-height:1.6">1. Each timer opens this URL on their phone (scan QR or type it in).<br>2. They enter their name once - saved on their phone.<br>3. They pick the lane they are standing next to.<br>4. When you hit GO, all phones get a 3-2-1 countdown + haptic buzz.<br>5. They tap the big STOP button when their runner crosses.<br>6. You hit Publish - times flow straight into the scoring app.</div></div>' +
     '<div class="footer-note"><a class="link" href="./timing.html' + qParam + '">back to Timer</a></div>';
 
-  try{
-    if(typeof QRCode !== 'undefined' && QRCode.toCanvas){
-      const canvas = document.createElement('canvas');
-      document.getElementById('qrBox').appendChild(canvas);
-      QRCode.toCanvas(canvas, joinUrl, {width:240, margin:1, color:{dark:'#0F172A', light:'#FFFFFF'}});
-    } else {
-      document.getElementById('qrBox').innerHTML = '<div style="color:#0F172A;padding:20px;font-size:12px">QR library unavailable - use the code below</div>';
-    }
-  }catch(e){
-    document.getElementById('qrBox').innerHTML = '<div style="color:#0F172A;padding:20px;font-size:12px">QR render failed</div>';
-  }
+  // QR code rendered inline via img tag (qrserver.com) — no library needed
 }
 
 // SELF-TESTS (?test=1)
@@ -1080,3 +1070,4 @@ if(q.has('test')){
 </script>
 </body>
 </html>
+                                                                                                                                                                                                                                                                                                                               
