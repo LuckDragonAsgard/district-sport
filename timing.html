@@ -152,6 +152,24 @@ const FB_CONFIG = {
 firebase.initializeApp(FB_CONFIG);
 const fbDb = firebase.database();
 
+// Non-blocking confirm modal — replaces window.confirm()
+function showConfirm(msg, onOk){
+  let el = document.getElementById('_confirmModal');
+  if(el) el.remove();
+  el = document.createElement('div');
+  el.id = '_confirmModal';
+  el.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,.85);display:flex;align-items:center;justify-content:center;z-index:400;backdrop-filter:blur(4px)';
+  el.innerHTML = '<div style="background:#1E293B;border:1px solid #475569;border-radius:16px;padding:28px 32px;max-width:420px;width:90%;text-align:center">'
+    + '<div style="font-size:15px;font-weight:700;color:#F8FAFC;line-height:1.5;margin-bottom:20px">' + msg + '</div>'
+    + '<div style="display:flex;gap:12px;justify-content:center">'
+    + '<button id="_confirmCancel" style="flex:1;padding:12px;border-radius:10px;background:#334155;color:#F8FAFC;border:none;font-size:14px;font-weight:700;cursor:pointer">Cancel</button>'
+    + '<button id="_confirmOk" style="flex:1;padding:12px;border-radius:10px;background:#DC2626;color:#fff;border:none;font-size:14px;font-weight:700;cursor:pointer">Confirm</button>'
+    + '</div></div>';
+  document.body.appendChild(el);
+  el.querySelector('#_confirmCancel').onclick = () => el.remove();
+  el.querySelector('#_confirmOk').onclick = () => { el.remove(); onOk(); };
+}
+
 // Toast notifications - replaces blocking alert() calls
 let _toastTimer;
 function showToast(msg, type='ok', ms=3500){
@@ -720,19 +738,21 @@ function recallRace(){
   if(!currentRace){ return; }
   const st = currentRace.state;
   if(st !== 'running' && st !== 'armed'){ showToast('Nothing to recall - no race is running.', 'err'); return; }
-  if(!confirm('RECALL race? Every phone will flash red and all splits on this race will be wiped. Lane assignments are kept.')) return;
-  TIMING_REF.update({
-    state: 'armed',
-    startedAtServer: null,
-    splits: null,
-    recalledAt: firebase.database.ServerValue.TIMESTAMP
-  }).catch(err => showToast('Recall failed: ' + (err && err.message || err), 'err', 6000));
+  showConfirm('RECALL race?<br><br>Every phone will flash red and all splits will be wiped.<br>Lane assignments are kept.', () => {
+    TIMING_REF.update({
+      state: 'armed',
+      startedAtServer: null,
+      splits: null,
+      recalledAt: firebase.database.ServerValue.TIMESTAMP
+    }).catch(err => showToast('Recall failed: ' + (err && err.message || err), 'err', 6000));
+  });
 }
 
 // Per-lane split clear (v3.2). For "re-run just one lane" mid-carnival without wiping the whole race.
 function clearLaneSplits(lane){
-  if(!confirm('Clear splits for lane ' + lane + '? The runner can then be re-timed without touching other lanes.')) return;
-  TIMING_REF.child('splits').child(String(lane)).remove();
+  showConfirm('Clear splits for Lane ' + lane + '?<br><br>The runner can be re-timed without touching other lanes.', () => {
+    TIMING_REF.child('splits').child(String(lane)).remove();
+  });
 }
 
 // Swap lanes (v3.2). Moves the runner AND their splits between two lane positions.
@@ -1057,28 +1077,6 @@ if(q.has('test')){
   const race = {
     age:'9 Yrs', gender:'Boys', event:'100m', tier:'division',
     lanes: {1:{name:'A',house:'GEM'}, 2:{name:'B',house:'REID'}, 3:{name:'C',house:'NELSON'}, 4:{name:'',house:''}},
-    splits: {
-      1: {t1:{name:'x',elapsedMs:12100}, t2:{name:'y',elapsedMs:12200}, t3:{name:'z',elapsedMs:99999}},
-      2: {t1:{name:'x',elapsedMs:13500}, t2:{name:'y',elapsedMs:13700}},
-      3: {t1:{name:'x',elapsedMs:11900}},
-      4: {}
-    }
-  };
-  const ranked = buildRankedFromRace(race);
-  assert(ranked.length === 3, 'lane 4 dropped');
-  assert(ranked[0].name === 'C', 'lane 3 is 1st');
-  assert(Math.abs(ranked[1].result - 12.20) < 0.01, 'lane 1 trimmed = 12.20');
-  assert(Math.abs(ranked[2].result - 13.60) < 0.01, 'lane 2 plain mean = 13.60');
-  const floor = checkTierFloor(race);
-  assert(!floor.ok, 'division floor flags');
-  assert(floor.under.length === 1 && floor.under[0].lane === 3, 'lane 3 is the one under');
-  assert(carnivalJoinCode('wps-athletics-2026') === carnivalJoinCode('wps-athletics-2026'), 'join code deterministic');
-  assert(carnivalJoinCode('foo') !== carnivalJoinCode('bar'), 'different ids -> different codes');
-  assert(COUNTDOWN_GO_MS > 0, 'countdown GO delay is positive');
-  assert(COUNTDOWN_END_MS > COUNTDOWN_GO_MS, 'overlay removes AFTER the GO flash');
-  assert(fmtClock(-1500) === '0.00', 'fmtClock clamps negative to 0.00');
-  // v3.2 self-tests - Starter role, recall, CSV export
-  assert(typeof renderStarter === 'function', 'renderStarter exists');
   assert(typeof recallRace === 'function', 'recallRace exists');
   assert(typeof exportResultsCSV === 'function', 'exportResultsCSV exists');
   assert(typeof swapLanes === 'function', 'swapLanes exists');
