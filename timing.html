@@ -53,8 +53,8 @@ label{display:block;font-size:11px;text-transform:uppercase;color:var(--sub);mar
 .conn-dot.ok{background:#10B981}
 
 .lanes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.lane-btn{height:96px;border-radius:14px;background:var(--card2);color:#fff;font-size:36px;font-weight:900;display:flex;align-items:center;justify-content:center;position:relative;border:2px solid #475569;text-decoration:none}
-.lane-btn .sub{position:absolute;bottom:6px;font-size:10px;font-weight:700;opacity:.75;letter-spacing:.5px;text-transform:uppercase}
+.lane-btn{height:96px;border-radius:14px;background:var(--card2);color:#fff;font-size:36px;font-weight:900;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:2px solid #475569;text-decoration:none;text-align:center}
+.lane-btn .sub{font-size:10px;font-weight:700;opacity:.75;letter-spacing:.5px;text-transform:uppercase}
 .lane-btn.assigned{background:linear-gradient(145deg,#0D9488,#0F766E);border-color:#14B8A6}
 .lane-btn.taken{opacity:.55}
 
