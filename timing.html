@@ -694,18 +694,22 @@ function renderAdmin(){
 // Admin actions
 function armRace(){
   // Safety: arming wipes splits. Warn if a race is currently RUNNING so admins don't nuke live data.
+  const doArm = () => {
+    const age = document.getElementById('admAge').value;
+    const gender = document.getElementById('admGender').value;
+    const event = document.getElementById('admEvent').value;
+    const tier = document.getElementById('admTier').value;
+    const prev = (currentRace && currentRace.lanes) || {};
+    const lanes = {};
+    for(let i=1;i<=LANE_COUNT;i++){ if(prev[i]) lanes[i] = prev[i]; }
+    const raceId = 'r_' + Date.now().toString(36);
+    TIMING_REF.set({raceId, age, gender, event, tier, state:'armed', startedAtServer:null, publishedAt:null, lanes, splits:null});
+  };
   if(currentRace && currentRace.state === 'running'){
-    if(!confirm('A race is currently RUNNING. Arming a new one will wipe the live splits. Continue?')) return;
+    showConfirm('A race is currently RUNNING.<br>Arming a new one will wipe the live splits. Continue?', doArm);
+  } else {
+    doArm();
   }
-  const age = document.getElementById('admAge').value;
-  const gender = document.getElementById('admGender').value;
-  const event = document.getElementById('admEvent').value;
-  const tier = document.getElementById('admTier').value;
-  const prev = (currentRace && currentRace.lanes) || {};
-  const lanes = {};
-  for(let i=1;i<=LANE_COUNT;i++){ if(prev[i]) lanes[i] = prev[i]; }
-  const raceId = 'r_' + Date.now().toString(36);
-  TIMING_REF.set({raceId, age, gender, event, tier, state:'armed', startedAtServer:null, publishedAt:null, lanes, splits:null});
 }
 function goRace(){
   if(!currentRace || currentRace.state !== 'armed'){ return; }
@@ -716,8 +720,7 @@ function goRace(){
 }
 function clearSplits(){ TIMING_REF.child('splits').remove(); }
 function abandonRace(){
-  if(!confirm('Abandon current race? Lane assignments and splits will be wiped.')) return;
-  TIMING_REF.remove();
+  showConfirm('Abandon current race?<br>Lane assignments and splits will be wiped.', () => TIMING_REF.remove());
 }
 function assignLane(lane, val){
   if(!val){ TIMING_REF.child('lanes').child(String(lane)).remove(); return; }
@@ -769,14 +772,19 @@ function swapLanes(from){
   const fromSplits = (race.splits && race.splits[from]) || null;
   const toSplits   = (race.splits && race.splits[to])   || null;
   const hasAnySplits = fromSplits || toSplits;
-  if(hasAnySplits && !confirm('These lanes have splits. Splits will move WITH the runner (splits follow the name, not the lane position). Continue?')) return;
-  const updates = {};
-  updates['lanes/' + from]  = toLane;
-  updates['lanes/' + to]    = fromLane;
-  updates['splits/' + from] = toSplits;
-  updates['splits/' + to]   = fromSplits;
-  TIMING_REF.update(updates).catch(err => showToast('Swap failed: ' + (err && err.message || err), 'err', 6000));
-}
+  const doSwap = () => {
+    const updates = {};
+    updates['lanes/' + from]  = toLane;
+    updates['lanes/' + to]    = fromLane;
+    updates['splits/' + from] = toSplits;
+    updates['splits/' + to]   = fromSplits;
+    TIMING_REF.update(updates).catch(err => showToast('Swap failed: ' + (err && err.message || err), 'err', 6000));
+  };
+  if(hasAnySplits){
+    showConfirm('These lanes have splits.<br>Splits move WITH the runner. Continue?', doSwap);
+  } else {
+    doSwap();
+  }
 
 // Decode fbEncode() keys back to human-readable "age|gender|event" (for CSV export).
 function fbDecode(k){
@@ -1076,7 +1084,6 @@ if(q.has('test')){
   assert(trimmedMean([null,NaN,-5,0]) === null, 'all invalid -> null');
   const race = {
     age:'9 Yrs', gender:'Boys', event:'100m', tier:'division',
-    lanes: {1:{name:'A',house:'GEM'}, 2:{name:'B',house:'REID'}, 3:{name:'C',house:'NELSON'}, 4:{name:'',house:''}},
   assert(typeof recallRace === 'function', 'recallRace exists');
   assert(typeof exportResultsCSV === 'function', 'exportResultsCSV exists');
   assert(typeof swapLanes === 'function', 'swapLanes exists');
