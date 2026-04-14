@@ -1,0 +1,2058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0d1117">
+  <title>FinishLine Â· School Sport Timing</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #21262d;
+      --surface3: #30363d;
+      --accent: #14b8a6;
+      --accent2: #0891b2;
+      --text: #f0f6fc;
+      --muted: #8b949e;
+      --success: #3fb950;
+      --warn: #d29922;
+      --danger: #f85149;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    /* â”€â”€ Screens â”€â”€ */
+    .screen { display: none; min-height: 100vh; }
+    .screen.active { display: block; }
+
+    /* â”€â”€ Header â”€â”€ */
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--surface3);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo-badge {
+      width: 30px; height: 30px;
+      background: var(--accent);
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 900; color: #000;
+      flex-shrink: 0;
+      letter-spacing: -1px;
+    }
+    .header-title { font-weight: 700; font-size: 1rem; }
+    .header-sub { font-size: 0.75rem; color: var(--muted); }
+    .header-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+    .conn-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--muted); flex-shrink: 0;
+    }
+    .conn-dot.live { background: var(--success); box-shadow: 0 0 6px var(--success); }
+
+    /* â”€â”€ Content â”€â”€ */
+    .content { padding: 16px; }
+
+    /* â”€â”€ Home Screen â”€â”€ */
+    .home-hero {
+      text-align: center;
+      padding: 52px 24px 32px;
+      background: linear-gradient(180deg, rgba(20,184,166,0.05) 0%, transparent 100%);
+    }
+    .home-logo {
+      width: 80px; height: 80px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      border-radius: 22px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 34px; font-weight: 900; color: #000;
+      margin: 0 auto 24px;
+      box-shadow: 0 12px 40px rgba(20,184,166,0.35);
+      letter-spacing: -2px;
+    }
+    .home-title {
+      font-size: 2.2rem; font-weight: 900;
+      background: linear-gradient(135deg, var(--accent) 0%, #67e8f9 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px; letter-spacing: -1px;
+    }
+    .home-tagline { color: var(--muted); font-size: 1rem; margin-bottom: 12px; }
+    .home-sports {
+      display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+    .home-sport-pill {
+      background: var(--surface2);
+      border: 1px solid var(--surface3);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .home-sport-pill span { margin-right: 5px; }
+
+    /* â”€â”€ Buttons â”€â”€ */
+    .btn {
+      display: block; width: 100%;
+      padding: 14px 20px;
+      border: none; border-radius: 10px;
+      font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: all 0.15s;
+      text-align: center; text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+      font-family: inherit;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: var(--accent); color: #000; }
+    .btn-primary:hover { filter: brightness(0.9); }
+    .btn-secondary {
+      background: var(--surface2); color: var(--text);
+      border: 1px solid var(--surface3);
+    }
+    .btn-secondary:hover { background: var(--surface3); }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-success { background: var(--success); color: #000; }
+    .btn-go {
+      background: var(--success); color: #000;
+      font-size: 1.5rem; font-weight: 900;
+      padding: 22px;
+    }
+    .btn-stop {
+      background: var(--danger); color: #fff;
+      font-size: 1.6rem; font-weight: 900;
+      padding: 0; min-height: 130px;
+      border-radius: 14px; border: none;
+      cursor: pointer; width: 100%;
+      -webkit-tap-highlight-color: transparent;
+      transition: all 0.1s;
+      font-family: inherit;
+    }
+    .btn-stop:active { transform: scale(0.97); }
+    .btn-tap {
+      background: var(--accent); color: #000;
+      font-weight: 900; padding: 0;
+      min-height: 220px; border-radius: 18px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 6px; width: 100%; border: none;
+      cursor: pointer; -webkit-tap-highlight-color: transparent;
+      transition: all 0.08s; user-select: none;
+      font-family: inherit;
+    }
+    .btn-tap:active { transform: scale(0.96); filter: brightness(0.85); }
+    .btn-tap .tap-main { font-size: 2.4rem; font-weight: 900; line-height: 1; }
+    .btn-tap .tap-sub { font-size: 1rem; font-family: 'Menlo','SF Mono',monospace; opacity: 0.75; }
+    .btn-sm { padding: 8px 14px; font-size: 0.85rem; width: auto; display: inline-block; }
+    .btn-icon {
+      background: var(--surface2); border: 1px solid var(--surface3);
+      color: var(--text); padding: 8px 12px;
+      width: auto; display: inline-flex; align-items: center; gap: 5px;
+      font-size: 0.82rem; border-radius: 8px;
+      font-family: inherit;
+    }
+    .btn[disabled] { opacity: 0.38; pointer-events: none; }
+
+    /* â”€â”€ Form â”€â”€ */
+    .form-group { margin-bottom: 16px; }
+    label {
+      display: block; font-size: 0.78rem; font-weight: 600;
+      color: var(--muted); text-transform: uppercase;
+      letter-spacing: 0.06em; margin-bottom: 6px;
+    }
+    input[type=text], input[type=number], select, textarea {
+      width: 100%; background: var(--surface2);
+      border: 1.5px solid var(--surface3); border-radius: 8px;
+      color: var(--text); padding: 12px 14px;
+      font-size: 1rem; font-family: inherit;
+      outline: none; transition: border-color 0.15s;
+    }
+    input:focus, select:focus { border-color: var(--accent); }
+    select option { background: var(--surface2); }
+
+    /* â”€â”€ Sport Picker â”€â”€ */
+    .sport-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .sport-btn {
+      background: var(--surface2); border: 2px solid var(--surface3);
+      border-radius: 12px; padding: 16px 12px;
+      text-align: center; cursor: pointer;
+      transition: all 0.15s; -webkit-tap-highlight-color: transparent;
+    }
+    .sport-btn.active { border-color: var(--accent); background: rgba(20,184,166,0.1); }
+    .sport-btn .s-icon { font-size: 2.2rem; margin-bottom: 6px; }
+    .sport-btn .s-label { font-size: 0.85rem; font-weight: 700; }
+    .sport-btn .s-desc { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+    /* â”€â”€ Tier Pills â”€â”€ */
+    .pill-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pill {
+      padding: 6px 14px; border-radius: 20px;
+      border: 1.5px solid var(--surface3); background: var(--surface2);
+      font-size: 0.8rem; font-weight: 600;
+      cursor: pointer; transition: all 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pill.active { border-color: var(--accent); color: var(--accent); background: rgba(20,184,166,0.1); }
+
+    /* â”€â”€ Card â”€â”€ */
+    .card {
+      background: var(--surface); border: 1px solid var(--surface3);
+      border-radius: 12px; padding: 16px; margin-bottom: 12px;
+    }
+    .card-title {
+      font-size: 0.73rem; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px;
+    }
+
+    /* â”€â”€ Badge â”€â”€ */
+    .badge {
+      display: inline-block; padding: 3px 9px;
+      border-radius: 20px; font-size: 0.7rem;
+      font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .badge-live { background: rgba(63,185,80,0.15); color: var(--success); border: 1px solid rgba(63,185,80,0.3); }
+    .badge-armed { background: rgba(210,153,34,0.15); color: var(--warn); border: 1px solid rgba(210,153,34,0.3); }
+    .badge-idle { background: rgba(139,148,158,0.15); color: var(--muted); border: 1px solid rgba(139,148,158,0.2); }
+    .badge-done { background: rgba(20,184,166,0.15); color: var(--accent); border: 1px solid rgba(20,184,166,0.3); }
+
+    /* â”€â”€ Clock â”€â”€ */
+    .clock {
+      font-family: 'Menlo','SF Mono','Courier New',monospace;
+      font-size: 4.2rem; font-weight: 700;
+      letter-spacing: -3px; color: var(--accent);
+      text-align: center; line-height: 1; padding: 14px 0;
+    }
+    .clock.stopped { color: var(--muted); }
+
+    /* â”€â”€ Lane Row â”€â”€ */
+    .lane-row {
+      display: flex; align-items: center;
+      padding: 10px 12px; background: var(--surface2);
+      border-radius: 8px; margin-bottom: 6px; gap: 10px;
+    }
+    .lane-num {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--surface3);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85rem; flex-shrink: 0;
+    }
+    .lane-name { flex: 1; font-weight: 500; }
+    .lane-time { font-family: 'Menlo',monospace; font-weight: 700; font-size: 1.05rem; }
+    .conf-HIGH { color: var(--success); font-size: 0.7rem; }
+    .conf-OK { color: var(--accent); font-size: 0.7rem; }
+    .conf-CHECK { color: var(--warn); font-size: 0.7rem; }
+    .conf-LOW { color: var(--danger); font-size: 0.7rem; }
+
+    /* â”€â”€ Place Row (XC) â”€â”€ */
+    .place-row {
+      display: flex; align-items: center;
+      padding: 10px 12px; background: var(--surface2);
+      border-radius: 8px; margin-bottom: 6px; gap: 10px;
+    }
+    .medal {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.9rem; flex-shrink: 0;
+    }
+    .medal.p1 { background: #FFD700; color: #000; }
+    .medal.p2 { background: #C0C0C0; color: #000; }
+    .medal.p3 { background: #CD7F32; color: #fff; }
+    .medal.pN { background: var(--surface3); color: var(--muted); }
+
+    /* â”€â”€ Tap Counter â”€â”€ */
+    .tap-counter { text-align: center; padding: 16px 0 8px; }
+    .tap-place {
+      font-size: 5.5rem; font-weight: 900; line-height: 1;
+      color: var(--accent);
+      font-family: 'Menlo','SF Mono',monospace;
+    }
+    .tap-label { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+
+    /* â”€â”€ Role Grid â”€â”€ */
+    .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .role-card {
+      background: var(--surface2); border: 2px solid var(--surface3);
+      border-radius: 12px; padding: 20px 12px; text-align: center;
+      cursor: pointer; transition: all 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .role-card:hover, .role-card:active { border-color: var(--accent); background: rgba(20,184,166,0.08); }
+    .role-card .r-icon { font-size: 2.2rem; margin-bottom: 8px; }
+    .role-card .r-label { font-weight: 700; font-size: 0.9rem; }
+    .role-card .r-desc { font-size: 0.73rem; color: var(--muted); margin-top: 3px; }
+    .role-card.full { grid-column: 1 / -1; }
+
+    /* â”€â”€ Countdown Overlay â”€â”€ */
+    #countdown-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(13,17,23,0.97); z-index: 200;
+      flex-direction: column; align-items: center; justify-content: center;
+    }
+    #countdown-overlay.active { display: flex; }
+    #countdown-num {
+      font-size: 11rem; font-weight: 900;
+      font-family: 'Menlo','SF Mono',monospace;
+      line-height: 1; transition: color 0.1s;
+    }
+    #countdown-label {
+      font-size: 1.1rem; color: var(--muted);
+      margin-top: 16px; text-transform: uppercase; letter-spacing: 0.15em;
+    }
+
+    /* â”€â”€ Flash Overlay â”€â”€ */
+    #flash-overlay {
+      display: none; position: fixed; inset: 0;
+      z-index: 250; pointer-events: none;
+    }
+    #flash-overlay.recall { background: rgba(248,81,73,0.82); display: block; }
+    #flash-overlay.go { background: rgba(63,185,80,0.45); display: block; }
+    #tap-flash {
+      display: none; position: fixed; inset: 0;
+      background: rgba(20,184,166,0.28); z-index: 199; pointer-events: none;
+    }
+    #tap-flash.show { display: block; }
+
+    /* â”€â”€ Join Code â”€â”€ */
+    .join-code {
+      font-size: 3.2rem; font-family: 'Menlo',monospace;
+      font-weight: 900; color: var(--accent);
+      text-align: center; letter-spacing: 12px; padding: 20px;
+    }
+    .qr-wrap { text-align: center; padding: 12px 0; }
+    .qr-wrap img { border-radius: 10px; max-width: 180px; }
+
+    /* â”€â”€ Modal â”€â”€ */
+    .modal-backdrop {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.72); z-index: 400;
+      align-items: flex-end;
+    }
+    .modal-backdrop.active { display: flex; }
+    .modal {
+      background: var(--surface); border-radius: 20px 20px 0 0;
+      padding: 24px 20px 44px; width: 100%;
+      border-top: 1px solid var(--surface3);
+    }
+    .modal-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
+    .modal-body { color: var(--muted); margin-bottom: 20px; font-size: 0.95rem; }
+
+    /* â”€â”€ Toast â”€â”€ */
+    #toast {
+      position: fixed; bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--surface); border: 1px solid var(--surface3);
+      border-radius: 24px; padding: 10px 20px;
+      font-size: 0.9rem; font-weight: 500;
+      transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1);
+      z-index: 350; white-space: nowrap;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* â”€â”€ Utility â”€â”€ */
+    .stack { display: flex; flex-direction: column; gap: 10px; }
+    .row { display: flex; gap: 10px; }
+    .row > .btn { flex: 1; }
+    .divider { border: none; border-top: 1px solid var(--surface3); margin: 16px 0; }
+    .text-center { text-align: center; }
+    .text-muted { color: var(--muted); }
+    .text-sm { font-size: 0.85rem; }
+    .text-xs { font-size: 0.75rem; }
+    .font-mono { font-family: 'Menlo','SF Mono',monospace; }
+    .mt-8 { margin-top: 8px; }
+    .mt-16 { margin-top: 16px; }
+    .mt-24 { margin-top: 24px; }
+    .mt-32 { margin-top: 32px; }
+    .hidden { display: none !important; }
+    .flex { display: flex; }
+    .items-center { align-items: center; }
+    .gap-8 { gap: 8px; }
+
+    /* â”€â”€ XC name input inline â”€â”€ */
+    .xc-name-input {
+      background: transparent; border: none;
+      border-bottom: 1px dashed var(--surface3);
+      border-radius: 0; padding: 2px 0;
+      font-size: 0.95rem; font-family: inherit;
+      color: var(--text); width: 100%; outline: none;
+    }
+    .xc-name-input:focus { border-bottom-color: var(--accent); }
+
+    /* â”€â”€ Admin Lane Input Row â”€â”€ */
+    .admin-lane-row {
+      display: flex; align-items: center;
+      gap: 8px; padding: 6px 0;
+      border-bottom: 1px solid var(--surface3);
+    }
+    .admin-lane-row:last-child { border-bottom: none; }
+    .admin-lane-num {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--surface3);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.8rem; flex-shrink: 0;
+      color: var(--muted);
+    }
+    .admin-lane-name-input {
+      flex: 1; background: transparent; border: none;
+      border-radius: 0; padding: 6px 0;
+      font-size: 0.95rem; font-family: inherit;
+      color: var(--text); outline: none;
+    }
+
+    @media (max-width: 380px) {
+      .clock { font-size: 3.4rem; }
+      .tap-place { font-size: 4.5rem; }
+      #countdown-num { font-size: 9rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     SCREEN: HOME
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="screen-home" class="screen active">
+  <div class="home-hero">
+    <div class="home-logo">FL</div>
+    <div class="home-title">FinishLine</div>
+    <div class="home-tagline">School sport timing â€” any event, any school</div>
+    <div class="home-sports">
+      <div class="home-sport-pill"><span>ðŸƒ</span>Track & Field</div>
+      <div class="home-sport-pill"><span>ðŸŠ</span>Swimming</div>
+      <div class="home-sport-pill"><span>ðŸŒ²</span>Cross Country</div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="stack">
+      <button class="btn btn-primary" onclick="showScreen('setup')">ðŸ« New Carnival</button>
+      <button class="btn btn-secondary" onclick="showScreen('join-screen')">ðŸ“± Join Carnival</button>
+    </div>
+    <div class="text-center text-muted text-xs mt-32">
+      Works offline Â· No app install Â· Free to use<br>
+      <span style="opacity:0.5">FinishLine v1.0 Â· finishline.app</span>
+    </div>
+  </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     SCREEN: SETUP (New Carnival)
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="screen-setup" class="screen">
+  <div class="header">
+    <div class="logo-badge">FL</div>
+    <div class="header-title">New Carnival</div>
+    <div class="header-right">
+      <button class="btn btn-icon btn-sm" onclick="showScreen('home')">â† Back</button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="form-group">
+      <label>School Name</label>
+      <input type="text" id="setup-school" placeholder="e.g. Williamstown Primary School">
+    </div>
+    <div class="form-group">
+      <label>Carnival / Event Name</label>
+      <input type="text" id="setup-name" placeholder="e.g. Winter Sport 2026">
+    </div>
+    <div class="form-group">
+      <label>Sport Type</label>
+      <div class="sport-grid">
+        <div class="sport-btn active" data-sport="track" onclick="selectSport('track')">
+          <div class="s-icon">ðŸƒ</div>
+          <div class="s-label">Track & Field</div>
+          <div class="s-desc">Lane timing</div>
+        </div>
+        <div class="sport-btn" data-sport="swim" onclick="selectSport('swim')">
+          <div class="s-icon">ðŸŠ</div>
+          <div class="s-label">Swimming</div>
+          <div class="s-desc">Lane timing</div>
+        </div>
+        <div class="sport-btn" data-sport="xc" onclick="selectSport('xc')">
+          <div class="s-icon">ðŸŒ²</div>
+          <div class="s-label">Cross Country</div>
+          <div class="s-desc">Finish order tap</div>
+        </div>
+        <div class="sport-btn" data-sport="mixed" onclick="selectSport('mixed')">
+          <div class="s-icon">ðŸŽ½</div>
+          <div class="s-label">Mixed Events</div>
+          <div class="s-desc">All modes</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Competition Tier</label>
+      <div class="pill-row">
+        <div class="pill active" data-tier="school" onclick="selectTier('school')">School</div>
+        <div class="pill" data-tier="hub" onclick="selectTier('hub')">Hub</div>
+        <div class="pill" data-tier="region" onclick="selectTier('region')">Region</div>
+        <div class="pill" data-tier="state" onclick="selectTier('state')">State</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Accent Colour <span style="font-weight:400;text-transform:none;font-size:0.85em">(optional)</span></label>
+      <input type="text" id="setup-colour" placeholder="#14b8a6 â€” leave blank for teal">
+    </div>
+    <button class="btn btn-primary mt-8" onclick="createCarnival()">Create Carnival â†’</button>
+  </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     SCREEN: JOIN
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="screen-join-screen" class="screen">
+  <div class="header">
+    <div class="logo-badge">FL</div>
+    <div class="header-title">Join Carnival</div>
+    <div class="header-right">
+      <button class="btn btn-icon btn-sm" onclick="showScreen('home')">â† Back</button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="form-group">
+      <label>4-Letter Code</label>
+      <input type="text" id="join-code-input" placeholder="ABCD"
+        maxlength="6"
+        style="font-family:'Menlo',monospace;font-size:1.8rem;text-transform:uppercase;letter-spacing:8px;text-align:center">
+    </div>
+    <div class="form-group">
+      <label>Your Name</label>
+      <input type="text" id="join-name-input" placeholder="e.g. Paddy G">
+    </div>
+    <button class="btn btn-primary" onclick="joinCarnival()">Join â†’</button>
+    <div id="join-error" class="text-center text-muted mt-16 hidden" style="color:var(--danger)"></div>
+  </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     SCREEN: ROLE PICKER
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="screen-role" class="screen">
+  <div class="header">
+    <div class="logo-badge">FL</div>
+    <div>
+      <div class="header-title" id="role-school-name">Choose Role</div>
+      <div class="header-sub" id="role-carnival-name"></div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="card">
+      <div class="card-title">Carnival</div>
+      <div style="font-size:1rem;font-weight:700" id="role-joined-name"></div>
+      <div class="text-xs text-muted mt-8 font-mono" id="role-joined-code"></div>
+    </div>
+    <div id="role-grid" class="role-grid"></div>
+    <div id="role-lane-picker" class="hidden mt-16">
+      <label>Select your lane</label>
+      <div id="lane-pick-btns" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     SCREEN: TIMER (Lane)
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="screen-timer" class="screen">
+  <div class="header">
+    <div class="conn-dot" id="timer-dot"></div>
+    <div>
+      <div class="header-title" id="timer-lane-label">Lane 1</div>
+      <div class="header-sub" id="timer-event-label"></div>
+    </div>
+    <div class="header-right" id="timer-badge-wrap"></div>
+  </div>
+  <div class="content">
+    <div class="card" id="timer-athlete-card">
+      <div class="card-title" id="timer-athlete-event">Event</div>
+      <div id="timer-athlete-name" style="font-size:1.5rem;font-weight:700">â€”</div>
+      <div id="timer-athlete-note" class="text-muted text-sm"></div>
+    </div>
+
+    <div class="clock" id="timer-clock">0:00.00</div>
+
+    <div class="form-group" id="timer-name-gate">
+      <label>Your name (needed to stop)</label>
+      <input type="text" id="timer-name-input" placeholder="e.g. Paddy G">
+    </div>
+
+    <button class="btn btn-stop" id="timer-stop-btn" onclick="timerStop()" disabled>STOP</button>
+
+    <div id="timer-my-split" class="hidden mt-16">
+      <div class="card">
+        <div class="card-title">Your time</div>
+        <div id="timer-my-time" class="font-mono" style="font-size:2.2rem;font-weight:700;color:var(--accent)"></div>
+      </div>
+    </div>
+
+    <div id="timer-splits-card" class="card mt-8 hidden">
+      <div class="card-title">All timers this lane</div>
+      <div id="timer-splits-list"></div>
+    </div>
+
+    <div id="timer-waiting-msg" class="text-center text-muted mt-32">
+      <div style="font-size:2.5rem">â±</div>
+      <div class="mt-8">Waiting for race to be armed...</div>
+    </div>
+  </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     SCREEN: ADMIN (Lane Race)
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="screen-admin" class="screen">
+  <div class="header">
+    <div class="conn-dot" id="admin-dot"></div>
+    <div class="header-title">Race Control</div>
+    <div class="header-right"><span class="text-muted text-xs" id="admin-school-lbl"></span></div>
+  </div>
+  <div class="content">
+
+    <!-- Setup panel -->
+    <div id="admin-setup-panel">
+      <div class="card">
+        <div class="card-title">Race Setup</div>
+        <div class="form-group">
+          <label>Age Group</label>
+          <select id="admin-age-sel"></select>
+        </div>
+        <div class="form-group">
+          <label>Gender</label>
+          <div class="pill-row">
+            <div class="pill active" data-ag="boys" onclick="selectAdminGender('boys')">Boys</div>
+            <div class="pill" data-ag="girls" onclick="selectAdminGender('girls')">Girls</div>
+            <div class="pill" data-ag="mixed" onclick="selectAdminGender('mixed')">Mixed</div>
+          </div>
+        </div>
+        <div class="form-group mb-0">
+          <label>Event</label>
+          <select id="admin-event-sel"></select>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Lane Assignments</div>
+        <div id="admin-lane-inputs"></div>
+      </div>
+      <button class="btn btn-primary" onclick="adminArm()">ARM RACE â†’</button>
+    </div>
+
+    <!-- Live panel -->
+    <div id="admin-live-panel" class="hidden">
+      <div class="card">
+        <div class="flex items-center gap-8" style="margin-bottom:6px">
+          <div id="admin-race-lbl" style="font-weight:700;font-size:1.05rem;flex:1"></div>
+          <span id="admin-state-badge" class="badge badge-armed">ARMED</span>
+        </div>
+        <div class="clock" id="admin-live-clock" style="font-size:3rem;padding:8px 0">0:00.00</div>
+      </div>
+      <div class="row">
+        <button class="btn btn-go" id="admin-go-btn" onclick="adminGo()">GO</button>
+        <button class="btn btn-secondary" onclick="adminRecall()">RECALL</button>
+      </div>
+      <div class="row mt-8">
+        <button class="btn btn-secondary" onclick="adminClear()">CLEAR SPLITS</button>
+        <button class="btn btn-secondary" onclick="adminAbandon()">ABANDON</button>
+      </div>
+      <hr class="divider">
+      <div class="card-title">Live Splits</div>
+      <div id="admin-splits-list"></div>
+      <button class="btn btn-primary mt-16 hidden" id="admin-publish-btn" onclick="adminPublish()">ðŸ“‹ Publish Results</button>
+    </div>
+
+    <!-- Done panel -->
+    <div id="admin-done-panel" class="hidden">
+      <div class="card">
+        <div class="card-title">Published Results</div>
+        <div id="admin-results-list"></div>
+      </div>
+      <div class="row mt-8">
+        <button class="btn btn-secondary" onclick="adminNewRace()">+ New Race</button>
+        <button class="btn btn-secondary" onclick="exportCSV()">ðŸ“¥ Export CSV</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     SCREEN: STARTER
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="screen-starter" class="screen">
+  <div class="header">
+    <div class="conn-dot" id="starter-dot"></div>
+    <div class="header-title">Starter</div>
+    <div class="header-right"><span id="starter-event-lbl" class="text-muted text-xs"></span></div>
+  </div>
+  <div class="content">
+    <div id="starter-waiting" class="text-center" style="padding-top:60px">
+      <div style="font-size:3.5rem">ðŸ””</div>
+      <div class="text-muted mt-16">Waiting for Race Control to arm...</div>
+    </div>
+    <div id="starter-armed" class="hidden">
+      <div class="card text-center">
+        <div id="starter-race-info" class="text-muted text-sm"></div>
+        <div class="clock mt-8" id="starter-clock">0:00.00</div>
+      </div>
+      <button class="btn btn-go" id="starter-go-btn" onclick="starterGo()">GO</button>
+      <button class="btn btn-secondary mt-8" onclick="starterRecall()">RECALL</button>
+    </div>
+  </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     SCREEN: OBSERVER (Lane Race)
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="screen-observer" class="screen">
+  <div class="header">
+    <div class="conn-dot" id="observer-dot"></div>
+    <div class="header-title">Live Results</div>
+    <div class="header-right"><span id="observer-event-lbl" class="text-muted text-xs"></span></div>
+  </div>
+  <div class="content">
+    <div class="clock" id="observer-clock" style="font-size:2.8rem">0:00.00</div>
+    <div id="observer-lanes-list"></div>
+    <div id="observer-waiting" class="text-center text-muted mt-32">
+      <div style="font-size:2.5rem">ðŸ“¡</div>
+      <div class="mt-8">Waiting for next race...</div>
+    </div>
+  </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     SCREEN: XC MARSHAL
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="screen-marshal" class="screen">
+  <div class="header">
+    <div class="conn-dot" id="marshal-dot"></div>
+    <div class="header-title">Finish Marshal</div>
+    <div class="header-right"><span id="marshal-event-lbl" class="text-xs text-muted"></span></div>
+  </div>
+  <div class="content">
+    <div id="marshal-waiting" class="text-center" style="padding-top:60px">
+      <div style="font-size:3.5rem">ðŸŒ²</div>
+      <div id="marshal-wait-msg" class="text-muted mt-16">Waiting for race to start...</div>
+    </div>
+    <div id="marshal-live" class="hidden">
+      <div class="tap-counter">
+        <div class="tap-label">Next finisher</div>
+        <div class="tap-place" id="marshal-next-place">1st</div>
+        <div class="tap-label" id="marshal-tapped-count"></div>
+      </div>
+      <button class="btn-tap" id="marshal-tap-btn" onclick="marshalTap()">
+        <span class="tap-main">TAP FINISH</span>
+        <span class="tap-sub" id="marshal-clock-mini">0:00.00</span>
+      </button>
+      <div class="text-center mt-8">
+        <button class="btn btn-icon btn-sm" onclick="marshalUndo()">â†© Undo last</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     SCREEN: XC ADMIN
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="screen-admin-xc" class="screen">
+  <div class="header">
+    <div class="conn-dot" id="xc-admin-dot"></div>
+    <div class="header-title">XC Race Control</div>
+    <div class="header-right"><span class="text-xs text-muted" id="xc-admin-school-lbl"></span></div>
+  </div>
+  <div class="content">
+
+    <!-- Setup -->
+    <div id="xc-setup-panel">
+      <div class="card">
+        <div class="card-title">Race Setup</div>
+        <div class="form-group">
+          <label>Age Group</label>
+          <select id="xc-age-sel"></select>
+        </div>
+        <div class="form-group">
+          <label>Gender</label>
+          <div class="pill-row">
+            <div class="pill active" data-xcg="boys" onclick="selectXCGender('boys')">Boys</div>
+            <div class="pill" data-xcg="girls" onclick="selectXCGender('girls')">Girls</div>
+            <div class="pill" data-xcg="mixed" onclick="selectXCGender('mixed')">Mixed</div>
+          </div>
+        </div>
+        <div class="form-group mb-0">
+          <label>Race / Distance</label>
+          <select id="xc-event-sel"></select>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="xcAdminArm()">ARM RACE â†’</button>
+    </div>
+
+    <!-- Live -->
+    <div id="xc-live-panel" class="hidden">
+      <div class="card">
+        <div class="flex items-center gap-8" style="margin-bottom:6px">
+          <div id="xc-race-lbl" style="font-weight:700;font-size:1.05rem;flex:1"></div>
+          <span id="xc-state-badge" class="badge badge-armed">ARMED</span>
+        </div>
+        <div class="clock" id="xc-admin-clock" style="font-size:3rem;padding:8px 0">0:00.00</div>
+      </div>
+      <div class="row">
+        <button class="btn btn-go" id="xc-go-btn" onclick="xcAdminGo()">GO</button>
+        <button class="btn btn-secondary" onclick="xcAdminRecall()">RECALL</button>
+      </div>
+      <div class="row mt-8">
+        <button class="btn btn-secondary" onclick="xcAdminAbandon()">ABANDON</button>
+        <button class="btn btn-primary hidden" id="xc-publish-btn" onclick="xcAdminPublish()">ðŸ“‹ Publish Results</button>
+      </div>
+      <hr class="divider">
+      <div class="card-title">Finishers <span id="xc-count-lbl" class="text-muted text-xs"></span></div>
+      <div id="xc-finishers-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     SCREEN: XC OBSERVER
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="screen-observer-xc" class="screen">
+  <div class="header">
+    <div class="conn-dot" id="xc-observer-dot"></div>
+    <div class="header-title">XC Live Results</div>
+    <div class="header-right"><span id="xc-observer-event-lbl" class="text-xs text-muted"></span></div>
+  </div>
+  <div class="content">
+    <div class="clock" id="xc-observer-clock" style="font-size:2.8rem">0:00.00</div>
+    <div id="xc-observer-places"></div>
+    <div id="xc-observer-waiting" class="text-center text-muted mt-32">
+      <div style="font-size:2.5rem">ðŸŒ²</div>
+      <div class="mt-8">Waiting for race to start...</div>
+    </div>
+  </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     SCREEN: JOIN PAGE (QR)
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="screen-share" class="screen">
+  <div class="header">
+    <div class="logo-badge">FL</div>
+    <div class="header-title" id="share-school-name">Join Page</div>
+    <div class="header-right">
+      <button class="btn btn-icon btn-sm" onclick="enterRole('role')">â† Back</button>
+    </div>
+  </div>
+  <div class="content text-center">
+    <div class="card">
+      <div class="card-title">Scan to Join</div>
+      <div class="qr-wrap"><img id="share-qr" src="" alt="QR Code" width="180" height="180"></div>
+      <div class="text-muted text-sm mt-8" id="share-carnival-name"></div>
+    </div>
+    <div class="card-title text-muted mt-8">Or enter this code</div>
+    <div class="join-code" id="share-join-code"></div>
+    <div class="text-muted text-xs mt-8">Open FinishLine and tap "Join Carnival"</div>
+  </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     SCREEN: RESULTS
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="screen-results" class="screen">
+  <div class="header">
+    <div class="logo-badge">FL</div>
+    <div class="header-title">Results</div>
+    <div class="header-right">
+      <button class="btn btn-icon btn-sm" onclick="exportCSV()">ðŸ“¥ CSV</button>
+    </div>
+  </div>
+  <div class="content">
+    <div id="results-all" class="text-muted text-center mt-32">Loading...</div>
+  </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     OVERLAYS
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<div id="countdown-overlay">
+  <div id="countdown-num" style="color:var(--text)">3</div>
+  <div id="countdown-label">Get set...</div>
+</div>
+
+<div id="flash-overlay"></div>
+<div id="tap-flash"></div>
+<div id="toast"></div>
+
+<div class="modal-backdrop" id="modal-bd">
+  <div class="modal">
+    <div class="modal-title" id="modal-ttl"></div>
+    <div class="modal-body" id="modal-bdy"></div>
+    <div class="stack" id="modal-btns-wrap"></div>
+  </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     FIREBASE SDK
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     APP SCRIPT
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<script>
+'use strict';
+
+// â”€â”€ Firebase â”€â”€
+const FB_CONFIG = {
+  apiKey: "AIzaSyA-bNl8XqvZ7DQ6YftL9teXbqxYICBlPF8",
+  authDomain: "willy-district-sport.firebaseapp.com",
+  databaseURL: "https://willy-district-sport-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "willy-district-sport",
+  storageBucket: "willy-district-sport.firebasestorage.app"
+};
+firebase.initializeApp(FB_CONFIG);
+const db = firebase.database();
+const ROOT = 'fl'; // FinishLine namespace
+
+// â”€â”€ State â”€â”€
+let carnivalCode = '';
+let carnivalMeta = null;
+let myName = localStorage.getItem('fl_name') || '';
+let myId   = localStorage.getItem('fl_id') || genId(8);
+localStorage.setItem('fl_id', myId);
+let myLane = 0;
+let serverOffset = 0;
+let wakeLock = null;
+let rafId = null;
+let raceState = null;
+let xcState   = null;
+let adminGender = 'boys';
+let xcGender    = 'boys';
+let selSport = 'track';
+let selTier  = 'school';
+let activeListeners = [];
+let countdownRunning = false;
+
+// â”€â”€ Event Lists â”€â”€
+const EVENTS = {
+  track: ['100m Sprint','200m Sprint','400m','800m','1500m','4Ã—100m Relay','Long Jump','Triple Jump','High Jump','Shot Put','Discus','Javelin'],
+  swim:  ['50m Freestyle','50m Backstroke','50m Breaststroke','50m Butterfly','100m Freestyle','100m Backstroke','100m Breaststroke','200m Freestyle','4Ã—50m Freestyle Relay','4Ã—50m Medley Relay'],
+  xc:    ['Cross Country 2km','Cross Country 3km','Cross Country 4km','Cross Country 5km','Fun Run 1km','Fun Run 2km','Fun Run 3km'],
+  mixed: ['100m Sprint','200m Sprint','400m','800m','50m Freestyle','50m Backstroke','Cross Country 2km','Cross Country 3km','Long Jump','High Jump']
+};
+const AGE_GROUPS = ['9 Years','10 Years','11 Years','12/13 Years','Open','Year 3/4','Year 5/6','Year 3â€“6'];
+const LANE_COUNT = 8;
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// UTILITIES
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function genId(n=8) {
+  return Math.random().toString(36).substring(2, 2+n).toUpperCase();
+}
+
+function genCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  let c = '';
+  for (let i = 0; i < 4; i++) c += chars[Math.floor(Math.random() * chars.length)];
+  return c;
+}
+
+function fmtMs(ms) {
+  if (ms == null || ms < 0) return 'â€”';
+  const totalCs = Math.floor(ms / 10);
+  const cs  = totalCs % 100;
+  const totalSec = Math.floor(totalCs / 100);
+  const sec = totalSec % 60;
+  const min = Math.floor(totalSec / 60);
+  if (min > 0) return `${min}:${pad(sec)}.${pad(cs)}`;
+  return `${sec}.${pad(cs)}`;
+}
+
+function fmtSec(ms) {
+  if (ms == null) return 'â€”';
+  return (ms / 1000).toFixed(2) + 's';
+}
+
+function pad(n) { return String(n).padStart(2,'0'); }
+
+function nowServer() { return Date.now() + serverOffset; }
+
+function ordinal(n) {
+  const s = ['th','st','nd','rd'];
+  const v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
+function trimmedMean(values) {
+  if (!values || values.length === 0) return null;
+  if (values.length <= 2) return values.reduce((a,b)=>a+b,0)/values.length;
+  const sorted = [...values].sort((a,b)=>a-b);
+  const inner = sorted.slice(1,-1);
+  return inner.reduce((a,b)=>a+b,0)/inner.length;
+}
+
+function confidenceFor(splitsObj) {
+  const vals = Object.values(splitsObj||{}).map(s=>s.elapsedMs).filter(Boolean);
+  if (vals.length === 0) return { cls:'LOW', label:'No timers' };
+  if (vals.length === 1) return { cls:'CHECK', label:'1 timer' };
+  const spread = Math.max(...vals) - Math.min(...vals);
+  if (vals.length >= 3 && spread < 300) return { cls:'HIGH', label:'HIGH' };
+  if (vals.length >= 2 && spread < 600) return { cls:'OK', label:'OK' };
+  if (spread < 1500) return { cls:'CHECK', label:'CHECK' };
+  return { cls:'LOW', label:'DISAGREE' };
+}
+
+function fbEnc(s) {
+  return String(s).replace(/\./g,'__D__').replace(/\//g,'__S__')
+    .replace(/\[/g,'__LB__').replace(/\]/g,'__RB__')
+    .replace(/#/g,'__H__').replace(/\$/g,'__$__');
+}
+
+// â”€â”€ UI helpers â”€â”€
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('screen-' + id);
+  if (el) { el.classList.add('active'); window.scrollTo(0,0); }
+}
+
+function toast(msg, dur=2200) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(()=>el.classList.remove('show'), dur);
+}
+
+function modal(title, body, buttons) {
+  document.getElementById('modal-ttl').textContent = title;
+  document.getElementById('modal-bdy').textContent = body;
+  const wrap = document.getElementById('modal-btns-wrap');
+  wrap.innerHTML = '';
+  buttons.forEach(b => {
+    const btn = document.createElement('button');
+    btn.className = 'btn ' + (b.cls||'btn-secondary');
+    btn.textContent = b.label;
+    btn.onclick = () => { closeModal(); b.fn && b.fn(); };
+    wrap.appendChild(btn);
+  });
+  document.getElementById('modal-bd').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('modal-bd').classList.remove('active');
+}
+
+function vibrate(pat) { try { navigator.vibrate && navigator.vibrate(pat); } catch(e){} }
+
+function flash(type, dur=450) {
+  const el = document.getElementById('flash-overlay');
+  el.className = type;
+  setTimeout(()=>el.className='', dur);
+}
+
+function tapFlash() {
+  const el = document.getElementById('tap-flash');
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 180);
+}
+
+// â”€â”€ Clock sync â”€â”€
+async function syncClock() {
+  const snap = await db.ref('.info/serverTimeOffset').once('value');
+  serverOffset = snap.val() || 0;
+}
+
+async function getServerTime() {
+  const snap = await db.ref('.info/serverTimeOffset').once('value');
+  return Date.now() + (snap.val() || 0);
+}
+
+// â”€â”€ Wake lock â”€â”€
+async function requestWakeLock() {
+  try { if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); }
+  catch(e){}
+}
+
+// â”€â”€ Firebase helpers â”€â”€
+function cRef(path) { return db.ref(`${ROOT}/${carnivalCode}/${path}`); }
+
+function cleanListeners() {
+  activeListeners.forEach(fn=>fn());
+  activeListeners = [];
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+}
+
+function watchConn(dotId) {
+  db.ref('.info/connected').on('value', snap => {
+    const el = document.getElementById(dotId);
+    if (el) el.classList.toggle('live', snap.val()===true);
+  });
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// SETUP SCREEN
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function selectSport(s) {
+  selSport = s;
+  document.querySelectorAll('.sport-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`.sport-btn[data-sport="${s}"]`).classList.add('active');
+}
+
+function selectTier(t) {
+  selTier = t;
+  document.querySelectorAll('.pill[data-tier]').forEach(p=>p.classList.remove('active'));
+  document.querySelector(`.pill[data-tier="${t}"]`).classList.add('active');
+}
+
+async function createCarnival() {
+  const school = document.getElementById('setup-school').value.trim();
+  const name   = document.getElementById('setup-name').value.trim();
+  if (!school || !name) { toast('âš ï¸ Enter school name and event name'); return; }
+
+  const colour = document.getElementById('setup-colour').value.trim() || '#14b8a6';
+  applyAccent(colour);
+
+  // Find unique code
+  let code, snap;
+  do {
+    code = genCode();
+    snap = await db.ref(`${ROOT}/${code}/meta`).once('value');
+  } while (snap.exists());
+
+  carnivalCode = code;
+  carnivalMeta = { school, name, sport:selSport, tier:selTier, colour,
+    createdAt: firebase.database.ServerValue.TIMESTAMP };
+
+  await db.ref(`${ROOT}/${code}/meta`).set(carnivalMeta);
+  localStorage.setItem('fl_last_code', code);
+
+  toast(`âœ… Carnival created: ${code}`);
+  showRolePicker();
+  // Admin auto-navigates to their control panel
+  setTimeout(() => enterRole('admin'), 600);
+}
+
+function applyAccent(colour) {
+  if (!colour || !/^#[0-9a-fA-F]{3,6}$/.test(colour)) return;
+  document.documentElement.style.setProperty('--accent', colour);
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// JOIN
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+async function joinCarnival() {
+  const code = document.getElementById('join-code-input').value.trim().toUpperCase();
+  const name = document.getElementById('join-name-input').value.trim();
+  if (code.length < 4) { toast('âš ï¸ Enter 4-letter code'); return; }
+  if (!name) { toast('âš ï¸ Enter your name'); return; }
+
+  const snap = await db.ref(`${ROOT}/${code}/meta`).once('value');
+  const errEl = document.getElementById('join-error');
+  if (!snap.exists()) {
+    errEl.textContent = 'âŒ Carnival not found. Check the code.';
+    errEl.classList.remove('hidden');
+    return;
+  }
+  errEl.classList.add('hidden');
+
+  carnivalCode = code;
+  carnivalMeta = snap.val();
+  myName = name;
+  localStorage.setItem('fl_name', name);
+  localStorage.setItem('fl_last_code', code);
+  if (carnivalMeta.colour) applyAccent(carnivalMeta.colour);
+
+  showRolePicker();
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ROLE PICKER
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function showRolePicker() {
+  document.getElementById('role-school-name').textContent = carnivalMeta?.school || 'FinishLine';
+  document.getElementById('role-carnival-name').textContent = carnivalMeta?.name || '';
+  document.getElementById('role-joined-name').textContent = carnivalMeta?.name || '';
+  document.getElementById('role-joined-code').textContent = `Code: ${carnivalCode}`;
+
+  const sport = carnivalMeta?.sport || 'track';
+  const grid = document.getElementById('role-grid');
+  const roles = [];
+
+  if (['track','swim','mixed'].includes(sport)) {
+    roles.push({ id:'timer',    icon:'â±', label:'Timer',        desc:'Time a lane' });
+    roles.push({ id:'admin',    icon:'ðŸŽ›', label:'Race Control', desc:'Arm & manage races' });
+    roles.push({ id:'starter',  icon:'ðŸ””', label:'Starter',      desc:'Fire the gun' });
+    roles.push({ id:'observer', icon:'ðŸ‘', label:'Observer',     desc:'Watch live results' });
+  }
+  if (['xc','mixed'].includes(sport)) {
+    roles.push({ id:'marshal',   icon:'ðŸŒ²', label:'Finish Marshal', desc:'Tap each finisher',     full: sport==='xc' });
+    roles.push({ id:'admin-xc',  icon:'ðŸŽ›', label:'XC Control',    desc:'Arm & manage XC races', full: sport==='xc' });
+    roles.push({ id:'observer-xc',icon:'ðŸ‘',label:'XC Observer',   desc:'Watch finish order',    full: sport==='xc' });
+  }
+  roles.push({ id:'share',   icon:'ðŸ“±', label:'Join Page',  desc:'QR code for participants', full:true });
+  roles.push({ id:'results', icon:'ðŸ“Š', label:'Results',    desc:'View all results',          full:true });
+
+  grid.innerHTML = roles.map(r => `
+    <div class="role-card${r.full?' full':''}" onclick="enterRole('${r.id}')">
+      <div class="r-icon">${r.icon}</div>
+      <div class="r-label">${r.label}</div>
+      <div class="r-desc">${r.desc}</div>
+    </div>`).join('');
+
+  showScreen('role');
+}
+
+function enterRole(role) {
+  cleanListeners();
+  if (role === 'timer') {
+    const picker = document.getElementById('role-lane-picker');
+    picker.classList.remove('hidden');
+    const btns = document.getElementById('lane-pick-btns');
+    btns.innerHTML = Array.from({length:LANE_COUNT},(_,i)=>i+1)
+      .map(n=>`<button class="btn btn-secondary btn-sm" onclick="enterTimerLane(${n})">Lane ${n}</button>`)
+      .join('');
+    return;
+  }
+  if (role === 'share')   { showSharePage(); return; }
+  if (role === 'admin')   { showScreen('admin');       initAdminView();      return; }
+  if (role === 'starter') { showScreen('starter');     initStarterView();    return; }
+  if (role === 'observer'){ showScreen('observer');    initObserverView();   return; }
+  if (role === 'marshal') { showScreen('marshal');     initMarshalView();    return; }
+  if (role === 'admin-xc'){ showScreen('admin-xc');   initXCAdminView();    return; }
+  if (role === 'observer-xc'){ showScreen('observer-xc'); initXCObserverView(); return; }
+  if (role === 'results') { showScreen('results');     initResultsView();    return; }
+  if (role === 'role')    { showRolePicker();           return; }
+}
+
+function enterTimerLane(n) {
+  myLane = n;
+  cleanListeners();
+  showScreen('timer');
+  initTimerView(n);
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// TIMER VIEW (Lane Race)
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function initTimerView(lane) {
+  requestWakeLock();
+  syncClock();
+  watchConn('timer-dot');
+
+  document.getElementById('timer-lane-label').textContent = `Lane ${lane}`;
+
+  // Name gate
+  const nameInput = document.getElementById('timer-name-input');
+  const stopBtn   = document.getElementById('timer-stop-btn');
+  if (myName) { nameInput.value = myName; stopBtn.removeAttribute('disabled'); }
+  nameInput.addEventListener('input', ()=>{
+    myName = nameInput.value.trim();
+    localStorage.setItem('fl_name', myName);
+    myName ? stopBtn.removeAttribute('disabled') : stopBtn.setAttribute('disabled','');
+  });
+
+  const raceRef = cRef('race/current');
+  raceRef.on('value', snap => { raceState = snap.val(); renderTimerView(lane, raceState); });
+  activeListeners.push(()=>raceRef.off());
+
+  cRef('recall').on('value', snap => { if (snap.val()?.active) flashRecall(); });
+  activeListeners.push(()=>cRef('recall').off());
+
+  function tick() {
+    if (raceState?.state==='live' && raceState.startedAtServer) {
+      const el = document.getElementById('timer-clock');
+      if (el) el.textContent = fmtMs(nowServer() - raceState.startedAtServer);
+    }
+    rafId = requestAnimationFrame(tick);
+  }
+  rafId = requestAnimationFrame(tick);
+}
+
+function renderTimerView(lane, race) {
+  const waiting  = document.getElementById('timer-waiting-msg');
+  const mySplit  = document.getElementById('timer-my-split');
+  const splitsCard = document.getElementById('timer-splits-card');
+  const stopBtn  = document.getElementById('timer-stop-btn');
+  const badge    = document.getElementById('timer-badge-wrap');
+
+  if (!race || race.state==='idle') {
+    waiting.classList.remove('hidden');
+    mySplit.classList.add('hidden');
+    splitsCard.classList.add('hidden');
+    document.getElementById('timer-clock').textContent = '0:00.00';
+    badge.innerHTML = `<span class="badge badge-idle">IDLE</span>`;
+    return;
+  }
+  waiting.classList.add('hidden');
+
+  const sportLabel = carnivalMeta?.sport==='swim' ? 'ðŸŠ' : 'ðŸƒ';
+  document.getElementById('timer-athlete-event').textContent =
+    `${sportLabel} ${race.age||''} ${race.gender||''} Â· ${race.event||''}`;
+
+  const laneData = race.lanes?.[lane];
+  document.getElementById('timer-athlete-name').textContent = laneData?.name || `Lane ${lane}`;
+  document.getElementById('timer-athlete-note').textContent = laneData?.note || '';
+
+  if (race.state==='armed') {
+    badge.innerHTML = `<span class="badge badge-armed">ARMED</span>`;
+    document.getElementById('timer-clock').textContent = '0:00.00';
+  } else if (race.state==='live') {
+    badge.innerHTML = `<span class="badge badge-live">LIVE</span>`;
+  } else if (race.state==='done') {
+    badge.innerHTML = `<span class="badge badge-done">DONE</span>`;
+  }
+
+  // My split
+  const myRec = race.splits?.[lane]?.[fbEnc(myId)];
+  if (myRec) {
+    document.getElementById('timer-my-time').textContent = fmtSec(myRec.elapsedMs);
+    mySplit.classList.remove('hidden');
+    stopBtn.textContent = 'âœ“ Stopped';
+    stopBtn.setAttribute('disabled','');
+  } else {
+    mySplit.classList.add('hidden');
+    if (race.state==='live') { stopBtn.textContent = 'STOP'; stopBtn.removeAttribute('disabled'); }
+  }
+
+  // All splits this lane
+  const laneSplits = race.splits?.[lane] || {};
+  const splitVals = Object.values(laneSplits);
+  if (splitVals.length) {
+    splitsCard.classList.remove('hidden');
+    document.getElementById('timer-splits-list').innerHTML = splitVals.map(s=>`
+      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--surface3)">
+        <span class="text-muted text-sm">${s.name||'?'}</span>
+        <span class="font-mono" style="font-weight:700">${fmtSec(s.elapsedMs)}</span>
+      </div>`).join('');
+  } else { splitsCard.classList.add('hidden'); }
+}
+
+async function timerStop() {
+  if (!raceState || raceState.state!=='live') { toast('âš ï¸ Race not live'); return; }
+  if (!myName) { toast('âš ï¸ Enter your name first'); return; }
+  const elapsed = nowServer() - raceState.startedAtServer;
+  if (elapsed < 500) { toast('âš ï¸ Too quick â€” check start'); return; }
+  const key = fbEnc(myId);
+  await cRef(`race/current/splits/${myLane}/${key}`).set({
+    name: myName, elapsedMs: elapsed,
+    stopAt: firebase.database.ServerValue.TIMESTAMP
+  });
+  vibrate([100]);
+  flash('go', 300);
+  toast(`âœ… ${fmtSec(elapsed)}`);
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ADMIN VIEW (Lane Race)
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function initAdminView() {
+  requestWakeLock(); syncClock();
+  watchConn('admin-dot');
+  document.getElementById('admin-school-lbl').textContent = carnivalMeta?.school||'';
+
+  // Populate dropdowns
+  const ageSel = document.getElementById('admin-age-sel');
+  ageSel.innerHTML = AGE_GROUPS.map(a=>`<option>${a}</option>`).join('');
+  const evSel = document.getElementById('admin-event-sel');
+  const sport = carnivalMeta?.sport||'track';
+  const evList = EVENTS[sport] || EVENTS.track;
+  evSel.innerHTML = evList.map(e=>`<option>${e}</option>`).join('');
+
+  // Lane inputs
+  const container = document.getElementById('admin-lane-inputs');
+  container.innerHTML = Array.from({length:LANE_COUNT},(_,i)=>i+1).map(n=>`
+    <div class="admin-lane-row">
+      <div class="admin-lane-num">${n}</div>
+      <input class="admin-lane-name-input" data-lane="${n}"
+        placeholder="Name or Bib #" type="text">
+    </div>`).join('');
+
+  const raceRef = cRef('race/current');
+  raceRef.on('value', snap=>{raceState=snap.val(); renderAdminView(raceState);});
+  activeListeners.push(()=>raceRef.off());
+
+  function tick() {
+    if (raceState?.state==='live' && raceState.startedAtServer) {
+      const el=document.getElementById('admin-live-clock');
+      if(el) el.textContent=fmtMs(nowServer()-raceState.startedAtServer);
+    }
+    rafId=requestAnimationFrame(tick);
+  }
+  rafId=requestAnimationFrame(tick);
+}
+
+function selectAdminGender(g) {
+  adminGender = g;
+  document.querySelectorAll('[data-ag]').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll(`[data-ag="${g}"]`).forEach(p=>p.classList.add('active'));
+}
+
+function renderAdminView(race) {
+  const setup = document.getElementById('admin-setup-panel');
+  const live  = document.getElementById('admin-live-panel');
+  const done  = document.getElementById('admin-done-panel');
+
+  if (!race || race.state==='idle') {
+    setup.classList.remove('hidden'); live.classList.add('hidden'); done.classList.add('hidden'); return;
+  }
+  setup.classList.add('hidden');
+
+  if (race.state==='done') {
+    live.classList.add('hidden'); done.classList.remove('hidden');
+    renderAdminDone(race); return;
+  }
+
+  live.classList.remove('hidden'); done.classList.add('hidden');
+  document.getElementById('admin-race-lbl').textContent = `${race.age} ${race.gender} Â· ${race.event}`;
+
+  const badge  = document.getElementById('admin-state-badge');
+  const goBtn  = document.getElementById('admin-go-btn');
+  const pubBtn = document.getElementById('admin-publish-btn');
+
+  if (race.state==='armed') {
+    badge.className='badge badge-armed'; badge.textContent='ARMED';
+    goBtn.removeAttribute('disabled'); pubBtn.classList.add('hidden');
+    document.getElementById('admin-live-clock').textContent='0:00.00';
+  } else if (race.state==='live') {
+    badge.className='badge badge-live'; badge.textContent='LIVE';
+    goBtn.setAttribute('disabled','');
+  }
+
+  // Splits
+  const lanes = race.lanes||{};
+  const splits = race.splits||{};
+  let allTimed = Object.keys(lanes).length>0;
+
+  document.getElementById('admin-splits-list').innerHTML = Array.from({length:LANE_COUNT},(_,i)=>i+1).map(n=>{
+    if (!lanes[n]) return '';
+    const laneSplits = splits[n]||{};
+    const vals = Object.values(laneSplits).map(s=>s.elapsedMs).filter(Boolean);
+    const mean = vals.length ? trimmedMean(vals) : null;
+    const conf = confidenceFor(laneSplits);
+    if (!mean) allTimed = false;
+    return `<div class="lane-row">
+      <div class="lane-num">${n}</div>
+      <div class="lane-name">${lanes[n]?.name||`Lane ${n}`}</div>
+      ${mean ? `<div><span class="lane-time">${fmtSec(mean)}</span> <span class="conf-${conf.cls}">${conf.label}</span></div>`
+             : `<span class="text-muted text-xs">${race.state==='live'?'waitingâ€¦':'â€”'}</span>`}
+    </div>`;
+  }).join('');
+
+  if (race.state==='live' && allTimed) pubBtn.classList.remove('hidden');
+}
+
+async function adminArm() {
+  const age   = document.getElementById('admin-age-sel').value;
+  const event = document.getElementById('admin-event-sel').value;
+  const lanes = {};
+  document.querySelectorAll('.admin-lane-name-input').forEach(inp=>{
+    const n = inp.dataset.lane;
+    const v = inp.value.trim();
+    if (v) lanes[n] = { name:v };
+  });
+  await cRef('race/current').set({
+    raceId: genId(6), age, gender:adminGender, event,
+    state:'armed', lanes, splits:{},
+    armedAt: firebase.database.ServerValue.TIMESTAMP
+  });
+  toast('âœ… Race armed');
+}
+
+async function adminGo() {
+  if (!raceState || raceState.state!=='armed') return;
+  document.getElementById('admin-go-btn').setAttribute('disabled','');
+  showCountdown(async ()=>{
+    const t = await getServerTime();
+    await cRef('race/current').update({ state:'live', startedAtServer:t });
+  });
+}
+
+async function adminRecall() {
+  await cRef('race/current').update({ state:'armed', startedAtServer:null });
+  broadcastRecall();
+}
+
+function broadcastRecall() {
+  cRef('recall').set({ active:true, at:firebase.database.ServerValue.TIMESTAMP });
+  setTimeout(()=>cRef('recall').set({active:false}), 2500);
+  flashRecall();
+}
+
+async function adminClear() {
+  modal('Clear Splits','Remove all timer splits for this race?',[
+    { label:'Clear', cls:'btn-danger', fn: async ()=>{
+      await cRef('race/current/splits').set({});
+      toast('Splits cleared');
+    }},
+    { label:'Cancel' }
+  ]);
+}
+
+async function adminAbandon() {
+  modal('Abandon Race','Return to setup and discard this race?',[
+    { label:'Abandon', cls:'btn-danger', fn: async ()=>{
+      await cRef('race/current').set({state:'idle'});
+    }},
+    { label:'Cancel' }
+  ]);
+}
+
+async function adminPublish() {
+  if (!raceState) return;
+  const lanes  = raceState.lanes||{};
+  const splits = raceState.splits||{};
+  const results = [];
+  Object.keys(lanes).forEach(lane=>{
+    const vals = Object.values(splits[lane]||{}).map(s=>s.elapsedMs).filter(Boolean);
+    const mean = vals.length ? trimmedMean(vals) : null;
+    if (mean!=null) results.push({ lane:parseInt(lane), name:lanes[lane]?.name||`Lane ${lane}`, timeMs:mean });
+  });
+  results.sort((a,b)=>a.timeMs-b.timeMs);
+  results.forEach((r,i)=>r.place=i+1);
+  const key = fbEnc(`${raceState.age}-${raceState.gender}-${raceState.event}-${raceState.raceId}`);
+  await cRef(`results/${key}`).set({
+    type:'lane', age:raceState.age, gender:raceState.gender, event:raceState.event,
+    raceId:raceState.raceId, results,
+    publishedAt:firebase.database.ServerValue.TIMESTAMP
+  });
+  await cRef('race/current').update({state:'done'});
+  toast('ðŸ“‹ Results published!');
+}
+
+function adminNewRace() {
+  cRef('race/current').set({state:'idle'});
+  document.querySelectorAll('.admin-lane-name-input').forEach(inp=>inp.value='');
+}
+
+function renderAdminDone(race) {
+  const splits = race.splits||{};
+  const lanes  = race.lanes||{};
+  const results = [];
+  Object.keys(lanes).forEach(lane=>{
+    const vals = Object.values(splits[lane]||{}).map(s=>s.elapsedMs).filter(Boolean);
+    const mean = vals.length ? trimmedMean(vals) : null;
+    if (mean) results.push({ lane, name:lanes[lane]?.name, timeMs:mean });
+  });
+  results.sort((a,b)=>a.timeMs-b.timeMs);
+  document.getElementById('admin-results-list').innerHTML = results.map((r,i)=>`
+    <div class="lane-row">
+      <div class="medal ${medalCls(i+1)}">${i+1}</div>
+      <div class="lane-name">${r.name||`Lane ${r.lane}`}</div>
+      <div class="lane-time font-mono">${fmtSec(r.timeMs)}</div>
+    </div>`).join('') || '<div class="text-muted text-sm">No timed athletes</div>';
+}
+
+function medalCls(p) { return p===1?'p1':p===2?'p2':p===3?'p3':'pN'; }
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// STARTER VIEW
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function initStarterView() {
+  watchConn('starter-dot');
+  const raceRef = cRef('race/current');
+  raceRef.on('value', snap=>{
+    const race = snap.val();
+    const w = document.getElementById('starter-waiting');
+    const a = document.getElementById('starter-armed');
+    if (!race || race.state==='idle') { w.classList.remove('hidden'); a.classList.add('hidden'); return; }
+    if (race.state==='armed') {
+      w.classList.add('hidden'); a.classList.remove('hidden');
+      document.getElementById('starter-race-info').textContent = `${race.age} ${race.gender} Â· ${race.event}`;
+    } else { w.classList.remove('hidden'); a.classList.add('hidden'); }
+  });
+  activeListeners.push(()=>raceRef.off());
+}
+
+function starterGo() {
+  document.getElementById('starter-go-btn').setAttribute('disabled','');
+  showCountdown(async ()=>{
+    const t = await getServerTime();
+    await cRef('race/current').update({ state:'live', startedAtServer:t });
+  });
+}
+
+function starterRecall() { broadcastRecall(); }
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// OBSERVER VIEW (Lane Race)
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function initObserverView() {
+  watchConn('observer-dot');
+  const raceRef = cRef('race/current');
+  raceRef.on('value', snap=>{ raceState=snap.val(); renderObserverView(raceState); });
+  activeListeners.push(()=>raceRef.off());
+
+  function tick() {
+    if (raceState?.state==='live' && raceState.startedAtServer) {
+      const el=document.getElementById('observer-clock');
+      if(el) el.textContent=fmtMs(nowServer()-raceState.startedAtServer);
+    }
+    rafId=requestAnimationFrame(tick);
+  }
+  rafId=requestAnimationFrame(tick);
+}
+
+function renderObserverView(race) {
+  const waiting = document.getElementById('observer-waiting');
+  const list    = document.getElementById('observer-lanes-list');
+  if (!race || race.state==='idle') {
+    waiting.classList.remove('hidden'); list.innerHTML='';
+    document.getElementById('observer-event-lbl').textContent=''; return;
+  }
+  waiting.classList.add('hidden');
+  document.getElementById('observer-event-lbl').textContent=
+    `${race.age||''} ${race.gender||''} Â· ${race.event||''}`;
+
+  const lanes  = race.lanes||{};
+  const splits = race.splits||{};
+  const data = Object.keys(lanes).map(n=>{
+    const vals = Object.values(splits[n]||{}).map(s=>s.elapsedMs).filter(Boolean);
+    const mean = vals.length ? trimmedMean(vals) : null;
+    const conf = confidenceFor(splits[n]||{});
+    return { n:parseInt(n), name:lanes[n]?.name||`Lane ${n}`, mean, conf };
+  });
+  const ranked = [...data].filter(d=>d.mean!=null).sort((a,b)=>a.mean-b.mean);
+  const rankMap={};
+  ranked.forEach((d,i)=>rankMap[d.n]=i+1);
+
+  list.innerHTML = data.sort((a,b)=>a.n-b.n).map(d=>{
+    const place = rankMap[d.n];
+    const numStyle = place===1?'background:#FFD700;color:#000':place===2?'background:#C0C0C0;color:#000':place===3?'background:#CD7F32;color:#fff':'';
+    return `<div class="lane-row">
+      <div class="lane-num" style="${numStyle}">${place||d.n}</div>
+      <div class="lane-name">${d.name}</div>
+      ${d.mean
+        ? `<div><span class="lane-time font-mono">${fmtSec(d.mean)}</span> <span class="conf-${d.conf.cls}">${d.conf.label}</span></div>`
+        : `<span class="text-muted text-xs">${race.state==='live'?'â€¦':'â€”'}</span>`}
+    </div>`;
+  }).join('');
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// COUNTDOWN
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function showCountdown(onGo) {
+  if (countdownRunning) return;
+  countdownRunning = true;
+  const overlay = document.getElementById('countdown-overlay');
+  const numEl   = document.getElementById('countdown-num');
+  const lblEl   = document.getElementById('countdown-label');
+  overlay.classList.add('active');
+
+  [
+    { n:'3', l:'Get setâ€¦',      d:0 },
+    { n:'2', l:'Readyâ€¦',        d:1000 },
+    { n:'1', l:'On your marksâ€¦',d:2000 },
+    { n:'GO',l:'',              d:3000, go:true }
+  ].forEach(({n,l,d,go})=>{
+    setTimeout(()=>{
+      numEl.textContent = n;
+      numEl.style.color = go ? 'var(--success)' : 'var(--text)';
+      lblEl.textContent = l;
+      vibrate(go ? [200,60,200] : [40]);
+      if (go) { flash('go',600); onGo && onGo(); }
+    }, d);
+  });
+
+  setTimeout(()=>{ overlay.classList.remove('active'); countdownRunning=false; }, 3900);
+}
+
+function flashRecall() {
+  const overlay = document.getElementById('countdown-overlay');
+  const numEl   = document.getElementById('countdown-num');
+  const lblEl   = document.getElementById('countdown-label');
+  overlay.classList.add('active');
+  numEl.textContent = 'ðŸ”´';
+  numEl.style.color  = 'var(--danger)';
+  lblEl.textContent  = 'FALSE START â€” RECALL';
+  vibrate([200,80,200,80,200]);
+  flash('recall', 1800);
+  setTimeout(()=>overlay.classList.remove('active'), 2000);
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// CROSS COUNTRY â€” MARSHAL VIEW
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function initMarshalView() {
+  requestWakeLock(); syncClock();
+  watchConn('marshal-dot');
+
+  const xcRef = cRef('xc/current');
+  xcRef.on('value', snap=>{ xcState=snap.val(); renderMarshalView(xcState); });
+  activeListeners.push(()=>xcRef.off());
+
+  cRef('recall').on('value', snap=>{ if(snap.val()?.active) flashRecall(); });
+  activeListeners.push(()=>cRef('recall').off());
+
+  function tick() {
+    if (xcState?.state==='live' && xcState.startedAtServer) {
+      const el=document.getElementById('marshal-clock-mini');
+      if(el) el.textContent=fmtMs(nowServer()-xcState.startedAtServer);
+    }
+    rafId=requestAnimationFrame(tick);
+  }
+  rafId=requestAnimationFrame(tick);
+}
+
+function renderMarshalView(xc) {
+  const waiting = document.getElementById('marshal-waiting');
+  const live    = document.getElementById('marshal-live');
+
+  if (!xc || xc.state!=='live') {
+    live.classList.add('hidden');
+    waiting.classList.remove('hidden');
+    const msg = document.getElementById('marshal-wait-msg');
+    if (xc?.state==='armed') {
+      msg.innerHTML = `âš¡ Race armed â€” waiting for GO<br>
+        <span style="color:var(--accent);font-weight:700;font-size:1.1rem">${xc.age||''} ${xc.gender||''} Â· ${xc.event||''}</span>`;
+    } else { msg.textContent='Waiting for race to start...'; }
+    return;
+  }
+
+  waiting.classList.add('hidden');
+  live.classList.remove('hidden');
+  document.getElementById('marshal-event-lbl').textContent = `${xc.age||''} ${xc.gender||''} Â· ${xc.event||''}`;
+
+  const count = Object.keys(xc.finishes||{}).length;
+  document.getElementById('marshal-next-place').textContent = ordinal(count+1);
+  document.getElementById('marshal-tapped-count').textContent = count>0 ? `${count} tapped` : '';
+}
+
+async function marshalTap() {
+  if (!xcState || xcState.state!=='live') { toast('âš ï¸ Race not live'); return; }
+  const elapsed  = nowServer() - xcState.startedAtServer;
+  const count    = Object.keys(xcState.finishes||{}).length;
+  const place    = count + 1;
+
+  // Instant visual feedback
+  tapFlash();
+  vibrate([70]);
+  document.getElementById('marshal-next-place').textContent = ordinal(place+1);
+  document.getElementById('marshal-tapped-count').textContent = `${place} tapped`;
+
+  await cRef(`xc/current/finishes/${place}`).set({
+    marshalId:   myId,
+    marshalName: myName || 'Marshal',
+    name:        '',
+    elapsedMs:   elapsed,
+    tapAt:       firebase.database.ServerValue.TIMESTAMP
+  });
+  toast(`âœ… ${ordinal(place)} â€” ${fmtMs(elapsed)}`);
+}
+
+async function marshalUndo() {
+  if (!xcState) return;
+  const finishes = xcState.finishes||{};
+  const count = Object.keys(finishes).length;
+  if (count===0) { toast('Nothing to undo'); return; }
+  modal(`Undo ${ordinal(count)}`,
+    `Remove ${ordinal(count)} finish at ${fmtMs(finishes[count]?.elapsedMs)}?`,
+    [
+      { label:'Undo', cls:'btn-danger', fn: async ()=>{
+        await cRef(`xc/current/finishes/${count}`).remove();
+        toast(`Removed ${ordinal(count)}`);
+      }},
+      { label:'Cancel' }
+    ]);
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// CROSS COUNTRY â€” ADMIN VIEW
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function initXCAdminView() {
+  requestWakeLock(); syncClock();
+  watchConn('xc-admin-dot');
+  document.getElementById('xc-admin-school-lbl').textContent = carnivalMeta?.school||'';
+
+  const ageSel=document.getElementById('xc-age-sel');
+  ageSel.innerHTML=AGE_GROUPS.map(a=>`<option>${a}</option>`).join('');
+  const evSel=document.getElementById('xc-event-sel');
+  evSel.innerHTML=EVENTS.xc.map(e=>`<option>${e}</option>`).join('');
+
+  const xcRef=cRef('xc/current');
+  xcRef.on('value', snap=>{ xcState=snap.val(); renderXCAdminView(xcState); });
+  activeListeners.push(()=>xcRef.off());
+
+  function tick() {
+    if (xcState?.state==='live' && xcState.startedAtServer) {
+      const el=document.getElementById('xc-admin-clock');
+      if(el) el.textContent=fmtMs(nowServer()-xcState.startedAtServer);
+    }
+    rafId=requestAnimationFrame(tick);
+  }
+  rafId=requestAnimationFrame(tick);
+}
+
+function selectXCGender(g) {
+  xcGender=g;
+  document.querySelectorAll('[data-xcg]').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll(`[data-xcg="${g}"]`).forEach(p=>p.classList.add('active'));
+}
+
+async function xcAdminArm() {
+  const age  = document.getElementById('xc-age-sel').value;
+  const event= document.getElementById('xc-event-sel').value;
+  await cRef('xc/current').set({
+    raceId:genId(6), age, gender:xcGender, event,
+    state:'armed', finishes:{},
+    armedAt:firebase.database.ServerValue.TIMESTAMP
+  });
+  toast('âœ… XC Race armed');
+}
+
+async function xcAdminGo() {
+  if (!xcState || xcState.state!=='armed') return;
+  document.getElementById('xc-go-btn').setAttribute('disabled','');
+  showCountdown(async ()=>{
+    const t=await getServerTime();
+    await cRef('xc/current').update({state:'live', startedAtServer:t});
+  });
+}
+
+async function xcAdminRecall() {
+  await cRef('xc/current').update({state:'armed', startedAtServer:null});
+  broadcastRecall();
+}
+
+async function xcAdminAbandon() {
+  modal('Abandon Race','Return to setup?',[
+    { label:'Abandon', cls:'btn-danger', fn:async()=>{
+      await cRef('xc/current').set({state:'idle'});
+    }},
+    { label:'Cancel' }
+  ]);
+}
+
+async function xcAdminPublish() {
+  if (!xcState) return;
+  const finishes = xcState.finishes||{};
+  const places   = Object.keys(finishes).sort((a,b)=>parseInt(a)-parseInt(b));
+  const key = fbEnc(`xc-${xcState.age}-${xcState.gender}-${xcState.event}-${xcState.raceId}`);
+  await cRef(`results/${key}`).set({
+    type:'xc', age:xcState.age, gender:xcState.gender, event:xcState.event,
+    raceId:xcState.raceId,
+    places: places.map(p=>({
+      place:parseInt(p),
+      name:  finishes[p]?.name||'',
+      elapsedMs: finishes[p]?.elapsedMs
+    })),
+    publishedAt:firebase.database.ServerValue.TIMESTAMP
+  });
+  await cRef('xc/current').update({state:'done'});
+  toast('ðŸ“‹ XC results published!');
+}
+
+function renderXCAdminView(xc) {
+  const setup=document.getElementById('xc-setup-panel');
+  const live =document.getElementById('xc-live-panel');
+
+  if (!xc || xc.state==='idle') {
+    setup.classList.remove('hidden'); live.classList.add('hidden'); return;
+  }
+  setup.classList.add('hidden'); live.classList.remove('hidden');
+
+  document.getElementById('xc-race-lbl').textContent = `${xc.age} ${xc.gender} Â· ${xc.event}`;
+  const badge  = document.getElementById('xc-state-badge');
+  const goBtn  = document.getElementById('xc-go-btn');
+  const pubBtn = document.getElementById('xc-publish-btn');
+
+  if (xc.state==='armed') {
+    badge.className='badge badge-armed'; badge.textContent='ARMED';
+    goBtn.removeAttribute('disabled'); pubBtn.classList.add('hidden');
+    document.getElementById('xc-admin-clock').textContent='0:00.00';
+  } else if (xc.state==='live') {
+    badge.className='badge badge-live'; badge.textContent='LIVE';
+    goBtn.setAttribute('disabled',''); pubBtn.classList.remove('hidden');
+  } else if (xc.state==='done') {
+    badge.className='badge badge-done'; badge.textContent='DONE';
+    pubBtn.classList.add('hidden');
+  }
+
+  const finishes = xc.finishes||{};
+  const places   = Object.keys(finishes).sort((a,b)=>parseInt(a)-parseInt(b));
+  document.getElementById('xc-count-lbl').textContent = places.length ? `${places.length} finishers` : '';
+
+  document.getElementById('xc-finishers-list').innerHTML = places.map(p=>{
+    const f=finishes[p];
+    return `<div class="place-row">
+      <div class="medal ${medalCls(parseInt(p))}">${p}</div>
+      <div style="flex:1">
+        <input class="xc-name-input" type="text" value="${f.name||''}"
+          placeholder="Enter name / bib"
+          onchange="xcSetName(${p}, this.value)">
+      </div>
+      <div class="font-mono text-sm" style="color:var(--muted);white-space:nowrap">${fmtMs(f.elapsedMs)}</div>
+    </div>`;
+  }).join('') || '<div class="text-muted text-sm">No finishers recorded yet</div>';
+}
+
+async function xcSetName(place, name) {
+  await cRef(`xc/current/finishes/${place}/name`).set(name);
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// XC OBSERVER
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function initXCObserverView() {
+  watchConn('xc-observer-dot');
+  const xcRef=cRef('xc/current');
+  xcRef.on('value', snap=>{ xcState=snap.val(); renderXCObserverView(xcState); });
+  activeListeners.push(()=>xcRef.off());
+
+  function tick() {
+    if (xcState?.state==='live' && xcState.startedAtServer) {
+      const el=document.getElementById('xc-observer-clock');
+      if(el) el.textContent=fmtMs(nowServer()-xcState.startedAtServer);
+    }
+    rafId=requestAnimationFrame(tick);
+  }
+  rafId=requestAnimationFrame(tick);
+}
+
+function renderXCObserverView(xc) {
+  const waiting=document.getElementById('xc-observer-waiting');
+  const places =document.getElementById('xc-observer-places');
+
+  if (!xc || xc.state==='idle') {
+    waiting.classList.remove('hidden'); places.innerHTML='';
+    document.getElementById('xc-observer-event-lbl').textContent=''; return;
+  }
+  waiting.classList.add('hidden');
+  document.getElementById('xc-observer-event-lbl').textContent=
+    `${xc.age||''} ${xc.gender||''} Â· ${xc.event||''}`;
+
+  const finishes=xc.finishes||{};
+  const sorted=Object.keys(finishes).sort((a,b)=>parseInt(a)-parseInt(b));
+  places.innerHTML = sorted.map(p=>{
+    const f=finishes[p];
+    const top3 = parseInt(p)<=3;
+    return `<div class="place-row">
+      <div class="medal ${medalCls(parseInt(p))}">${p}</div>
+      <div style="flex:1;font-weight:${top3?700:400}">${f.name||'â€”'}</div>
+      <div class="font-mono text-sm">${fmtMs(f.elapsedMs)}</div>
+    </div>`;
+  }).join('') || (xc.state==='live'
+    ? '<div class="text-muted text-sm text-center mt-16">Waiting for first finisherâ€¦</div>'
+    : '');
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// RESULTS VIEW
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function initResultsView() {
+  const resultsRef=cRef('results');
+  resultsRef.on('value', snap=>{renderAllResults(snap.val());});
+  activeListeners.push(()=>resultsRef.off());
+}
+
+function renderAllResults(results) {
+  const el=document.getElementById('results-all');
+  if (!results || Object.keys(results).length===0) {
+    el.innerHTML='<div class="text-muted text-center" style="padding-top:60px">No published results yet</div>'; return;
+  }
+  el.innerHTML = Object.values(results).map(r=>{
+    if (r.type==='xc') {
+      return `<div class="card">
+        <div class="card-title">ðŸŒ² ${r.age} ${r.gender} Â· ${r.event}</div>
+        ${(r.places||[]).map(p=>`
+          <div class="place-row" style="padding:6px 0;background:transparent;margin-bottom:0;border-bottom:1px solid var(--surface3)">
+            <div class="medal ${medalCls(p.place)}" style="width:26px;height:26px;font-size:0.8rem">${p.place}</div>
+            <div style="flex:1;font-weight:${p.place<=3?700:400}">${p.name||'â€”'}</div>
+            <div class="font-mono text-sm">${fmtMs(p.elapsedMs)}</div>
+          </div>`).join('')}
+      </div>`;
+    } else {
+      return `<div class="card">
+        <div class="card-title">ðŸƒ ${r.age} ${r.gender} Â· ${r.event}</div>
+        ${(r.results||[]).map(p=>`
+          <div class="lane-row" style="padding:6px 0;background:transparent;margin-bottom:0;border-bottom:1px solid var(--surface3)">
+            <div class="medal ${medalCls(p.place)}" style="width:26px;height:26px;font-size:0.8rem">${p.place}</div>
+            <div style="flex:1;font-weight:${p.place<=3?700:400}">${p.name||'â€”'}</div>
+            <div class="font-mono text-sm">${fmtSec(p.timeMs)}</div>
+          </div>`).join('')}
+      </div>`;
+    }
+  }).join('');
+}
+
+async function exportCSV() {
+  if (!carnivalCode) { toast('Not connected to a carnival'); return; }
+  const snap=await cRef('results').once('value');
+  const results=snap.val();
+  if (!results) { toast('No results to export'); return; }
+  let csv=`FinishLine Results â€” ${carnivalMeta?.name||''} â€” ${carnivalMeta?.school||''}\n`;
+  csv+='Type,Age,Gender,Event,Place,Name,Time (s)\n';
+  Object.values(results).forEach(r=>{
+    if (r.type==='xc') {
+      (r.places||[]).forEach(p=>{
+        csv+=`XC,${r.age},${r.gender},"${r.event}",${p.place},"${p.name||''}",${p.elapsedMs?(p.elapsedMs/1000).toFixed(2):''}\n`;
+      });
+    } else {
+      (r.results||[]).forEach(p=>{
+        csv+=`Lane,${r.age},${r.gender},"${r.event}",${p.place},"${p.name||''}",${p.timeMs?(p.timeMs/1000).toFixed(2):''}\n`;
+      });
+    }
+  });
+  const blob=new Blob([csv],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=`${(carnivalMeta?.name||'results').replace(/\s+/g,'-')}_${carnivalCode}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+  toast('ðŸ“¥ CSV downloaded');
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// SHARE / JOIN PAGE
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+function showSharePage() {
+  const url=`${location.origin}${location.pathname}?join=${carnivalCode}`;
+  document.getElementById('share-school-name').textContent=carnivalMeta?.school||'FinishLine';
+  document.getElementById('share-carnival-name').textContent=carnivalMeta?.name||'';
+  document.getElementById('share-join-code').textContent=carnivalCode;
+  const qr=`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}&bgcolor=161b22&color=14b8a6&format=png`;
+  document.getElementById('share-qr').src=qr;
+  showScreen('share');
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// URL ROUTING (direct deep links)
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+async function routeFromURL() {
+  const p=new URLSearchParams(location.search);
+  const code=p.get('join')||p.get('carnival');
+  if (!code) return;
+
+  const snap=await db.ref(`${ROOT}/${code}/meta`).once('value');
+  if (!snap.exists()) { toast('âŒ Carnival not found'); return; }
+
+  carnivalCode=code;
+  carnivalMeta=snap.val();
+  if (carnivalMeta.colour) applyAccent(carnivalMeta.colour);
+
+  const lane   =p.get('lane');
+  const role   =p.get('admin')?'admin':p.get('starter')?'starter':p.get('observer')?'observer'
+                :p.get('marshal')?'marshal':p.get('xcadmin')?'admin-xc'
+                :p.get('xcobserver')?'observer-xc':p.get('results')?'results':null;
+
+  if (lane) { myLane=parseInt(lane); enterTimerLane(parseInt(lane)); }
+  else if (role) enterRole(role);
+  else showRolePicker();
+}
+
+// â”€â”€ INIT â”€â”€
+syncClock();
+routeFromURL();
+
+</script>
+</body>
+</html>
