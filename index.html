@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#0d1117">
-  <title>FinishLine Â· School Sport Timing</title>
+  <title>FinishLine · School Sport Timing</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -34,11 +34,11 @@
       overflow-x: hidden;
     }
 
-    /* ââ Screens ââ */
+    /* ── Screens ── */
     .screen { display: none; min-height: 100vh; }
     .screen.active { display: block; }
 
-    /* ââ Header ââ */
+    /* ── Header ── */
     .header {
       background: var(--surface);
       border-bottom: 1px solid var(--surface3);
@@ -68,10 +68,10 @@
     }
     .conn-dot.live { background: var(--success); box-shadow: 0 0 6px var(--success); }
 
-    /* ââ Content ââ */
+    /* ── Content ── */
     .content { padding: 16px; }
 
-    /* ââ Home Screen ââ */
+    /* ── Home Screen ── */
     .home-hero {
       text-align: center;
       padding: 52px 24px 32px;
@@ -109,7 +109,7 @@
     }
     .home-sport-pill span { margin-right: 5px; }
 
-    /* ââ Buttons ââ */
+    /* ── Buttons ── */
     .btn {
       display: block; width: 100%;
       padding: 14px 20px;
@@ -170,7 +170,7 @@
     }
     .btn[disabled] { opacity: 0.38; pointer-events: none; }
 
-    /* ââ Form ââ */
+    /* ── Form ── */
     .form-group { margin-bottom: 16px; }
     label {
       display: block; font-size: 0.78rem; font-weight: 600;
@@ -187,7 +187,7 @@
     input:focus, select:focus { border-color: var(--accent); }
     select option { background: var(--surface2); }
 
-    /* ââ Sport Picker ââ */
+    /* ── Sport Picker ── */
     .sport-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
     .sport-btn {
       background: var(--surface2); border: 2px solid var(--surface3);
@@ -200,7 +200,7 @@
     .sport-btn .s-label { font-size: 0.85rem; font-weight: 700; }
     .sport-btn .s-desc { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
 
-    /* ââ Tier Pills ââ */
+    /* ── Tier Pills ── */
     .pill-row { display: flex; gap: 8px; flex-wrap: wrap; }
     .pill {
       padding: 6px 14px; border-radius: 20px;
@@ -211,7 +211,7 @@
     }
     .pill.active { border-color: var(--accent); color: var(--accent); background: rgba(20,184,166,0.1); }
 
-    /* ââ Card ââ */
+    /* ── Card ── */
     .card {
       background: var(--surface); border: 1px solid var(--surface3);
       border-radius: 12px; padding: 16px; margin-bottom: 12px;
@@ -221,7 +221,7 @@
       text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px;
     }
 
-    /* ââ Badge ââ */
+    /* ── Badge ── */
     .badge {
       display: inline-block; padding: 3px 9px;
       border-radius: 20px; font-size: 0.7rem;
@@ -232,7 +232,7 @@
     .badge-idle { background: rgba(139,148,158,0.15); color: var(--muted); border: 1px solid rgba(139,148,158,0.2); }
     .badge-done { background: rgba(20,184,166,0.15); color: var(--accent); border: 1px solid rgba(20,184,166,0.3); }
 
-    /* ââ Clock ââ */
+    /* ── Clock ── */
     .clock {
       font-family: 'Menlo','SF Mono','Courier New',monospace;
       font-size: 4.2rem; font-weight: 700;
@@ -241,7 +241,7 @@
     }
     .clock.stopped { color: var(--muted); }
 
-    /* ââ Lane Row ââ */
+    /* ── Lane Row ── */
     .lane-row {
       display: flex; align-items: center;
       padding: 10px 12px; background: var(--surface2);
@@ -260,7 +260,7 @@
     .conf-CHECK { color: var(--warn); font-size: 0.7rem; }
     .conf-LOW { color: var(--danger); font-size: 0.7rem; }
 
-    /* ââ Place Row (XC) ââ */
+    /* ── Place Row (XC) ── */
     .place-row {
       display: flex; align-items: center;
       padding: 10px 12px; background: var(--surface2);
@@ -276,7 +276,7 @@
     .medal.p3 { background: #CD7F32; color: #fff; }
     .medal.pN { background: var(--surface3); color: var(--muted); }
 
-    /* ââ Tap Counter ââ */
+    /* ── Tap Counter ── */
     .tap-counter { text-align: center; padding: 16px 0 8px; }
     .tap-place {
       font-size: 5.5rem; font-weight: 900; line-height: 1;
@@ -285,7 +285,7 @@
     }
     .tap-label { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
 
-    /* ââ Role Grid ââ */
+    /* ── Role Grid ── */
     .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .role-card {
       background: var(--surface2); border: 2px solid var(--surface3);
@@ -299,7 +299,7 @@
     .role-card .r-desc { font-size: 0.73rem; color: var(--muted); margin-top: 3px; }
     .role-card.full { grid-column: 1 / -1; }
 
-    /* ââ Countdown Overlay ââ */
+    /* ── Countdown Overlay ── */
     #countdown-overlay {
       display: none; position: fixed; inset: 0;
       background: rgba(13,17,23,0.97); z-index: 200;
@@ -316,7 +316,7 @@
       margin-top: 16px; text-transform: uppercase; letter-spacing: 0.15em;
     }
 
-    /* ââ Flash Overlay ââ */
+    /* ── Flash Overlay ── */
     #flash-overlay {
       display: none; position: fixed; inset: 0;
       z-index: 250; pointer-events: none;
@@ -329,7 +329,7 @@
     }
     #tap-flash.show { display: block; }
 
-    /* ââ Join Code ââ */
+    /* ── Join Code ── */
     .join-code {
       font-size: 3.2rem; font-family: 'Menlo',monospace;
       font-weight: 900; color: var(--accent);
@@ -338,7 +338,7 @@
     .qr-wrap { text-align: center; padding: 12px 0; }
     .qr-wrap img { border-radius: 10px; max-width: 180px; }
 
-    /* ââ Modal ââ */
+    /* ── Modal ── */
     .modal-backdrop {
       display: none; position: fixed; inset: 0;
       background: rgba(0,0,0,0.72); z-index: 400;
@@ -353,7 +353,7 @@
     .modal-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
     .modal-body { color: var(--muted); margin-bottom: 20px; font-size: 0.95rem; }
 
-    /* ââ Toast ââ */
+    /* ── Toast ── */
     #toast {
       position: fixed; bottom: 28px; left: 50%;
       transform: translateX(-50%) translateY(80px);
@@ -366,7 +366,7 @@
     }
     #toast.show { transform: translateX(-50%) translateY(0); }
 
-    /* ââ Utility ââ */
+    /* ── Utility ── */
     .stack { display: flex; flex-direction: column; gap: 10px; }
     .row { display: flex; gap: 10px; }
     .row > .btn { flex: 1; }
@@ -385,7 +385,7 @@
     .items-center { align-items: center; }
     .gap-8 { gap: 8px; }
 
-    /* ââ XC name input inline ââ */
+    /* ── XC name input inline ── */
     .xc-name-input {
       background: transparent; border: none;
       border-bottom: 1px dashed var(--surface3);
@@ -395,7 +395,7 @@
     }
     .xc-name-input:focus { border-bottom-color: var(--accent); }
 
-    /* ââ Admin Lane Input Row ââ */
+    /* ── Admin Lane Input Row ── */
     .admin-lane-row {
       display: flex; align-items: center;
       gap: 8px; padding: 6px 0;
@@ -425,41 +425,41 @@
 </head>
 <body>
 
-<!-- ââââââââââââââââââââââââââââââââââââââââ
+<!-- ════════════════════════════════════════
      SCREEN: HOME
-ââââââââââââââââââââââââââââââââââââââââ -->
+════════════════════════════════════════ -->
 <div id="screen-home" class="screen active">
   <div class="home-hero">
     <div class="home-logo">FL</div>
     <div class="home-title">FinishLine</div>
-    <div class="home-tagline">School sport timing â any event, any school</div>
+    <div class="home-tagline">School sport timing — any event, any school</div>
     <div class="home-sports">
-      <div class="home-sport-pill"><span>ð</span>Track & Field</div>
-      <div class="home-sport-pill"><span>ð</span>Swimming</div>
-      <div class="home-sport-pill"><span>ð²</span>Cross Country</div>
+      <div class="home-sport-pill"><span>🏃</span>Track & Field</div>
+      <div class="home-sport-pill"><span>🏊</span>Swimming</div>
+      <div class="home-sport-pill"><span>🌲</span>Cross Country</div>
     </div>
   </div>
   <div class="content">
     <div class="stack">
-      <button class="btn btn-primary" onclick="showScreen('setup')">ð« New Carnival</button>
-      <button class="btn btn-secondary" onclick="showScreen('join-screen')">ð± Join Carnival</button>
+      <button class="btn btn-primary" onclick="showScreen('setup')">🏫 New Carnival</button>
+      <button class="btn btn-secondary" onclick="showScreen('join-screen')">📱 Join Carnival</button>
     </div>
     <div class="text-center text-muted text-xs mt-32">
-      Works offline Â· No app install Â· Free to use<br>
-      <span style="opacity:0.5">FinishLine v1.0 Â· finishline.app</span>
+      Works offline · No app install · Free to use<br>
+      <span style="opacity:0.5">FinishLine v1.0 · finishline.app</span>
     </div>
   </div>
 </div>
 
-<!-- ââââââââââââââââââââââââââââââââââââââââ
+<!-- ════════════════════════════════════════
      SCREEN: SETUP (New Carnival)
-ââââââââââââââââââââââââââââââââââââââââ -->
+════════════════════════════════════════ -->
 <div id="screen-setup" class="screen">
   <div class="header">
     <div class="logo-badge">FL</div>
     <div class="header-title">New Carnival</div>
     <div class="header-right">
-      <button class="btn btn-icon btn-sm" onclick="showScreen('home')">â Back</button>
+      <button class="btn btn-icon btn-sm" onclick="showScreen('home')">← Back</button>
     </div>
   </div>
   <div class="content">
@@ -475,22 +475,22 @@
       <label>Sport Type</label>
       <div class="sport-grid">
         <div class="sport-btn active" data-sport="track" onclick="selectSport('track')">
-          <div class="s-icon">ð</div>
+          <div class="s-icon">🏃</div>
           <div class="s-label">Track & Field</div>
           <div class="s-desc">Lane timing</div>
         </div>
         <div class="sport-btn" data-sport="swim" onclick="selectSport('swim')">
-          <div class="s-icon">ð</div>
+          <div class="s-icon">🏊</div>
           <div class="s-label">Swimming</div>
           <div class="s-desc">Lane timing</div>
         </div>
         <div class="sport-btn" data-sport="xc" onclick="selectSport('xc')">
-          <div class="s-icon">ð²</div>
+          <div class="s-icon">🌲</div>
           <div class="s-label">Cross Country</div>
           <div class="s-desc">Finish order tap</div>
         </div>
         <div class="sport-btn" data-sport="mixed" onclick="selectSport('mixed')">
-          <div class="s-icon">ð½</div>
+          <div class="s-icon">🎽</div>
           <div class="s-label">Mixed Events</div>
           <div class="s-desc">All modes</div>
         </div>
@@ -507,21 +507,21 @@
     </div>
     <div class="form-group">
       <label>Accent Colour <span style="font-weight:400;text-transform:none;font-size:0.85em">(optional)</span></label>
-      <input type="text" id="setup-colour" placeholder="#14b8a6 â leave blank for teal">
+      <input type="text" id="setup-colour" placeholder="#14b8a6 — leave blank for teal">
     </div>
-    <button class="btn btn-primary mt-8" onclick="createCarnival()">Create Carnival â</button>
+    <button class="btn btn-primary mt-8" onclick="createCarnival()">Create Carnival →</button>
   </div>
 </div>
 
-<!-- ââââââââââââââââââââââââââââââââââââââââ
+<!-- ════════════════════════════════════════
      SCREEN: JOIN
-ââââââââââââââââââââââââââââââââââââââââ -->
+════════════════════════════════════════ -->
 <div id="screen-join-screen" class="screen">
   <div class="header">
     <div class="logo-badge">FL</div>
     <div class="header-title">Join Carnival</div>
     <div class="header-right">
-      <button class="btn btn-icon btn-sm" onclick="showScreen('home')">â Back</button>
+      <button class="btn btn-icon btn-sm" onclick="showScreen('home')">← Back</button>
     </div>
   </div>
   <div class="content">
@@ -535,14 +535,14 @@
       <label>Your Name</label>
       <input type="text" id="join-name-input" placeholder="e.g. Paddy G">
     </div>
-    <button class="btn btn-primary" onclick="joinCarnival()">Join â</button>
+    <button class="btn btn-primary" onclick="joinCarnival()">Join →</button>
     <div id="join-error" class="text-center text-muted mt-16 hidden" style="color:var(--danger)"></div>
   </div>
 </div>
 
-<!-- ââââââââââââââââââââââââââââââââââââââââ
+<!-- ════════════════════════════════════════
      SCREEN: ROLE PICKER
-ââââââââââââââââââââââââââââââââââââââââ -->
+════════════════════════════════════════ -->
 <div id="screen-role" class="screen">
   <div class="header">
     <div class="logo-badge">FL</div>
@@ -565,9 +565,9 @@
   </div>
 </div>
 
-<!-- ââââââââââââââââââââââââââââââââââââââââ
+<!-- ════════════════════════════════════════
      SCREEN: TIMER (Lane)
-ââââââââââââââââââââââââââââââââââââââââ -->
+════════════════════════════════════════ -->
 <div id="screen-timer" class="screen">
   <div class="header">
     <div class="conn-dot" id="timer-dot"></div>
@@ -580,7 +580,7 @@
   <div class="content">
     <div class="card" id="timer-athlete-card">
       <div class="card-title" id="timer-athlete-event">Event</div>
-      <div id="timer-athlete-name" style="font-size:1.5rem;font-weight:700">â</div>
+      <div id="timer-athlete-name" style="font-size:1.5rem;font-weight:700">—</div>
       <div id="timer-athlete-note" class="text-muted text-sm"></div>
     </div>
 
@@ -606,15 +606,15 @@
     </div>
 
     <div id="timer-waiting-msg" class="text-center text-muted mt-32">
-      <div style="font-size:2.5rem">â±</div>
+      <div style="font-size:2.5rem">⏱</div>
       <div class="mt-8">Waiting for race to be armed...</div>
     </div>
   </div>
 </div>
 
-<!-- ââââââââââââââââââââââââââââââââââââââââ
+<!-- ════════════════════════════════════════
      SCREEN: ADMIN (Lane Race)
-ââââââââââââââââââââââââââââââââââââââââ -->
+════════════════════════════════════════ -->
 <div id="screen-admin" class="screen">
   <div class="header">
     <div class="conn-dot" id="admin-dot"></div>
@@ -648,7 +648,7 @@
         <div class="card-title">Lane Assignments</div>
         <div id="admin-lane-inputs"></div>
       </div>
-      <button class="btn btn-primary" onclick="adminArm()">ARM RACE â</button>
+      <button class="btn btn-primary" onclick="adminArm()">ARM RACE →</button>
     </div>
 
     <!-- Live panel -->
@@ -671,7 +671,7 @@
       <hr class="divider">
       <div class="card-title">Live Splits</div>
       <div id="admin-splits-list"></div>
-      <button class="btn btn-primary mt-16 hidden" id="admin-publish-btn" onclick="adminPublish()">ð Publish Results</button>
+      <button class="btn btn-primary mt-16 hidden" id="admin-publish-btn" onclick="adminPublish()">📋 Publish Results</button>
     </div>
 
     <!-- Done panel -->
@@ -682,15 +682,15 @@
       </div>
       <div class="row mt-8">
         <button class="btn btn-secondary" onclick="adminNewRace()">+ New Race</button>
-        <button class="btn btn-secondary" onclick="exportCSV()">ð¥ Export CSV</button>
+        <button class="btn btn-secondary" onclick="exportCSV()">📥 Export CSV</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ââââââââââââââââââââââââââââââââââââââââ
+<!-- ════════════════════════════════════════
      SCREEN: STARTER
-ââââââââââââââââââââââââââââââââââââââââ -->
+════════════════════════════════════════ -->
 <div id="screen-starter" class="screen">
   <div class="header">
     <div class="conn-dot" id="starter-dot"></div>
@@ -699,7 +699,7 @@
   </div>
   <div class="content">
     <div id="starter-waiting" class="text-center" style="padding-top:60px">
-      <div style="font-size:3.5rem">ð</div>
+      <div style="font-size:3.5rem">🔔</div>
       <div class="text-muted mt-16">Waiting for Race Control to arm...</div>
     </div>
     <div id="starter-armed" class="hidden">
@@ -713,9 +713,9 @@
   </div>
 </div>
 
-<!-- ââââââââââââââââââââââââââââââââââââââââ
+<!-- ════════════════════════════════════════
      SCREEN: OBSERVER (Lane Race)
-ââââââââââââââââââââââââââââââââââââââââ -->
+════════════════════════════════════════ -->
 <div id="screen-observer" class="screen">
   <div class="header">
     <div class="conn-dot" id="observer-dot"></div>
@@ -726,15 +726,15 @@
     <div class="clock" id="observer-clock" style="font-size:2.8rem">0:00.00</div>
     <div id="observer-lanes-list"></div>
     <div id="observer-waiting" class="text-center text-muted mt-32">
-      <div style="font-size:2.5rem">ð¡</div>
+      <div style="font-size:2.5rem">📡</div>
       <div class="mt-8">Waiting for next race...</div>
     </div>
   </div>
 </div>
 
-<!-- ââââââââââââââââââââââââââââââââââââââââ
+<!-- ════════════════════════════════════════
      SCREEN: XC MARSHAL
-ââââââââââââââââââââââââââââââââââââââââ -->
+════════════════════════════════════════ -->
 <div id="screen-marshal" class="screen">
   <div class="header">
     <div class="conn-dot" id="marshal-dot"></div>
@@ -743,7 +743,7 @@
   </div>
   <div class="content">
     <div id="marshal-waiting" class="text-center" style="padding-top:60px">
-      <div style="font-size:3.5rem">ð²</div>
+      <div style="font-size:3.5rem">🌲</div>
       <div id="marshal-wait-msg" class="text-muted mt-16">Waiting for race to start...</div>
     </div>
     <div id="marshal-live" class="hidden">
@@ -757,15 +757,15 @@
         <span class="tap-sub" id="marshal-clock-mini">0:00.00</span>
       </button>
       <div class="text-center mt-8">
-        <button class="btn btn-icon btn-sm" onclick="marshalUndo()">â© Undo last</button>
+        <button class="btn btn-icon btn-sm" onclick="marshalUndo()">↩ Undo last</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ââââââââââââââââââââââââââââââââââââââââ
+<!-- ════════════════════════════════════════
      SCREEN: XC ADMIN
-ââââââââââââââââââââââââââââââââââââââââ -->
+════════════════════════════════════════ -->
 <div id="screen-admin-xc" class="screen">
   <div class="header">
     <div class="conn-dot" id="xc-admin-dot"></div>
@@ -795,7 +795,7 @@
           <select id="xc-event-sel"></select>
         </div>
       </div>
-      <button class="btn btn-primary" onclick="xcAdminArm()">ARM RACE â</button>
+      <button class="btn btn-primary" onclick="xcAdminArm()">ARM RACE →</button>
     </div>
 
     <!-- Live -->
@@ -813,7 +813,7 @@
       </div>
       <div class="row mt-8">
         <button class="btn btn-secondary" onclick="xcAdminAbandon()">ABANDON</button>
-        <button class="btn btn-primary hidden" id="xc-publish-btn" onclick="xcAdminPublish()">ð Publish Results</button>
+        <button class="btn btn-primary hidden" id="xc-publish-btn" onclick="xcAdminPublish()">📋 Publish Results</button>
       </div>
       <hr class="divider">
       <div class="card-title">Finishers <span id="xc-count-lbl" class="text-muted text-xs"></span></div>
@@ -822,9 +822,9 @@
   </div>
 </div>
 
-<!-- ââââââââââââââââââââââââââââââââââââââââ
+<!-- ════════════════════════════════════════
      SCREEN: XC OBSERVER
-ââââââââââââââââââââââââââââââââââââââââ -->
+════════════════════════════════════════ -->
 <div id="screen-observer-xc" class="screen">
   <div class="header">
     <div class="conn-dot" id="xc-observer-dot"></div>
@@ -835,21 +835,21 @@
     <div class="clock" id="xc-observer-clock" style="font-size:2.8rem">0:00.00</div>
     <div id="xc-observer-places"></div>
     <div id="xc-observer-waiting" class="text-center text-muted mt-32">
-      <div style="font-size:2.5rem">ð²</div>
+      <div style="font-size:2.5rem">🌲</div>
       <div class="mt-8">Waiting for race to start...</div>
     </div>
   </div>
 </div>
 
-<!-- ââââââââââââââââââââââââââââââââââââââââ
+<!-- ════════════════════════════════════════
      SCREEN: JOIN PAGE (QR)
-ââââââââââââââââââââââââââââââââââââââââ -->
+════════════════════════════════════════ -->
 <div id="screen-share" class="screen">
   <div class="header">
     <div class="logo-badge">FL</div>
     <div class="header-title" id="share-school-name">Join Page</div>
     <div class="header-right">
-      <button class="btn btn-icon btn-sm" onclick="enterRole('role')">â Back</button>
+      <button class="btn btn-icon btn-sm" onclick="enterRole('role')">← Back</button>
     </div>
   </div>
   <div class="content text-center">
@@ -864,15 +864,15 @@
   </div>
 </div>
 
-<!-- ââââââââââââââââââââââââââââââââââââââââ
+<!-- ════════════════════════════════════════
      SCREEN: RESULTS
-ââââââââââââââââââââââââââââââââââââââââ -->
+════════════════════════════════════════ -->
 <div id="screen-results" class="screen">
   <div class="header">
     <div class="logo-badge">FL</div>
     <div class="header-title">Results</div>
     <div class="header-right">
-      <button class="btn btn-icon btn-sm" onclick="exportCSV()">ð¥ CSV</button>
+      <button class="btn btn-icon btn-sm" onclick="exportCSV()">📥 CSV</button>
     </div>
   </div>
   <div class="content">
@@ -880,9 +880,9 @@
   </div>
 </div>
 
-<!-- ââââââââââââââââââââââââââââââââââââââââ
+<!-- ════════════════════════════════════════
      OVERLAYS
-ââââââââââââââââââââââââââââââââââââââââ -->
+════════════════════════════════════════ -->
 <div id="countdown-overlay">
   <div id="countdown-num" style="color:var(--text)">3</div>
   <div id="countdown-label">Get set...</div>
@@ -900,19 +900,19 @@
   </div>
 </div>
 
-<!-- ââââââââââââââââââââââââââââââââââââââââ
+<!-- ════════════════════════════════════════
      FIREBASE SDK
-ââââââââââââââââââââââââââââââââââââââââ -->
+════════════════════════════════════════ -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-<!-- ââââââââââââââââââââââââââââââââââââââââ
+<!-- ════════════════════════════════════════
      APP SCRIPT
-ââââââââââââââââââââââââââââââââââââââââ -->
+════════════════════════════════════════ -->
 <script>
 'use strict';
 
-// ââ Firebase ââ
+// ── Firebase ──
 const FB_CONFIG = {
   apiKey: "AIzaSyA-bNl8XqvZ7DQ6YftL9teXbqxYICBlPF8",
   authDomain: "willy-district-sport.firebaseapp.com",
@@ -924,7 +924,7 @@ firebase.initializeApp(FB_CONFIG);
 const db = firebase.database();
 const ROOT = 'fl'; // FinishLine namespace
 
-// ââ State ââ
+// ── State ──
 let carnivalCode = '';
 let carnivalMeta = null;
 let myName = localStorage.getItem('fl_name') || '';
@@ -943,19 +943,19 @@ let selTier  = 'school';
 let activeListeners = [];
 let countdownRunning = false;
 
-// ââ Event Lists ââ
+// ── Event Lists ──
 const EVENTS = {
-  track: ['100m Sprint','200m Sprint','400m','800m','1500m','4Ã100m Relay','Long Jump','Triple Jump','High Jump','Shot Put','Discus','Javelin'],
-  swim:  ['50m Freestyle','50m Backstroke','50m Breaststroke','50m Butterfly','100m Freestyle','100m Backstroke','100m Breaststroke','200m Freestyle','4Ã50m Freestyle Relay','4Ã50m Medley Relay'],
+  track: ['100m Sprint','200m Sprint','400m','800m','1500m','4×100m Relay','Long Jump','Triple Jump','High Jump','Shot Put','Discus','Javelin'],
+  swim:  ['50m Freestyle','50m Backstroke','50m Breaststroke','50m Butterfly','100m Freestyle','100m Backstroke','100m Breaststroke','200m Freestyle','4×50m Freestyle Relay','4×50m Medley Relay'],
   xc:    ['Cross Country 2km','Cross Country 3km','Cross Country 4km','Cross Country 5km','Fun Run 1km','Fun Run 2km','Fun Run 3km'],
   mixed: ['100m Sprint','200m Sprint','400m','800m','50m Freestyle','50m Backstroke','Cross Country 2km','Cross Country 3km','Long Jump','High Jump']
 };
-const AGE_GROUPS = ['9 Years','10 Years','11 Years','12/13 Years','Open','Year 3/4','Year 5/6','Year 3â6'];
+const AGE_GROUPS = ['9 Years','10 Years','11 Years','12/13 Years','Open','Year 3/4','Year 5/6','Year 3–6'];
 const LANE_COUNT = 8;
 
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 // UTILITIES
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 function genId(n=8) {
   return Math.random().toString(36).substring(2, 2+n).toUpperCase();
 }
@@ -968,7 +968,7 @@ function genCode() {
 }
 
 function fmtMs(ms) {
-  if (ms == null || ms < 0) return 'â';
+  if (ms == null || ms < 0) return '—';
   const totalCs = Math.floor(ms / 10);
   const cs  = totalCs % 100;
   const totalSec = Math.floor(totalCs / 100);
@@ -979,7 +979,7 @@ function fmtMs(ms) {
 }
 
 function fmtSec(ms) {
-  if (ms == null) return 'â';
+  if (ms == null) return '—';
   return (ms / 1000).toFixed(2) + 's';
 }
 
@@ -1018,7 +1018,7 @@ function fbEnc(s) {
     .replace(/#/g,'__H__').replace(/\$/g,'__$__');
 }
 
-// ââ UI helpers ââ
+// ── UI helpers ──
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const el = document.getElementById('screen-' + id);
@@ -1066,7 +1066,7 @@ function tapFlash() {
   setTimeout(()=>el.classList.remove('show'), 180);
 }
 
-// ââ Clock sync ââ
+// ── Clock sync ──
 async function syncClock() {
   const snap = await db.ref('.info/serverTimeOffset').once('value');
   serverOffset = snap.val() || 0;
@@ -1077,13 +1077,13 @@ async function getServerTime() {
   return Date.now() + (snap.val() || 0);
 }
 
-// ââ Wake lock ââ
+// ── Wake lock ──
 async function requestWakeLock() {
   try { if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); }
   catch(e){}
 }
 
-// ââ Firebase helpers ââ
+// ── Firebase helpers ──
 function cRef(path) { return db.ref(`${ROOT}/${carnivalCode}/${path}`); }
 
 function cleanListeners() {
@@ -1099,9 +1099,9 @@ function watchConn(dotId) {
   });
 }
 
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 // SETUP SCREEN
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 function selectSport(s) {
   selSport = s;
   document.querySelectorAll('.sport-btn').forEach(b=>b.classList.remove('active'));
@@ -1117,7 +1117,7 @@ function selectTier(t) {
 async function createCarnival() {
   const school = document.getElementById('setup-school').value.trim();
   const name   = document.getElementById('setup-name').value.trim();
-  if (!school || !name) { toast('â ï¸ Enter school name and event name'); return; }
+  if (!school || !name) { toast('⚠️ Enter school name and event name'); return; }
 
   const colour = document.getElementById('setup-colour').value.trim() || '#14b8a6';
   applyAccent(colour);
@@ -1136,7 +1136,7 @@ async function createCarnival() {
   await db.ref(`${ROOT}/${code}/meta`).set(carnivalMeta);
   localStorage.setItem('fl_last_code', code);
 
-  toast(`â Carnival created: ${code}`);
+  toast(`✅ Carnival created: ${code}`);
   showRolePicker();
   // Admin auto-navigates to their control panel
   setTimeout(() => enterRole('admin'), 600);
@@ -1147,19 +1147,19 @@ function applyAccent(colour) {
   document.documentElement.style.setProperty('--accent', colour);
 }
 
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 // JOIN
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 async function joinCarnival() {
   const code = document.getElementById('join-code-input').value.trim().toUpperCase();
   const name = document.getElementById('join-name-input').value.trim();
-  if (code.length < 4) { toast('â ï¸ Enter 4-letter code'); return; }
-  if (!name) { toast('â ï¸ Enter your name'); return; }
+  if (code.length < 4) { toast('⚠️ Enter 4-letter code'); return; }
+  if (!name) { toast('⚠️ Enter your name'); return; }
 
   const snap = await db.ref(`${ROOT}/${code}/meta`).once('value');
   const errEl = document.getElementById('join-error');
   if (!snap.exists()) {
-    errEl.textContent = 'â Carnival not found. Check the code.';
+    errEl.textContent = '❌ Carnival not found. Check the code.';
     errEl.classList.remove('hidden');
     return;
   }
@@ -1175,9 +1175,9 @@ async function joinCarnival() {
   showRolePicker();
 }
 
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 // ROLE PICKER
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 function showRolePicker() {
   document.getElementById('role-school-name').textContent = carnivalMeta?.school || 'FinishLine';
   document.getElementById('role-carnival-name').textContent = carnivalMeta?.name || '';
@@ -1189,18 +1189,18 @@ function showRolePicker() {
   const roles = [];
 
   if (['track','swim','mixed'].includes(sport)) {
-    roles.push({ id:'timer',    icon:'â±', label:'Timer',        desc:'Time a lane' });
-    roles.push({ id:'admin',    icon:'ð', label:'Race Control', desc:'Arm & manage races' });
-    roles.push({ id:'starter',  icon:'ð', label:'Starter',      desc:'Fire the gun' });
-    roles.push({ id:'observer', icon:'ð', label:'Observer',     desc:'Watch live results' });
+    roles.push({ id:'timer',    icon:'⏱', label:'Timer',        desc:'Time a lane' });
+    roles.push({ id:'admin',    icon:'🎛', label:'Race Control', desc:'Arm & manage races' });
+    roles.push({ id:'starter',  icon:'🔔', label:'Starter',      desc:'Fire the gun' });
+    roles.push({ id:'observer', icon:'👁', label:'Observer',     desc:'Watch live results' });
   }
   if (['xc','mixed'].includes(sport)) {
-    roles.push({ id:'marshal',   icon:'ð²', label:'Finish Marshal', desc:'Tap each finisher',     full: sport==='xc' });
-    roles.push({ id:'admin-xc',  icon:'ð', label:'XC Control',    desc:'Arm & manage XC races', full: sport==='xc' });
-    roles.push({ id:'observer-xc',icon:'ð',label:'XC Observer',   desc:'Watch finish order',    full: sport==='xc' });
+    roles.push({ id:'marshal',   icon:'🌲', label:'Finish Marshal', desc:'Tap each finisher',     full: sport==='xc' });
+    roles.push({ id:'admin-xc',  icon:'🎛', label:'XC Control',    desc:'Arm & manage XC races', full: sport==='xc' });
+    roles.push({ id:'observer-xc',icon:'👁',label:'XC Observer',   desc:'Watch finish order',    full: sport==='xc' });
   }
-  roles.push({ id:'share',   icon:'ð±', label:'Join Page',  desc:'QR code for participants', full:true });
-  roles.push({ id:'results', icon:'ð', label:'Results',    desc:'View all results',          full:true });
+  roles.push({ id:'share',   icon:'📱', label:'Join Page',  desc:'QR code for participants', full:true });
+  roles.push({ id:'results', icon:'📊', label:'Results',    desc:'View all results',          full:true });
 
   grid.innerHTML = roles.map(r => `
     <div class="role-card${r.full?' full':''}" onclick="enterRole('${r.id}')">
@@ -1241,9 +1241,9 @@ function enterTimerLane(n) {
   initTimerView(n);
 }
 
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 // TIMER VIEW (Lane Race)
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 function initTimerView(lane) {
   requestWakeLock();
   syncClock();
@@ -1295,9 +1295,9 @@ function renderTimerView(lane, race) {
   }
   waiting.classList.add('hidden');
 
-  const sportLabel = carnivalMeta?.sport==='swim' ? 'ð' : 'ð';
+  const sportLabel = carnivalMeta?.sport==='swim' ? '🏊' : '🏃';
   document.getElementById('timer-athlete-event').textContent =
-    `${sportLabel} ${race.age||''} ${race.gender||''} Â· ${race.event||''}`;
+    `${sportLabel} ${race.age||''} ${race.gender||''} · ${race.event||''}`;
 
   const laneData = race.lanes?.[lane];
   document.getElementById('timer-athlete-name').textContent = laneData?.name || `Lane ${lane}`;
@@ -1317,7 +1317,7 @@ function renderTimerView(lane, race) {
   if (myRec) {
     document.getElementById('timer-my-time').textContent = fmtSec(myRec.elapsedMs);
     mySplit.classList.remove('hidden');
-    stopBtn.textContent = 'â Stopped';
+    stopBtn.textContent = '✓ Stopped';
     stopBtn.setAttribute('disabled','');
   } else {
     mySplit.classList.add('hidden');
@@ -1338,10 +1338,10 @@ function renderTimerView(lane, race) {
 }
 
 async function timerStop() {
-  if (!raceState || raceState.state!=='live') { toast('â ï¸ Race not live'); return; }
-  if (!myName) { toast('â ï¸ Enter your name first'); return; }
+  if (!raceState || raceState.state!=='live') { toast('⚠️ Race not live'); return; }
+  if (!myName) { toast('⚠️ Enter your name first'); return; }
   const elapsed = nowServer() - raceState.startedAtServer;
-  if (elapsed < 500) { toast('â ï¸ Too quick â check start'); return; }
+  if (elapsed < 500) { toast('⚠️ Too quick — check start'); return; }
   const key = fbEnc(myId);
   await cRef(`race/current/splits/${myLane}/${key}`).set({
     name: myName, elapsedMs: elapsed,
@@ -1349,12 +1349,12 @@ async function timerStop() {
   });
   vibrate([100]);
   flash('go', 300);
-  toast(`â ${fmtSec(elapsed)}`);
+  toast(`✅ ${fmtSec(elapsed)}`);
 }
 
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 // ADMIN VIEW (Lane Race)
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 function initAdminView() {
   requestWakeLock(); syncClock();
   watchConn('admin-dot');
@@ -1413,7 +1413,7 @@ function renderAdminView(race) {
   }
 
   live.classList.remove('hidden'); done.classList.add('hidden');
-  document.getElementById('admin-race-lbl').textContent = `${race.age} ${race.gender} Â· ${race.event}`;
+  document.getElementById('admin-race-lbl').textContent = `${race.age} ${race.gender} · ${race.event}`;
 
   const badge  = document.getElementById('admin-state-badge');
   const goBtn  = document.getElementById('admin-go-btn');
@@ -1444,7 +1444,7 @@ function renderAdminView(race) {
       <div class="lane-num">${n}</div>
       <div class="lane-name">${lanes[n]?.name||`Lane ${n}`}</div>
       ${mean ? `<div><span class="lane-time">${fmtSec(mean)}</span> <span class="conf-${conf.cls}">${conf.label}</span></div>`
-             : `<span class="text-muted text-xs">${race.state==='live'?'waitingâ¦':'â'}</span>`}
+             : `<span class="text-muted text-xs">${race.state==='live'?'waiting…':'—'}</span>`}
     </div>`;
   }).join('');
 
@@ -1465,7 +1465,7 @@ async function adminArm() {
     state:'armed', lanes, splits:{},
     armedAt: firebase.database.ServerValue.TIMESTAMP
   });
-  toast('â Race armed');
+  toast('✅ Race armed');
 }
 
 async function adminGo() {
@@ -1526,7 +1526,7 @@ async function adminPublish() {
     publishedAt:firebase.database.ServerValue.TIMESTAMP
   });
   await cRef('race/current').update({state:'done'});
-  toast('ð Results published!');
+  toast('📋 Results published!');
 }
 
 function adminNewRace() {
@@ -1554,9 +1554,9 @@ function renderAdminDone(race) {
 
 function medalCls(p) { return p===1?'p1':p===2?'p2':p===3?'p3':'pN'; }
 
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 // STARTER VIEW
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 function initStarterView() {
   watchConn('starter-dot');
   const raceRef = cRef('race/current');
@@ -1567,7 +1567,7 @@ function initStarterView() {
     if (!race || race.state==='idle') { w.classList.remove('hidden'); a.classList.add('hidden'); return; }
     if (race.state==='armed') {
       w.classList.add('hidden'); a.classList.remove('hidden');
-      document.getElementById('starter-race-info').textContent = `${race.age} ${race.gender} Â· ${race.event}`;
+      document.getElementById('starter-race-info').textContent = `${race.age} ${race.gender} · ${race.event}`;
     } else { w.classList.remove('hidden'); a.classList.add('hidden'); }
   });
   activeListeners.push(()=>raceRef.off());
@@ -1583,9 +1583,9 @@ function starterGo() {
 
 function starterRecall() { broadcastRecall(); }
 
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 // OBSERVER VIEW (Lane Race)
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 function initObserverView() {
   watchConn('observer-dot');
   const raceRef = cRef('race/current');
@@ -1611,7 +1611,7 @@ function renderObserverView(race) {
   }
   waiting.classList.add('hidden');
   document.getElementById('observer-event-lbl').textContent=
-    `${race.age||''} ${race.gender||''} Â· ${race.event||''}`;
+    `${race.age||''} ${race.gender||''} · ${race.event||''}`;
 
   const lanes  = race.lanes||{};
   const splits = race.splits||{};
@@ -1633,14 +1633,14 @@ function renderObserverView(race) {
       <div class="lane-name">${d.name}</div>
       ${d.mean
         ? `<div><span class="lane-time font-mono">${fmtSec(d.mean)}</span> <span class="conf-${d.conf.cls}">${d.conf.label}</span></div>`
-        : `<span class="text-muted text-xs">${race.state==='live'?'â¦':'â'}</span>`}
+        : `<span class="text-muted text-xs">${race.state==='live'?'…':'—'}</span>`}
     </div>`;
   }).join('');
 }
 
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 // COUNTDOWN
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 function showCountdown(onGo) {
   if (countdownRunning) return;
   countdownRunning = true;
@@ -1650,9 +1650,9 @@ function showCountdown(onGo) {
   overlay.classList.add('active');
 
   [
-    { n:'3', l:'Get setâ¦',      d:0 },
-    { n:'2', l:'Readyâ¦',        d:1000 },
-    { n:'1', l:'On your marksâ¦',d:2000 },
+    { n:'3', l:'Get set…',      d:0 },
+    { n:'2', l:'Ready…',        d:1000 },
+    { n:'1', l:'On your marks…',d:2000 },
     { n:'GO',l:'',              d:3000, go:true }
   ].forEach(({n,l,d,go})=>{
     setTimeout(()=>{
@@ -1672,17 +1672,17 @@ function flashRecall() {
   const numEl   = document.getElementById('countdown-num');
   const lblEl   = document.getElementById('countdown-label');
   overlay.classList.add('active');
-  numEl.textContent = 'ð´';
+  numEl.textContent = '🔴';
   numEl.style.color  = 'var(--danger)';
-  lblEl.textContent  = 'FALSE START â RECALL';
+  lblEl.textContent  = 'FALSE START — RECALL';
   vibrate([200,80,200,80,200]);
   flash('recall', 1800);
   setTimeout(()=>overlay.classList.remove('active'), 2000);
 }
 
-// ââââââââââââââââââââââââââââââââââââââââ
-// CROSS COUNTRY â MARSHAL VIEW
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
+// CROSS COUNTRY — MARSHAL VIEW
+// ════════════════════════════════════════
 function initMarshalView() {
   requestWakeLock(); syncClock();
   watchConn('marshal-dot');
@@ -1713,15 +1713,15 @@ function renderMarshalView(xc) {
     waiting.classList.remove('hidden');
     const msg = document.getElementById('marshal-wait-msg');
     if (xc?.state==='armed') {
-      msg.innerHTML = `â¡ Race armed â waiting for GO<br>
-        <span style="color:var(--accent);font-weight:700;font-size:1.1rem">${xc.age||''} ${xc.gender||''} Â· ${xc.event||''}</span>`;
+      msg.innerHTML = `⚡ Race armed — waiting for GO<br>
+        <span style="color:var(--accent);font-weight:700;font-size:1.1rem">${xc.age||''} ${xc.gender||''} · ${xc.event||''}</span>`;
     } else { msg.textContent='Waiting for race to start...'; }
     return;
   }
 
   waiting.classList.add('hidden');
   live.classList.remove('hidden');
-  document.getElementById('marshal-event-lbl').textContent = `${xc.age||''} ${xc.gender||''} Â· ${xc.event||''}`;
+  document.getElementById('marshal-event-lbl').textContent = `${xc.age||''} ${xc.gender||''} · ${xc.event||''}`;
 
   const count = Object.keys(xc.finishes||{}).length;
   document.getElementById('marshal-next-place').textContent = ordinal(count+1);
@@ -1729,7 +1729,7 @@ function renderMarshalView(xc) {
 }
 
 async function marshalTap() {
-  if (!xcState || xcState.state!=='live') { toast('â ï¸ Race not live'); return; }
+  if (!xcState || xcState.state!=='live') { toast('⚠️ Race not live'); return; }
   const elapsed  = nowServer() - xcState.startedAtServer;
   const count    = Object.keys(xcState.finishes||{}).length;
   const place    = count + 1;
@@ -1747,7 +1747,7 @@ async function marshalTap() {
     elapsedMs:   elapsed,
     tapAt:       firebase.database.ServerValue.TIMESTAMP
   });
-  toast(`â ${ordinal(place)} â ${fmtMs(elapsed)}`);
+  toast(`✅ ${ordinal(place)} — ${fmtMs(elapsed)}`);
 }
 
 async function marshalUndo() {
@@ -1766,9 +1766,9 @@ async function marshalUndo() {
     ]);
 }
 
-// ââââââââââââââââââââââââââââââââââââââââ
-// CROSS COUNTRY â ADMIN VIEW
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
+// CROSS COUNTRY — ADMIN VIEW
+// ════════════════════════════════════════
 function initXCAdminView() {
   requestWakeLock(); syncClock();
   watchConn('xc-admin-dot');
@@ -1807,7 +1807,7 @@ async function xcAdminArm() {
     state:'armed', finishes:{},
     armedAt:firebase.database.ServerValue.TIMESTAMP
   });
-  toast('â XC Race armed');
+  toast('✅ XC Race armed');
 }
 
 async function xcAdminGo() {
@@ -1849,7 +1849,7 @@ async function xcAdminPublish() {
     publishedAt:firebase.database.ServerValue.TIMESTAMP
   });
   await cRef('xc/current').update({state:'done'});
-  toast('ð XC results published!');
+  toast('📋 XC results published!');
 }
 
 function renderXCAdminView(xc) {
@@ -1861,7 +1861,7 @@ function renderXCAdminView(xc) {
   }
   setup.classList.add('hidden'); live.classList.remove('hidden');
 
-  document.getElementById('xc-race-lbl').textContent = `${xc.age} ${xc.gender} Â· ${xc.event}`;
+  document.getElementById('xc-race-lbl').textContent = `${xc.age} ${xc.gender} · ${xc.event}`;
   const badge  = document.getElementById('xc-state-badge');
   const goBtn  = document.getElementById('xc-go-btn');
   const pubBtn = document.getElementById('xc-publish-btn');
@@ -1900,9 +1900,9 @@ async function xcSetName(place, name) {
   await cRef(`xc/current/finishes/${place}/name`).set(name);
 }
 
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 // XC OBSERVER
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 function initXCObserverView() {
   watchConn('xc-observer-dot');
   const xcRef=cRef('xc/current');
@@ -1929,7 +1929,7 @@ function renderXCObserverView(xc) {
   }
   waiting.classList.add('hidden');
   document.getElementById('xc-observer-event-lbl').textContent=
-    `${xc.age||''} ${xc.gender||''} Â· ${xc.event||''}`;
+    `${xc.age||''} ${xc.gender||''} · ${xc.event||''}`;
 
   const finishes=xc.finishes||{};
   const sorted=Object.keys(finishes).sort((a,b)=>parseInt(a)-parseInt(b));
@@ -1938,17 +1938,17 @@ function renderXCObserverView(xc) {
     const top3 = parseInt(p)<=3;
     return `<div class="place-row">
       <div class="medal ${medalCls(parseInt(p))}">${p}</div>
-      <div style="flex:1;font-weight:${top3?700:400}">${f.name||'â'}</div>
+      <div style="flex:1;font-weight:${top3?700:400}">${f.name||'—'}</div>
       <div class="font-mono text-sm">${fmtMs(f.elapsedMs)}</div>
     </div>`;
   }).join('') || (xc.state==='live'
-    ? '<div class="text-muted text-sm text-center mt-16">Waiting for first finisherâ¦</div>'
+    ? '<div class="text-muted text-sm text-center mt-16">Waiting for first finisher…</div>'
     : '');
 }
 
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 // RESULTS VIEW
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 function initResultsView() {
   const resultsRef=cRef('results');
   resultsRef.on('value', snap=>{renderAllResults(snap.val());});
@@ -1963,21 +1963,21 @@ function renderAllResults(results) {
   el.innerHTML = Object.values(results).map(r=>{
     if (r.type==='xc') {
       return `<div class="card">
-        <div class="card-title">ð² ${r.age} ${r.gender} Â· ${r.event}</div>
+        <div class="card-title">🌲 ${r.age} ${r.gender} · ${r.event}</div>
         ${(r.places||[]).map(p=>`
           <div class="place-row" style="padding:6px 0;background:transparent;margin-bottom:0;border-bottom:1px solid var(--surface3)">
             <div class="medal ${medalCls(p.place)}" style="width:26px;height:26px;font-size:0.8rem">${p.place}</div>
-            <div style="flex:1;font-weight:${p.place<=3?700:400}">${p.name||'â'}</div>
+            <div style="flex:1;font-weight:${p.place<=3?700:400}">${p.name||'—'}</div>
             <div class="font-mono text-sm">${fmtMs(p.elapsedMs)}</div>
           </div>`).join('')}
       </div>`;
     } else {
       return `<div class="card">
-        <div class="card-title">ð ${r.age} ${r.gender} Â· ${r.event}</div>
+        <div class="card-title">🏃 ${r.age} ${r.gender} · ${r.event}</div>
         ${(r.results||[]).map(p=>`
           <div class="lane-row" style="padding:6px 0;background:transparent;margin-bottom:0;border-bottom:1px solid var(--surface3)">
             <div class="medal ${medalCls(p.place)}" style="width:26px;height:26px;font-size:0.8rem">${p.place}</div>
-            <div style="flex:1;font-weight:${p.place<=3?700:400}">${p.name||'â'}</div>
+            <div style="flex:1;font-weight:${p.place<=3?700:400}">${p.name||'—'}</div>
             <div class="font-mono text-sm">${fmtSec(p.timeMs)}</div>
           </div>`).join('')}
       </div>`;
@@ -1990,7 +1990,7 @@ async function exportCSV() {
   const snap=await cRef('results').once('value');
   const results=snap.val();
   if (!results) { toast('No results to export'); return; }
-  let csv=`FinishLine Results â ${carnivalMeta?.name||''} â ${carnivalMeta?.school||''}\n`;
+  let csv=`FinishLine Results — ${carnivalMeta?.name||''} — ${carnivalMeta?.school||''}\n`;
   csv+='Type,Age,Gender,Event,Place,Name,Time (s)\n';
   Object.values(results).forEach(r=>{
     if (r.type==='xc') {
@@ -2008,12 +2008,12 @@ async function exportCSV() {
   const a=document.createElement('a');
   a.href=url; a.download=`${(carnivalMeta?.name||'results').replace(/\s+/g,'-')}_${carnivalCode}.csv`;
   a.click(); URL.revokeObjectURL(url);
-  toast('ð¥ CSV downloaded');
+  toast('📥 CSV downloaded');
 }
 
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 // SHARE / JOIN PAGE
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 function showSharePage() {
   const url=`${location.origin}${location.pathname}?join=${carnivalCode}`;
   document.getElementById('share-school-name').textContent=carnivalMeta?.school||'FinishLine';
@@ -2024,16 +2024,16 @@ function showSharePage() {
   showScreen('share');
 }
 
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 // URL ROUTING (direct deep links)
-// ââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════
 async function routeFromURL() {
   const p=new URLSearchParams(location.search);
   const code=p.get('join')||p.get('carnival');
   if (!code) return;
 
   const snap=await db.ref(`${ROOT}/${code}/meta`).once('value');
-  if (!snap.exists()) { toast('â Carnival not found'); return; }
+  if (!snap.exists()) { toast('❌ Carnival not found'); return; }
 
   carnivalCode=code;
   carnivalMeta=snap.val();
@@ -2049,7 +2049,7 @@ async function routeFromURL() {
   else showRolePicker();
 }
 
-// ââ INIT ââ
+// ── INIT ──
 syncClock();
 routeFromURL();
 
