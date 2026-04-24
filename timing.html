@@ -20,6 +20,7 @@
      splits for mid-carnival fixes; results CSV export from admin. -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <!-- qrcode library removed; QR generated server-side via qrserver.com img tag -->
 <style>
 :root{
@@ -150,6 +151,10 @@ const FB_CONFIG = {
   storageBucket: "willy-district-sport.firebasestorage.app"
 };
 firebase.initializeApp(FB_CONFIG);
+// Anonymous sign-in so locked Firebase rules (auth != null) don't block writes.
+const __fbAuthReady = firebase.auth().signInAnonymously()
+  .then(cred => { window.__fbUid = cred.user && cred.user.uid; })
+  .catch(err => { console.warn('Anon sign-in failed:', err && err.code, err && err.message); });
 const fbDb = firebase.database();
 
 // Non-blocking confirm modal — replaces window.confirm()
