@@ -905,6 +905,7 @@
 ════════════════════════════════════════ -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
 <!-- ════════════════════════════════════════
      APP SCRIPT
@@ -921,6 +922,11 @@ const FB_CONFIG = {
   storageBucket: "willy-district-sport.firebasestorage.app"
 };
 firebase.initializeApp(FB_CONFIG);
+// Anonymous sign-in so locked Firebase rules (auth != null) don't block writes.
+// Silent fallback if auth is temporarily unavailable so demos still render reads.
+const __fbAuthReady = firebase.auth().signInAnonymously()
+  .then(cred => { window.__fbUid = cred.user && cred.user.uid; })
+  .catch(err => { console.warn('Anon sign-in failed:', err && err.code, err && err.message); });
 const db = firebase.database();
 const ROOT = 'fl'; // FinishLine namespace
 
