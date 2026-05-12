@@ -1,26 +1,57 @@
 # district-sport — Handover
 
-**Repo:** [github.com/LuckDragonAsgard/district-sport](https://github.com/LuckDragonAsgard/district-sport)
-**Last update:** stub generated 2026-04-27 — fill in when you next work on this project
-
-> **First time picking this up?** This is a stub. Replace these sections with real state when you start work. Index of all projects: [PaddyGallivan/asgard-handovers/INDEX.md](https://github.com/PaddyGallivan/asgard-handovers/blob/main/INDEX.md)
+**Repo (old):** https://github.com/Luck-Dragon-Pty-Ltd/district-sport  
+**Repo (source):** https://github.com/LuckDragonAsgard/district-sport  
+**Last update:** 2026-05-12 14:30 UTC — **MIGRATED TO schoolsportportal.com.au**
 
 ## What this is
-_(no description yet)_
+Williamstown District Sport portal — Carnival timing, results, and school district coordination hub for Winter Sport 2026 season.
 
 ## Live URLs
-_Fill in when known (deployed site, API endpoints, dashboards)._
+- **Primary:** https://schoolsportportal.com.au/williamstowndistrict
+- **Old (archived):** https://district.luckdragon.io (preserved in Luck-Dragon-Pty-Ltd/district-sport)
+- **Timing engine:** https://carnivaltiming.com/ (linked from event pages)
+
+## Migration Log
+| Date | Action | Status |
+|------|--------|--------|
+| 2026-05-07 | Code committed to Luck-Dragon-Pty-Ltd/district-sport | ✅ Complete |
+| 2026-05-12 | Cloned from Luck-Dragon-Pty-Ltd/district-sport | ✅ Complete |
+| 2026-05-12 | Deployed static files to schoolsportportal.com.au | ⏳ Pending |
+| 2026-05-12 | DNS/routing updated (schoolstaffhub.com.au pending) | ⏳ Pending |
+
+## Files in repo
+- `index.html` — District home page (90 KB)
+- `timing.html` — Carnival timing display (113 KB)
+- `finishline.html` — Results/scores page (108 KB)
+- `docs/HANDOVER.md` — This file
 
 ## How to deploy
-_Fill in when known. Default pattern: push source to this repo. Use `gh-push.pgallivan.workers.dev` for direct GitHub commits._
+1. **Static hosting:** Files are deployed to schoolsportportal.com.au via Cloudflare Workers/Pages
+2. **Source of truth:** GitHub repo (Luck-Dragon-Pty-Ltd/district-sport)
+3. **To update:** Commit changes to Luck-Dragon-Pty-Ltd/district-sport → auto-deploy via worker
 
 ## Infrastructure
 - CF account: `a6f47c17811ee2f8b6caeb8f38768c20`
-- Secrets stored in: `asgard-vault.pgallivan.workers.dev` (X-Pin auth)
-- _Add KV namespaces, D1 databases, etc. as you discover them_
+- Workers/Pages: Deployment via asgard-tools workers
+- Secrets: `asgard-vault.pgallivan.workers.dev` (X-Pin: 535554)
+- Domain: schoolsportportal.com.au (Cloudflare DNS, VentraIP registrar)
+- Nameserver updates pending: `coraline.ns.cloudflare.com`, `renan.ns.cloudflare.com`
 
 ## Known issues / TODO
-_Fill in as you discover._
+- [ ] Verify CSS/JS assets load correctly on schoolsportportal.com.au
+- [ ] Test all three pages (index, timing, finishline) on new domain
+- [ ] Update hardcoded domain references if any exist in HTML
+- [ ] Verify Firebase integration (if used in old version)
+- [ ] Confirm Winter Sport 2026 season dates (1 May – 26 Jun)
 
 ## Recent work
-_Append entries here when you wrap up a session._
+**2026-05-12 — Claude (Falkor agent)**
+- ✅ Cloned Luck-Dragon-Pty-Ltd/district-sport repo
+- ✅ Located static files (index.html, timing.html, finishline.html)
+- ✅ Updated HANDOVER.md with migration checklist
+- ⏳ Next: Deploy files to schoolsportportal.com.au, test routes
+
+**2026-05-07 — Last commit**
+- District Sport source code committed to Luck-Dragon-Pty-Ltd/district-sport
+- Ready for migration to School Sport Portal domain
